@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
+  <task-flow-definition id="launcher-tf">
+    <default-activity>testTaskFlowCall</default-activity>
+    <input-parameter-definition id="__1">
+      <name>TaskFlowTester</name>
+      <value>#{pageFlowScope.TaskFlowTester}</value>
+      <class>org.emg.adf.tftester.rt.controller.bean.TaskFlowTester</class>
+      <required/>
+    </input-parameter-definition>
+    <view id="returnPage">
+      <page>/adfemg/tftester/pages/returnPage.jsff</page>
+    </view>
+    <task-flow-call id="testTaskFlowCall">
+      <dynamic-task-flow-reference>#{pageFlowScope.TaskFlowTester.runTaskFlowId}</dynamic-task-flow-reference>
+      <input-parameter-map>#{pageFlowScope.TaskFlowTester.runParamMap}</input-parameter-map>
+      <!-- actualk return value mapping is specified at runtime when actual TF to test is known -->
+      <return-value id="__2" >
+        <name>dummyValue</name>
+        <value>#{pageFlowScope.dummyValue}</value>
+      </return-value>
+      <after-listener>#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}</after-listener>
+    </task-flow-call>
+    <control-flow-rule id="__3">
+      <from-activity-id>testTaskFlowCall</from-activity-id>
+      <control-flow-case id="__8">
+        <to-activity-id>returnPage</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <use-page-fragments/>
+  </task-flow-definition>
+</adfc-config>
