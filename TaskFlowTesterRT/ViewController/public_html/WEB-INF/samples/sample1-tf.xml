@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
+  <task-flow-definition id="sample1-tf">
+    <default-activity>sample1</default-activity>
+    <input-parameter-definition id="__1">
+      <name>param1</name>
+      <value>#{pageFlowScope.param1}</value>
+      <class>java.lang.String</class>
+      <required/>
+    </input-parameter-definition>
+    <input-parameter-definition id="__2">
+      <name>param2</name>
+      <value>#{pageFlowScope.param2}</value>
+      <class>java.util.HashMap</class>
+    </input-parameter-definition>
+    <input-parameter-definition id="__7">
+      <name>someContext</name>
+      <value>#{pageFlowScope.someContext}</value>
+      <class>org.emg.adf.sample.controller.bean.SampleContext</class>
+    </input-parameter-definition>
+    <return-value-definition id="__3">
+      <name>returnValue1</name>
+      <value>#{pageFlowScope.returnValue1}</value>
+      <class>java.lang.String</class>
+    </return-value-definition>
+    <return-value-definition id="__4">
+      <name>returnValue2</name>
+      <value>#{pageFlowScope.returnValue2}</value>
+      <class>java.lang.String</class>
+    </return-value-definition>
+    <view id="sample1">
+      <page>/sample1.jsff</page>
+    </view>
+    <task-flow-return id="taskFlowReturn1">
+      <outcome>
+        <name>done</name>
+      </outcome>
+    </task-flow-return>
+    <control-flow-rule id="__5">
+      <from-activity-id>sample1</from-activity-id>
+      <control-flow-case id="__6">
+        <from-outcome>done</from-outcome>
+        <to-activity-id>taskFlowReturn1</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <use-page-fragments/>
+  </task-flow-definition>
+</adfc-config>
