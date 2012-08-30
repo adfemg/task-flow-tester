@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich">
+  <af:document title="samplepage.jsf" id="d1">
+    <af:form id="f1">
+      <af:panelHeader text="This is a page, not a apage fragment" id="ph1">
+        <f:facet name="context"/>
+        <f:facet name="menuBar"/>
+        <f:facet name="toolbar"/>
+        <f:facet name="legend"/>
+        <f:facet name="info"/>
+        <af:commandButton text="Done" id="cb1" action="done">
+          <af:setActionListener from="SomeReturnValue" to="#{pageFlowScope.returnValue1FromTFWithPages}"/>
+        </af:commandButton>
+      </af:panelHeader>
+    </af:form>
+  </af:document>
+</f:view>
