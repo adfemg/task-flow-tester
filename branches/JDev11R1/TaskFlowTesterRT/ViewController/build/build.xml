@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<project xmlns="antlib:org.apache.tools.ant" default="init">
+
+  <property file="build.properties"/>
+
+  <target name="init">
+    <tstamp/>
+  </target>
+   <path id="adfemg.tftester.classpath">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.xdk_11.1.0">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>  
+    <target name="jaxb">  
+
+    <delete dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
+    <mkdir dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
+
+    <!--
+      Generate source code.
+      The 'schema' attribute gives the path to the schema the sources
+      will be generated from.
+      The 'target' attribute specifies the base directory that the source
+      will be generated into. Sources will be created in subdirectories
+      corresponding to the package structure.
+      -->
+      <java classname="oracle.xml.jaxb.orajaxb" description="Generate Java binding for tftester.xsd" classpathref="adfemg.tftester.classpath" >
+         <arg value="-schema"/>
+         <arg value="../src/org/emg/adf/tftester/rt/model/xml/tftester.xsd"/>
+         <arg value="-outputDir"/>
+         <arg value="../src"/>
+         <arg value="-targetPkg"/>
+         <arg value="org.emg.adf.tftester.rt.model.xml.jaxb"/>
+      </java>
+    <echo message="Created JAXB classes"/>
+  </target>
+</project>
