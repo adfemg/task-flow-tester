@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import javax.xml.bind.Unmarshaller;
@@ -57,8 +58,15 @@ public class TaskFlowTesterService
 
   public void importFromXml(String xml)
   {
-    TaskFlowTesterType tftester = createJaxbModelFromXml(xml);
-    createBeanModelFromJaxbModel(tftester);
+    try
+    {
+      TaskFlowTesterType tftester = createJaxbModelFromXml(xml);
+      createBeanModelFromJaxbModel(tftester);
+    }
+    catch (Exception exc)
+    {
+      throw new JboException("Error importing testcases from XML: " + exc.getMessage());
+    }
     // create bean model from jaxbmodel
   }
 
@@ -133,27 +141,19 @@ public class TaskFlowTesterService
   }
 
   private TaskFlowTesterType createJaxbModelFromXml(String xml)
+    throws JAXBException
   {
-    TaskFlowTesterType tftester = null;
     String instancePath = TaskFlowTesterType.class.getPackage().getName();
     Unmarshaller u;
-    try
-    {
-      JAXBContext jc = JAXBContext.newInstance(instancePath);
-      u.set
-      sLog.fine("JAXBContext: " + jc.getClass());
-      u = jc.createUnmarshaller();
-      SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-      InputStream stream = getClass().getClassLoader().getResourceAsStream("org/emg/adf/tftester/rt/model/xml/tftester.xsd");
-      Source source = new StreamSource(stream);
-      Schema schema = factory.newSchema(source);
-      u.setSchema(schema);
-      tftester = (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
-    }
-    catch (Exception exc)
-    {
-      throw new JboException("Error importing testcases from XML: " + exc.getMessage());
-    }
+    JAXBContext jc = JAXBContext.newInstance(instancePath);
+    sLog.fine("JAXBContext: " + jc.getClass());
+    u = jc.createUnmarshaller();
+    //      SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    //      InputStream stream = getClass().getClassLoader().getResourceAsStream("org/emg/adf/tftester/rt/model/xml/tftester.xsd");
+    //      Source source = new StreamSource(stream);
+    //      Schema schema = factory.newSchema(source);
+    //      u.setSchema(schema);
+    TaskFlowTesterType tftester = (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
     return tftester;
   }
 
@@ -256,8 +256,9 @@ public class TaskFlowTesterService
 
   private void loadDefaultTestcases()
   {
-    InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("adf-emg-task-flow-tester.xml");
-    if (stream!=null)
+    InputStream stream =
+      Thread.currentThread().getContextClassLoader().getResourceAsStream("adf-emg-task-flow-tester.xml");
+    if (stream != null)
     {
       String xml = convertStreamToString(stream, "UTF-8");
       importFromXml(xml);
@@ -266,8 +267,8 @@ public class TaskFlowTesterService
 
   /**
    * Nice trick from StackOverflow website to convert stream to string using standard library.
-   * The reason it works is because Scanner iterates over tokens in the stream, and in this case we 
-   * separate tokens using "beginning of the input boundary" (\A) thus giving us only one token 
+   * The reason it works is because Scanner iterates over tokens in the stream, and in this case we
+   * separate tokens using "beginning of the input boundary" (\A) thus giving us only one token
    * for the entire contents of the stream.
    * @param is
    * @param encoding

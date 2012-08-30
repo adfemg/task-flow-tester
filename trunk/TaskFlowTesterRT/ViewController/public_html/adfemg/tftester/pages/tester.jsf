@@ -41,10 +41,10 @@
                                 <af:popup childCreation="immediate" autoCancel="disabled" id="p3"
                                           contentDelivery="immediate" resetEditableValues="whenCanceled">
                                   <af:dialog id="d4" title="Add Test Task Flow"
-                                             dialogListener="#{pageFlowScope.TaskFlowTreeController.dialogListener}">
+                                             dialogListener="#{pageFlowScope.TaskFlowTreeController.addTaskFlowListener}">
                                     <af:panelFormLayout id="pfl6" labelAlignment="start" maxColumns="1">
                                       <f:facet name="footer"/>
-                                      <af:inputText label="Task Flow Id" required="true" id="tfiInput" columns="80"
+                                      <af:inputText label="Task Flow Id" required="true" id="tfiInput" columns="80" clientComponent="true"
                                                     shortDesc="Enter fully qualified name of the taskflow. This is of form &lt;document name>#&lt;local task flow id>. For example '/WEB-INF/mytask.xml#mytask'."
                                                     value="#{pageFlowScope.TaskFlowTreeController.taskFlowId}"/>
                                       <af:inputText label="Display Name" id="it14"
@@ -55,30 +55,37 @@
                                     <f:facet name="buttonBar"/>
                                   </af:dialog>
                                 </af:popup>
-                                <af:commandToolbarButton shortDesc="Export Testcases to XML" id="ctb2" icon="/adfemg/images/exporttoxml.png" immediate="true"
+                                <af:commandToolbarButton shortDesc="Export Testcases to XML" id="ctb2"
+                                                         icon="/adfemg/images/exporttoxml.png" immediate="true"
                                                          actionListener="#{viewScope.Exporter.exportToXml}"/>
                                 <af:popup childCreation="deferred" autoCancel="disabled" id="p2"
-                                          binding="#{viewScope.Exporter.popup}" >
-                                  <af:dialog id="d3" type="ok" title="Task Flow Testcases XML" >
-                                    <af:inputText simple="false" label="Xml" columns="150" rows="20" id="it4" disabled="true" value="#{viewScope.Exporter.xml}"/>
+                                          binding="#{viewScope.Exporter.popup}">
+                                  <af:dialog id="d3" type="ok" title="Task Flow Testcases XML">
+                                    <af:inputText simple="false" label="Xml" columns="150" rows="20" id="it4"
+                                                  disabled="true" value="#{viewScope.Exporter.xml}"/>
                                     <f:facet name="buttonBar">
-                                        <af:commandButton text="Export to File" shortDesc="Save the XML to a file. If you store the file under name 'adf-emg-task-flow-tester.xml' in the source root directory of your ADF project, the XML will be automatically loaded when starting the tester." id="cb6">
-                                          <af:fileDownloadActionListener method="#{viewScope.Exporter.exportToFile}"
-                                                                         filename="adf-emg-task-flow-tester.xml"
-                                                                         contentType="text/xml"/>
-                                        </af:commandButton>
+                                      <af:commandButton text="Export to File"
+                                                        shortDesc="Save the XML to a file. If you store the file under name 'adf-emg-task-flow-tester.xml' in the source root directory of your ADF project, the XML will be automatically loaded when starting the tester."
+                                                        id="cb6">
+                                        <af:fileDownloadActionListener method="#{viewScope.Exporter.exportToFile}"
+                                                                       filename="adf-emg-task-flow-tester.xml"
+                                                                       contentType="text/xml"/>
+                                      </af:commandButton>
                                     </f:facet>
                                   </af:dialog>
                                 </af:popup>
-                                <af:commandToolbarButton shortDesc="Import Testcases from XML" id="ctb3" icon="/adfemg/images/loadxml.png" immediate="true"
+                                <af:commandToolbarButton shortDesc="Import Testcases from XML" id="ctb3"
+                                                         icon="/adfemg/images/loadxml.png" immediate="true"
                                                          actionListener="#{Importer.showImportPopup}"/>
                                 <af:popup childCreation="deferred" autoCancel="disabled" id="p34"
-                                          binding="#{Importer.popup}" >
-                                  <af:dialog id="d44" type="none" title="Import Task Flow Testcases from XML" >
-                                    <af:inputText simple="false" label="Xml" columns="150" rows="20" id="it5" value="#{Importer.xml}"/>
+                                          binding="#{Importer.popup}">
+                                  <af:dialog id="d44" type="none" title="Import Task Flow Testcases from XML">
+                                    <af:inputText simple="false" label="Xml" columns="150" rows="20" id="it5"
+                                                  value="#{Importer.xml}"/>
                                     <f:facet name="buttonBar">
                                       <af:toolbar id="t3">
-                                        <af:commandButton text="Import" partialSubmit="true" actionListener="#{Importer.doImport}" id="cb5"/>
+                                        <af:commandButton text="Import" partialSubmit="true"
+                                                          actionListener="#{Importer.doImport}" id="cb5"/>
                                       </af:toolbar>
                                     </f:facet>
                                   </af:dialog>
@@ -95,7 +102,11 @@
                             <f:facet name="menus"/>
                             <f:facet name="toolbar"/>
                             <f:facet name="statusbar"/>
-                            <af:tree initiallyExpanded="true" var="node" value="#{pageFlowScope.TaskFlowTreeController.menuModel}" id="tree">
+                            <af:tree initiallyExpanded="true" var="node"
+                                     value="#{pageFlowScope.TaskFlowTreeController.menuModel}" id="tree"
+                                     selectedRowKeys="#{pageFlowScope.TaskFlowTreeController.selectedRowKeySet}"
+                                     rowSelection="single"
+                                     selectionListener="#{pageFlowScope.TaskFlowTreeController.treeNodeSelected}">
                               <f:facet name="nodeStamp">
                                 <af:group>
                                   <af:commandLink text="#{node.name}" id="selectTF" partialSubmit="true"
@@ -127,19 +138,20 @@
                   </af:decorativeBox>
                 </f:facet>
                 <f:facet name="second">
-                  <af:decorativeBox id="testArea" topHeight="10" theme="default" partialTriggers="pctree:tree:selectTF pctree:tree:selectTC"
-                                    >
+                  <af:decorativeBox id="testArea" topHeight="10" theme="default"
+                                    partialTriggers="pctree:tree:selectTF pctree:tree:selectTC">
                     <f:facet name="top">
                       <af:group>
-                          <af:spacer width="10" height="10" id="s5" rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}"/>
+                        <af:spacer width="10" height="10" id="s5"
+                                   rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}"/>
                       </af:group>
                     </f:facet>
                     <f:facet name="center">
-                      <af:panelSplitter id="ps1" orientation="vertical" splitterPosition="200" >
+                      <af:panelSplitter id="ps1" orientation="vertical" splitterPosition="200">
                         <f:facet name="first">
-                          <af:panelHeader text="#{pageFlowScope.TaskFlowTester.headerText}"
-                                          id="tfarea">
-                            <af:panelGroupLayout id="pgl1" layout="scroll" rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}">
+                          <af:panelHeader text="#{pageFlowScope.TaskFlowTester.headerText}" id="tfarea">
+                            <af:panelGroupLayout id="pgl1" layout="scroll"
+                                                 rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}">
                               <af:panelGroupLayout id="pgl8" layout="horizontal" valign="top">
                                 <af:panelHeader text="Task Flow Details" id="ph4">
                                   <f:facet name="context"/>
@@ -181,7 +193,8 @@
                                     <f:facet name="footer"></f:facet>
                                   </af:panelFormLayout>
                                 </af:panelHeader>
-                                <af:panelHeader text="Return Values" id="ph5"  rendered="#{pageFlowScope.TaskFlowTester.runAsCall}">
+                                <af:panelHeader text="Return Values" id="ph5"
+                                                rendered="#{pageFlowScope.TaskFlowTester.runAsCall}">
                                   <af:panelFormLayout labelAlignment="start" maxColumns="1" rows="1" id="pfl5">
                                     <af:group id="g1">
                                       <af:iterator var="rv" value="#{pageFlowScope.TaskFlowTester.testReturnValues}"
@@ -190,7 +203,8 @@
                                       </af:iterator>
                                     </af:group>
                                     <af:group id="g2">
-                                      <af:inputText label="Navigation Outcome" value="#{pageFlowScope.TaskFlowTester.testNavigationOutcome}"
+                                      <af:inputText label="Navigation Outcome"
+                                                    value="#{pageFlowScope.TaskFlowTester.testNavigationOutcome}"
                                                     readOnly="true" id="it12"/>
                                     </af:group>
                                   </af:panelFormLayout>
@@ -202,11 +216,14 @@
                             </af:panelGroupLayout>
                             <f:facet name="toolbar">
                               <af:toolbar id="t1">
-                                <af:panelGroupLayout id="pgl2" layout="horizontal" valign="top" rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}">
+                                <af:panelGroupLayout id="pgl2" layout="horizontal" valign="top"
+                                                     rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}">
                                   <af:selectBooleanCheckbox value="#{pageFlowScope.TaskFlowTester.stretchLayout}"
                                                             label="Stretch Layout?" id="stretchLayout"/>
-                                  <af:selectOneRadio layout="horizontal" rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
-                                       autoSubmit="true" value="#{pageFlowScope.TaskFlowTester.runInRegion}" id="runas"
+                                  <af:selectOneRadio layout="horizontal"
+                                                     rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
+                                                     autoSubmit="true"
+                                                     value="#{pageFlowScope.TaskFlowTester.runInRegion}" id="runas"
                                                      valueChangeListener="#{pageFlowScope.TaskFlowTester.changeRunAsOption}">
                                     <af:selectItem label="Run in Region" value="#{true}" id="si2"/>
                                     <af:selectItem label="Run as Task Flow Call" value="#{false}" id="si4"/>
@@ -215,24 +232,31 @@
                                                     rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
                                                     disabled="#{pageFlowScope.TaskFlowTester.testActive}"
                                                     actionListener="#{pageFlowScope.TaskFlowTester.doTest}"/>
-                                  <af:commandButton text="Run Test" id="cb15" 
+                                  <af:commandButton text="Run Test" id="cb15"
                                                     rendered="#{!pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
-                                                    action="testTFInDialog" useWindow="true" windowModalityType="applicationModal" windowWidth="600" windowHeight="600"
+                                                    action="testTFInDialog" useWindow="true"
+                                                    windowModalityType="applicationModal" windowWidth="600"
+                                                    windowHeight="600"
                                                     actionListener="#{pageFlowScope.TaskFlowTester.doTest}"
                                                     returnListener="#{pageFlowScope.TaskFlowTester.returnedFromTestDialog}"/>
                                   <af:commandButton text="Reset" id="cb3"
                                                     rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
                                                     disabled="#{!pageFlowScope.TaskFlowTester.testActive}"
                                                     actionListener="#{pageFlowScope.TaskFlowTester.reset}"/>
-                                  <af:commandButton text="Save" id="cb4" actionListener="#{TestCaseController.saveTestcase}" rendered="#{pageFlowScope.TaskFlowTester.currentTestCase!=null}"/>
-                                  <af:commandButton text="Save As..." id="cb2" actionListener="#{TestCaseController.showSaveAsPopup}"/>
+                                  <af:commandButton text="Save" id="cb4"
+                                                    actionListener="#{TestCaseController.saveTestcase}"
+                                                    rendered="#{pageFlowScope.TaskFlowTester.currentTestCase!=null}"/>
+                                  <af:commandButton text="Save As..." id="cb2"
+                                                    actionListener="#{TestCaseController.showSaveAsPopup}"/>
                                   <af:popup childCreation="deferred" autoCancel="disabled" id="p1"
                                             binding="#{TestCaseController.saveAsPopup}">
                                     <af:dialog id="d2" title="Save As New Task Flow Test Case"
                                                dialogListener="#{TestCaseController.saveAsNewTestcase}">
                                       <af:panelFormLayout id="pfl2" maxColumns="1">
-                                        <af:inputText label="Name" id="it2" value="#{TestCaseController.name}" required="true"/>
-                                        <af:inputText label="Description" value="#{TestCaseController.description}" id="it3"/>
+                                        <af:inputText label="Name" id="it2" value="#{TestCaseController.name}"
+                                                      required="true"/>
+                                        <af:inputText label="Description" value="#{TestCaseController.description}"
+                                                      id="it3"/>
                                         <f:facet name="footer"/>
                                       </af:panelFormLayout>
                                       <f:facet name="buttonBar"/>
