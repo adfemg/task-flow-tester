@@ -42,6 +42,8 @@ import org.apache.myfaces.trinidad.component.UIXCommand;
 import org.apache.myfaces.trinidad.component.UIXEditableValue;
 import org.apache.myfaces.trinidad.component.UIXForm;
 import org.apache.myfaces.trinidad.component.UIXSubform;
+import org.apache.myfaces.trinidad.render.ExtendedRenderKitService;
+import org.apache.myfaces.trinidad.util.Service;
 
 
 public class JsfUtils
@@ -516,4 +518,21 @@ public class JsfUtils
     fm.setSeverity(FacesMessage.SEVERITY_ERROR);
     FacesContext.getCurrentInstance().addMessage(clientId,fm);
   }
+
+  public static void setInputFocus(String clientId)
+  {
+    String script ="comp = AdfPage.PAGE.findComponent('" + clientId + "');\n" 
+                       +
+        "if (comp!=null) comp.focus(); ";
+    writeJavaScriptToClient(script); 
+  }
+
+  public static void writeJavaScriptToClient(String script)
+  {
+    FacesContext fctx = FacesContext.getCurrentInstance();
+    ExtendedRenderKitService erks =
+      Service.getRenderKitService(fctx, ExtendedRenderKitService.class);
+    erks.addScript(fctx, script);
+  }
+
 }

@@ -57,8 +57,7 @@ public class Importer
     {
       taskFlowTesterService.importFromXml(xml);
       getPopup().hide();      
-      UIComponent treeArea = JsfUtils.findComponentInRoot("treeArea");
-      AdfFacesContext.getCurrentInstance().addPartialTarget(treeArea);
+      TaskFlowTester.getInstance().refreshTreeArea();
     }
     catch (JboException e)
     {

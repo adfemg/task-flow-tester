@@ -158,6 +158,50 @@
    </hash>
    <hash n="oracle.jdeveloper.deploy.dt.DeploymentProfiles">
       <hash n="profileDefinitions">
+         <hash n="AdfLibrary">
+            <value n="adflib-connectionDetails" v="true"/>
+            <value n="adflib-nonReusablesError" v="false"/>
+            <hash n="archiveOptions">
+               <value n="hasManifest" v="true"/>
+            </hash>
+            <hash n="fileGroups">
+               <list n="groups">
+                  <hash>
+                     <list n="contributors">
+                        <hash>
+                           <value n="type" v="2"/>
+                        </hash>
+                        <hash>
+                           <value n="type" v="5"/>
+                        </hash>
+                     </list>
+                     <value n="displayName" v="Project Output"/>
+                     <hash n="filters">
+                        <list n="rules">
+                           <hash>
+                              <value n="pattern" v="WEB-INF/classes/**"/>
+                              <value n="type" v="1"/>
+                           </hash>
+                           <hash>
+                              <value n="DefaultFilters" v=""/>
+                           </hash>
+                        </list>
+                     </hash>
+                     <value n="internalName" v="project-output"/>
+                     <value n="type" v="1"/>
+                  </hash>
+               </list>
+            </hash>
+            <url n="jarURL" path="deploy/org.emg.adf.AdfTaskFlowTester.jar"/>
+            <hash n="libraryDependencies">
+               <value n="IncludeLibrariesFromOtherContainers" v="true"/>
+            </hash>
+            <hash n="LibraryDependencies">
+               <list n="dependencyList"/>
+            </hash>
+            <value n="profileClass" v="oracle.adfdt.common.deploy.impl.AdfLibraryProfile"/>
+            <value n="profileName" v="AdfLibrary"/>
+         </hash>
          <hash n="TaskFlowsToTest_ViewController_webapp">
             <hash n="appletArchives"/>
             <hash n="appletFiles">
@@ -234,6 +278,7 @@
          </hash>
       </hash>
       <list n="profileList">
+         <string v="AdfLibrary"/>
          <string v="TaskFlowsToTest_ViewController_webapp"/>
       </list>
    </hash>
@@ -355,11 +400,11 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-core.jar"/>
+            <value n="id" v="Spring-beans.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-beans.jar"/>
+            <value n="id" v="Spring-core.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -367,20 +412,20 @@
          <list n="libraryDefinitions">
             <hash>
                <list n="classPath">
-                  <url path="../../../../adffaces/design/lib/spring-core.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="Spring-core.jar"/>
-               <value n="id" v="Spring-core.jar"/>
-               <value n="locked" v="true"/>
-            </hash>
-            <hash>
-               <list n="classPath">
-                  <url path="../../../../adffaces/design/lib/spring-beans.jar" jar-entry=""/>
+                  <url path="public_html/WEB-INF/lib/spring-beans.jar" jar-entry=""/>
                </list>
                <value n="deployedByDefault" v="true"/>
                <value n="description" v="Spring-beans.jar"/>
                <value n="id" v="Spring-beans.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/spring-core.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Spring-core.jar"/>
+               <value n="id" v="Spring-core.jar"/>
                <value n="locked" v="true"/>
             </hash>
          </list>
@@ -479,11 +524,11 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-core.jar"/>
+            <value n="id" v="Spring-beans.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-beans.jar"/>
+            <value n="id" v="Spring-core.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
