@@ -106,7 +106,7 @@ public class TaskFlowTester
     {
       // first construct value
       param.getValueObject().constructValue();
-      if (param.getParamValue()!=null)
+      if (param.getParamValue()!=null && !"".equals(param.getParamValue()))
       {
         testParamMap.put(param.getName(), param.getParamValue());             
       }
@@ -223,7 +223,7 @@ public class TaskFlowTester
     // now clear dummy returnValues that might be specified for our dynamic TF call
     // and set the return values based on definitions in test TF
     // we create the value expression to store the return values based on the name
-    returnValueMappings.clear();
+//    returnValueMappings.clear();
     // Also set up return values map that will be populated with actual retunr values
     testReturnValues = new ArrayList<ReturnValue>();
     for (NamedParameter param : returnValueDefs.values())
