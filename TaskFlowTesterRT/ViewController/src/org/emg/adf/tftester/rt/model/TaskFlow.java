@@ -6,18 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import oracle.adf.controller.TaskFlowId;
-import oracle.adf.controller.metadata.MetadataService;
-import oracle.adf.controller.metadata.model.NamedParameter;
-import oracle.adf.controller.metadata.model.TaskFlowDefinition;
-import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
+import oracle.adf.controller.internal.metadata.MetadataService;
+import oracle.adf.controller.internal.metadata.NamedParameter;
+import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
+import oracle.adf.controller.internal.metadata.TaskFlowInputParameter;
+//import oracle.adf.controller.metadata.MetadataService;
+//import oracle.adf.controller.metadata.model.NamedParameter;
+//import oracle.adf.controller.metadata.model.TaskFlowDefinition;
+//import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
+
 
 import oracle.jbo.JboException;
-
-
-//import oracle.adf.controller.internal.metadata.Activity;
-//import oracle.adf.controller.internal.metadata.TaskFlowCall;
-// import oracle.adf.controller.internal.metadata.ValueMapping;
-
 
 public class TaskFlow
 {

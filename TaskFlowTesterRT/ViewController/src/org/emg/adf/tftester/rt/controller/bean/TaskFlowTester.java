@@ -11,15 +11,24 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
 import oracle.adf.controller.TaskFlowId;
-import oracle.adf.controller.metadata.ActivityId;
-import oracle.adf.controller.metadata.MetadataService;
-import oracle.adf.controller.metadata.model.Activity;
-import oracle.adf.controller.metadata.model.NamedParameter;
-import oracle.adf.controller.metadata.model.ParsingContext;
-import oracle.adf.controller.metadata.model.TaskFlowCall;
-import oracle.adf.controller.metadata.model.TaskFlowDefinition;
-import oracle.adf.controller.metadata.model.UIInfo;
-import oracle.adf.controller.metadata.model.ValueMapping;
+//import oracle.adf.controller.metadata.ActivityId;
+//import oracle.adf.controller.metadata.MetadataService;
+//import oracle.adf.controller.metadata.model.Activity;
+//import oracle.adf.controller.metadata.model.NamedParameter;
+//import oracle.adf.controller.metadata.model.ParsingContext;
+//import oracle.adf.controller.metadata.model.TaskFlowCall;
+//import oracle.adf.controller.metadata.model.TaskFlowDefinition;
+//import oracle.adf.controller.metadata.model.UIInfo;
+//import oracle.adf.controller.metadata.model.ValueMapping;
+import oracle.adf.controller.internal.metadata.Activity;
+import oracle.adf.controller.internal.metadata.ActivityId;
+import oracle.adf.controller.internal.metadata.MetadataService;
+import oracle.adf.controller.internal.metadata.NamedParameter;
+import oracle.adf.controller.internal.metadata.ParsingContext;
+import oracle.adf.controller.internal.metadata.TaskFlowCall;
+import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
+import oracle.adf.controller.internal.metadata.UIInfo;
+import oracle.adf.controller.internal.metadata.ValueMapping;
 import oracle.adf.view.rich.context.AdfFacesContext;
 
 import org.apache.myfaces.trinidad.event.ReturnEvent;
@@ -392,94 +401,9 @@ public class TaskFlowTester
       return expression;       
     }
 
-    @Override
-    public boolean passByValue()
+    public boolean shouldPassByValue()
     {
       return false;
-    }
-
-    @Override
-    public UIInfo getUIInfo()
-    {
-      return null;
-    }
-
-    @Override
-    public String getDescription()
-    {
-      return null;
-    }
-
-    @Override
-    public String getDisplayName()
-    {
-      return null;
-    }
-
-    @Override
-    public String getLargeIcon()
-    {
-      return null;
-    }
-
-    @Override
-    public String getSmallIcon()
-    {
-      return null;
-    }
-
-    @Override
-    public boolean setDescription(String description)
-    {
-      return false;
-    }
-
-    @Override
-    public boolean setDisplayName(String displayName)
-    {
-      return false;
-    }
-
-    @Override
-    public boolean setLargeIcon(String largeIcon)
-    {
-      return false;
-    }
-
-    @Override
-    public boolean setSmallIcon(String smallIcon)
-    {
-      return false;
-    }
-
-    @Override
-    public ParsingContext getParsingContext()
-    {
-      return null;
-    }
-
-    @Override
-    public boolean validate()
-    {
-      return false;
-    }
-
-    @Override
-    public String getIdAttribute()
-    {
-      return null;
-    }
-
-    @Override
-    public boolean setIdAttribute(String id)
-    {
-      return false;
-    }
-
-    @Override
-    public Node getNode()
-    {
-      return null;
     }
   }
 

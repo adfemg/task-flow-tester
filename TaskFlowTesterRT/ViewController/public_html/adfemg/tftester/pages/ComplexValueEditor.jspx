@@ -1,4 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:af="http://xmlns.oracle.com/adf/faces/rich" version="2.1">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 <af:componentDef xmlns:af="http://xmlns.oracle.com/adf/faces/rich" var="attrs" componentVar="comp" definition="private"
                  xmlns:f="http://java.sun.com/jsf/core" xmlns:afc="http://xmlns.oracle.com/adf/faces/rich/component">
   <af:xmlContent>
@@ -41,7 +45,7 @@ in the correct context
               <af:panelGroupLayout id="pgl3" layout="horizontal">
                 <af:inputText label="#{prop.name}" shortDesc="#{prop.hintText}"
                               value="#{InputParameterController.rawParamValue}" columns="60" simple="true" id="it1"/>
-                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf" id="dc2"/>
+                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx" id="dc2"/>
               </af:panelGroupLayout>
             </af:panelLabelAndMessage>
           </af:iterator>
@@ -68,11 +72,11 @@ in the correct context
               <af:inputText label="Class name" autoSubmit="true" required="true" simple="true"
                             valueChangeListener="#{InputParameterController.classNameChanged}" value="#{prop.className}"
                             columns="30" id="it6"/>
-              <af:inputText label="Key" autoSubmit="true" required="true" false="true" value="#{prop.name}" columns="30"
+              <af:inputText label="Key" autoSubmit="true" required="true" value="#{prop.name}" columns="30"
                             id="it4" simple="true"/>
               <af:inputText label="Value" autoSubmit="true" shortDesc="#{prop.hintText}" required="true"
                             value="#{prop.value}" columns="60" id="it5" simple="true"/>
-              <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf" id="dc1"/>
+              <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx" id="dc1"/>
               <af:commandImageLink shortDesc="Remove map entry" immediate="true"
                                    actionListener="#{InputParameterController.removeMapEntry}"
                                    icon="/adfemg/images/deleteRow.png" partialSubmit="true" id="cb6"/>
@@ -88,3 +92,4 @@ in the correct context
     </af:popup>
   </af:group>
 </af:componentDef>
+</jsp:root>

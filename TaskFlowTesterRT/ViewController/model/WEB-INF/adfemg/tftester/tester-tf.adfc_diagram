@@ -12,7 +12,7 @@
       <property
          name="activityId">tester</property>
       <property
-         name="page">/adfemg/tftester/pages/tester.jsf</property>
+         name="page">/adfemg/tftester/pages/tester.jspx</property>
       <property
          name="start">true</property>
       <property

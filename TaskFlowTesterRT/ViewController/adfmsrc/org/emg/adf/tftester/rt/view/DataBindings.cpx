@@ -2,7 +2,7 @@
 <Application xmlns="http://xmlns.oracle.com/adfm/application" version="11.1.2.61.83" id="DataBindings"
              SeparateXMLFiles="false" Package="org.emg.adf.tftester.rt.view" ClientType="Generic">
   <pageMap>
-    <page path="/adfemg/tftester/pages/tester.jsf" usageId="org_emg_adf_tftester_rt_view_testerPageDef"/>
+    <page path="/adfemg/tftester/pages/tester.jspx" usageId="org_emg_adf_tftester_rt_view_testerPageDef"/>
   </pageMap>
   <definitionFactories>
     <factory nameSpace="http://xmlns.oracle.com/adf/controller/binding"
