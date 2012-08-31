@@ -32,7 +32,13 @@ public class InputParameterController
   public void setRawParamValue(String rawParamValue)
   {
     ValueObject param = getValueObject();
-    if (rawParamValue!=null && rawParamValue.startsWith("#{"))
+    if (rawParamValue==null || "".equals(rawParamValue))
+    {
+      param.setValueAsString(null);         
+      param.setValue(null);         
+      return;       
+    } 
+    if (rawParamValue.startsWith("#{"))
     {
       param.setElExpressionUsed(true);
       param.setValueAsString(rawParamValue);
@@ -40,11 +46,8 @@ public class InputParameterController
     }
     else if (param.isComplexType())
     {
-      if (rawParamValue!=null)
-      {
-        String messagePart = param.isMapType() ? "to populate the map with values" : "to construct an instance of "+param.getType();
-        throw new JboException("Invalid value for parameter "+param.getName()+". You need to enter an EL expression or click the edit icon "+messagePart);        
-      }
+       String messagePart = param.isMapType() ? "to populate the map with values" : "to construct an instance of "+param.getType();
+       throw new JboException("Invalid value for parameter "+param.getName()+". You need to enter an EL expression or click the edit icon "+messagePart);        
       // we do not call setParamValue in this case, might wipe out complex-constructed value
     }
     else
