@@ -3,7 +3,7 @@ package org.emg.adf.tftester.rt.controller;
 import javax.faces.context.FacesContext;
 
 import oracle.adf.controller.internal.AdfcNavigationHandler;
-import oracle.adf.controller.metadata.ActivityId;
+import oracle.adf.controller.internal.metadata.ActivityId;
 
 import org.emg.adf.tftester.rt.util.JsfUtils;
 

@@ -45,7 +45,7 @@
       <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <view id="tester">
-      <page>/adfemg/tftester/pages/tester.jsf</page>
+      <page>/adfemg/tftester/pages/tester.jspx</page>
     </view>
     <task-flow-call id="testTaskFlowCall">
       <dynamic-task-flow-reference>#{pageFlowScope.TaskFlowTester.runTaskFlowId}</dynamic-task-flow-reference>

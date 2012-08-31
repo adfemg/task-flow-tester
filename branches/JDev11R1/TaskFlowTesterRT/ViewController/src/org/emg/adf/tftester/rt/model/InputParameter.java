@@ -3,7 +3,8 @@ package org.emg.adf.tftester.rt.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
+import oracle.adf.controller.internal.metadata.TaskFlowInputParameter;
+//import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
 
 
 public class InputParameter

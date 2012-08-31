@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<f:view xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
-        xmlns:c="http://java.sun.com/jsp/jstl/core">
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:af="http://xmlns.oracle.com/adf/faces/rich">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
   <af:document title="ADF EMG Task Flow Tester" id="d1">
     <af:form id="f1">
       <af:panelSplitter id="ps2" orientation="vertical" splitterPosition="26">
@@ -39,7 +42,7 @@
                                   <af:showPopupBehavior popupId="p3" align="afterEnd" alignId="ctb1"/>
                                 </af:commandToolbarButton>
                                 <af:popup childCreation="immediate" autoCancel="disabled" id="p3"
-                                          contentDelivery="immediate" resetEditableValues="whenCanceled">
+                                          contentDelivery="immediate" >
                                   <af:dialog id="d4" title="Add Test Task Flow"
                                              dialogListener="#{pageFlowScope.TaskFlowTreeController.addTaskFlowListener}">
                                     <af:panelFormLayout id="pfl6" labelAlignment="start" maxColumns="1">
@@ -184,7 +187,7 @@
                                                         value="#{InputParameterController.rawParamValue}" columns="60"
                                                         simple="true" id="it1"/>
                                           <af:iterator var="prop" value="#{row.valueObjects}" id="i2">
-                                            <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf"
+                                            <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
                                                                      id="dc1"/>
                                           </af:iterator>
                                         </af:panelGroupLayout>
@@ -292,4 +295,5 @@
       </af:panelSplitter>
     </af:form>
   </af:document>
-</f:view>
+  </f:view>
+</jsp:root>
