@@ -8,9 +8,6 @@
       <class>org.emg.adf.tftester.rt.controller.bean.TaskFlowTester</class>
       <required/>
     </input-parameter-definition>
-    <view id="returnPage">
-      <page>/adfemg/tftester/pages/returnPage.jsff</page>
-    </view>
     <task-flow-call id="testTaskFlowCall">
       <dynamic-task-flow-reference>#{pageFlowScope.TaskFlowTester.runTaskFlowId}</dynamic-task-flow-reference>
       <input-parameter-map>#{pageFlowScope.TaskFlowTester.runParamMap}</input-parameter-map>
@@ -21,12 +18,6 @@
       </return-value>
       <after-listener>#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}</after-listener>
     </task-flow-call>
-    <control-flow-rule id="__3">
-      <from-activity-id>testTaskFlowCall</from-activity-id>
-      <control-flow-case id="__8">
-        <to-activity-id>returnPage</to-activity-id>
-      </control-flow-case>
-    </control-flow-rule>
     <use-page-fragments/>
   </task-flow-definition>
 </adfc-config>
