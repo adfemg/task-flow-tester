@@ -26,7 +26,7 @@ public class InputParameter
 
   public String getType()
   {
-    return paramDef.getType();
+    return paramDef.getType()!=null ? paramDef.getType() : "java.lang.Object";
   }
 
   public boolean isRequired()

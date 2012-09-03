@@ -340,7 +340,7 @@ public class ValueObject
 
   public void constructComplexValue()
   {
-    this.value = instantiateComplexType();
+    this.value = null;
     for (ValueObject pp: getValueProperties())
     {
         try
@@ -356,6 +356,10 @@ public class ValueObject
           }
           else
           {
+            if (value==null)
+            {
+              this.value = instantiateComplexType();              
+            }
             BeanWrapper bw = new BeanWrapperImpl(value);
             registerPropertyEditors(bw);
             if (bw.isWritableProperty(pp.getName()))
@@ -395,9 +399,7 @@ public class ValueObject
     else if (!isElExpressionUsed())
     {
       // convert to actucal value using spring beanwrapper to get automatic type conversions.
-      BeanWrapper beanWrapper = new BeanWrapperImpl(this);
-      registerPropertyEditors(beanWrapper);
-      beanWrapper.setPropertyValue("value", valueAsString);
+      this.value = ConverterHelperBean.convertValue(getType(), valueAsString);
     }
   }
 
