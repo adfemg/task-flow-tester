@@ -7,10 +7,30 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
-
 import javax.faces.event.ValueChangeEvent;
 
 import oracle.adf.controller.TaskFlowId;
+import oracle.adf.controller.internal.metadata.Activity;
+import oracle.adf.controller.internal.metadata.ActivityId;
+import oracle.adf.controller.internal.metadata.MetadataService;
+import oracle.adf.controller.internal.metadata.NamedParameter;
+import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
+import oracle.adf.controller.internal.metadata.ValueMapping;
+import oracle.adf.controller.internal.metadata.xml.ActivityXmlImpl;
+import oracle.adf.view.rich.context.AdfFacesContext;
+
+import oracle.xml.parser.v2.XMLElement;
+
+import org.apache.myfaces.trinidad.event.ReturnEvent;
+
+import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
+import org.emg.adf.tftester.rt.model.InputParameter;
+import org.emg.adf.tftester.rt.model.TaskFlow;
+import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
+import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
+import org.emg.adf.tftester.rt.util.JsfUtils;
+
+
 //import oracle.adf.controller.metadata.ActivityId;
 //import oracle.adf.controller.metadata.MetadataService;
 //import oracle.adf.controller.metadata.model.Activity;
@@ -20,28 +40,6 @@ import oracle.adf.controller.TaskFlowId;
 //import oracle.adf.controller.metadata.model.TaskFlowDefinition;
 //import oracle.adf.controller.metadata.model.UIInfo;
 //import oracle.adf.controller.metadata.model.ValueMapping;
-import oracle.adf.controller.internal.metadata.Activity;
-import oracle.adf.controller.internal.metadata.ActivityId;
-import oracle.adf.controller.internal.metadata.MetadataService;
-import oracle.adf.controller.internal.metadata.NamedParameter;
-import oracle.adf.controller.internal.metadata.ParsingContext;
-import oracle.adf.controller.internal.metadata.TaskFlowCall;
-import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
-import oracle.adf.controller.internal.metadata.UIInfo;
-import oracle.adf.controller.internal.metadata.ValueMapping;
-import oracle.adf.view.rich.context.AdfFacesContext;
-
-import org.apache.myfaces.trinidad.event.ReturnEvent;
-
-import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
-import org.emg.adf.tftester.rt.model.InputParameter;
-import org.emg.adf.tftester.rt.model.TaskFlow;
-import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
-import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
-import org.emg.adf.tftester.rt.model.ValueObject;
-import org.emg.adf.tftester.rt.util.JsfUtils;
-
-import org.w3c.dom.Node;
 
 
 //import oracle.adf.controller.internal.metadata.Activity;
@@ -218,26 +216,31 @@ public class TaskFlowTester
     // get return value definitions from TF that we are going to call
     Map<String, NamedParameter> returnValueDefs = getCurrentTestTaskFlow().getReturnValueDefs();
 
-    Map<String,ValueMapping> returnValueMappings = getTaskFlowCallReturnValueMappings();
+//    Map<String,ValueMapping> returnValueMappings = getTaskFlowCallReturnValueMappings();
 
     // now clear dummy returnValues that might be specified for our dynamic TF call
     // and set the return values based on definitions in test TF
     // we create the value expression to store the return values based on the name
-//    returnValueMappings.clear();
+
+    // In JDev 11.1.1.x the return value mappings map is unmodifiable, create new tf call XML node
+    // with correct return value defs
+    replaceTaskFlowCallXMLNode();
+    
     // Also set up return values map that will be populated with actual retunr values
     testReturnValues = new ArrayList<ReturnValue>();
     for (NamedParameter param : returnValueDefs.values())
     {
       String name = param.getName();
       String expression = "#{pageFlowScope."+name+"}";
-      ValueMapping vm = new ValueMappingImpl(name,expression);
-      returnValueMappings.put(param.getName(), vm);
+//      ValueMapping vm = new ValueMappingImpl(name,expression);
+//      returnValueMappings.put(param.getName(), vm);
+// makes no sense to add the return value, we cannot show the value in JDev 11.1.1.x
       testReturnValues.add(new ReturnValue(name,null,expression));
     }
     
   }
 
-  private Map<String, ValueMapping> getTaskFlowCallReturnValueMappings()
+  private void replaceTaskFlowCallXMLNode()
   {
     // now get the TF call activity and change return values to map the return value defs of the TF we are going to test
     TaskFlowId launcherTfi = getCurrentTestTaskFlow().isUsesPageFragments() ? TaskFlowId.parse(LAUNCHER_TASK_FLOW_ID) : TaskFlowId.parse(TESTER_TASK_FLOW_ID);    
@@ -250,12 +253,63 @@ public class TaskFlowTester
       if (actId.getLocalActivityId().equals("testTaskFlowCall"))
       {
         Activity act = activities.get(actId);
-        TaskFlowCall tfc = (TaskFlowCall) act.getMetadataObject();
-        returnValues = tfc.getReturnValues();
-        break;
+        XMLElement el = createTaskFlowCallXmlNode();
+        Activity actNew = ActivityXmlImpl.parse(act.getParsingContext(), el);
+        // replace the activity with the newly created activity that has correct return values
+        activities.put(actId, actNew);
       }
     }
-    return returnValues;        
+  }
+
+  /**
+   * Create TF call XML node that has the return-value definitions that match the current test task flow
+   * @return
+   */
+  private XMLElement createTaskFlowCallXmlNode()
+  {
+    XMLElement el  = new XMLElement("task-flow-call");
+    el.setAttribute("id", "testTaskFlowCall");
+    XMLElement dynref  = new XMLElement("dynamic-task-flow-reference");
+    dynref.setTextContent("#{pageFlowScope.TaskFlowTester.runTaskFlowId}");
+    el.appendChild(dynref);
+    XMLElement map  = new XMLElement("input-parameter-map");
+    map.setTextContent("#{pageFlowScope.TaskFlowTester.runParamMap}");
+    el.appendChild(map);
+    XMLElement al  = new XMLElement("after-listener");
+    al.setTextContent("#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}");
+    el.appendChild(al);
+
+    Map<String, NamedParameter> returnValueDefs = getCurrentTestTaskFlow().getReturnValueDefs();
+    for (NamedParameter param : returnValueDefs.values())
+    {
+      String name = param.getName();
+      String expression = "#{pageFlowScope."+name+"}";
+      XMLElement rv  = new XMLElement("return-value");
+      XMLElement rvname  = new XMLElement("name");
+      rvname.setTextContent(name);
+      rv.appendChild(rvname);
+      XMLElement rvvalue  = new XMLElement("value");
+      rvvalue.setTextContent(expression);
+      rv.appendChild(rvvalue);
+      el.appendChild(rv);
+    }
+    if (!getCurrentTestTaskFlow().getTaskFlowDefinition().usePageFragments())
+    {
+      // add run as dialog option
+//      <run-as-dialog>
+//        <display-type id="__10">
+//          <inline-popup/>
+//        </display-type>
+//      </run-as-dialog>
+      XMLElement rad = new XMLElement("run-as-dialog");
+      XMLElement dt = new XMLElement("display-type");
+      XMLElement ip = new XMLElement("inline-popup");
+//      XMLElement ip = new XMLElement("external-window");
+      dt.appendChild(ip);
+      rad.appendChild(dt);
+      el.appendChild(rad);
+    }
+    return el;
   }
 
   public void setCurrentTestTaskFlow(TaskFlow currentTestTaskFlow)
@@ -377,35 +431,35 @@ public class TaskFlowTester
     return testNavigationOutcome;
   }
 
-  private class ValueMappingImpl implements ValueMapping
-  {
-    String name;
-    String expression;
-
-    public ValueMappingImpl(String name, String expression)
-    {
-      this.name = name;
-      this.expression = expression;
-    }
-
-    public String getValueName()
-    {
-      return name; 
-    }
-
-    /**
-     * @return the value EL expression for this mapping
-     */
-    public String getValueExpression()
-    {
-      return expression;       
-    }
-
-    public boolean shouldPassByValue()
-    {
-      return false;
-    }
-  }
+//  private class ValueMappingImpl implements ValueMapping
+//  {
+//    String name;
+//    String expression;
+//
+//    public ValueMappingImpl(String name, String expression)
+//    {
+//      this.name = name;
+//      this.expression = expression;
+//    }
+//
+//    public String getValueName()
+//    {
+//      return name; 
+//    }
+//
+//    /**
+//     * @return the value EL expression for this mapping
+//     */
+//    public String getValueExpression()
+//    {
+//      return expression;       
+//    }
+//
+//    public boolean shouldPassByValue()
+//    {
+//      return false;
+//    }
+//  }
 
   public void populateTestReturnValues()
   {

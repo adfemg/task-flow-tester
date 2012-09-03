@@ -50,7 +50,7 @@
     <task-flow-call id="testTaskFlowCall">
       <dynamic-task-flow-reference>#{pageFlowScope.TaskFlowTester.runTaskFlowId}</dynamic-task-flow-reference>
       <input-parameter-map>#{pageFlowScope.TaskFlowTester.runParamMap}</input-parameter-map>
-      <!-- actualk return value mapping is specified at runtime when actual TF to test is known -->
+      <!-- actual return value mapping is specified at runtime when actual TF to test is known -->
       <return-value id="__7" >
         <name>dummyValue</name>
         <value>#{pageFlowScope.dummyValue}</value>
@@ -58,7 +58,7 @@
       <after-listener>#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}</after-listener>
       <run-as-dialog>
         <display-type>
-          <external-window/>
+          <inline-popup/>
         </display-type>
       </run-as-dialog>
     </task-flow-call>

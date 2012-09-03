@@ -209,6 +209,14 @@
          <hash n="Default">
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
+            <hash n="oracle.adfdt.controller.adfc.source.runner.AdfcRunnerLaunchSettings">
+               <hash n="inputParameterValues">
+                  <value n="taskFlowId" v=""/>
+               </hash>
+               <value n="taskFlowId" v="tester-tf"/>
+               <value n="unboundedTaskFlow" v="false"/>
+            </hash>
+            <url n="targetURL" path="public_html/WEB-INF/adfemg/tftester/tester-tf.xml"/>
          </hash>
       </hash>
       <list n="runConfigurationList">
