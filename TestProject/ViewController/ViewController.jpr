@@ -182,6 +182,33 @@
       <value n="j2eeWebAppName" v="TestProject-ViewController-webapp"/>
       <value n="j2eeWebContextRoot" v="TestProject-ViewController-context-root"/>
    </hash>
+   <hash n="oracle.jdeveloper.runner.RunConfigurations">
+      <hash n="runConfigurationDefinitions">
+         <hash n="Test Task Flow pagetf">
+            <value n="allowInput" v="true"/>
+            <value n="custom" v="false"/>
+            <value n="name" v="Test Task Flow pagetf"/>
+            <hash n="oracle.adfdt.controller.adfc.source.runner.AdfcRunnerLaunchSettings">
+               <hash n="inputParameterValues">
+                  <value n="taskFlowId" v="/WEB-INF/sample/sample-tf.xml#sample-tf"/>
+               </hash>
+               <value n="taskFlowId" v="tester-tf"/>
+               <value n="unboundedTaskFlow" v="false"/>
+            </hash>
+            <url n="targetURL" protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml"/>
+         </hash>
+         <hash n="Test Task Flow sample1-tf">
+            <value n="allowInput" v="true"/>
+            <value n="custom" v="false"/>
+            <value n="name" v="Test Task Flow sample1-tf"/>
+            <url n="targetURL" protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml"/>
+         </hash>
+      </hash>
+      <list n="runConfigurationList">
+         <string v="Test Task Flow pagetf"/>
+         <string v="Test Task Flow sample1-tf"/>
+      </list>
+   </hash>
    <hash n="oracle.jdevimpl.config.JProjectLibraries">
       <list n="exportedReferences">
          <hash>
@@ -253,10 +280,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Org.emg.adf.AdfTaskFlowTester.jar"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="ADF Faces Databinding Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -276,19 +299,13 @@
             <value n="id" v="Oracle JEWT"/>
             <value n="isJDK" v="false"/>
          </hash>
+         <hash>
+            <value n="id" v="ADF EMG Task Flow Tester"/>
+            <value n="isJDK" v="false"/>
+         </hash>
       </list>
       <hash n="internalDefinitions">
-         <list n="libraryDefinitions">
-            <hash>
-               <list n="classPath">
-                  <url path="../../TaskFlowTesterRT/ViewController/deploy/org.emg.adf.AdfTaskFlowTester.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="Org.emg.adf.AdfTaskFlowTester.jar"/>
-               <value n="id" v="Org.emg.adf.AdfTaskFlowTester.jar"/>
-               <value n="locked" v="true"/>
-            </hash>
-         </list>
+         <list n="libraryDefinitions"/>
       </hash>
       <list n="libraryReferences">
          <hash>
@@ -360,10 +377,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Org.emg.adf.AdfTaskFlowTester.jar"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="ADF Faces Databinding Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -385,6 +398,10 @@
          </hash>
          <hash>
             <value n="id" v="Oracle JEWT"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="ADF EMG Task Flow Tester"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -514,6 +531,16 @@
             <value n="URI" v="http://xmlns.oracle.com/dss/adf/faces"/>
             <value n="version" v="1.1"/>
          </hash>
+         <hash>
+            <value n="libraries" v="ADF Faces Components"/>
+            <value n="name" v="compLib1"/>
+            <value n="prefix" v="compLib1"/>
+            <value n="runInEditor" v="true"/>
+            <value n="showInPalette" v="true"/>
+            <value n="taglibURL" v="/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/META-INF/complib1.taglib.xml"/>
+            <value n="URI" v="/componentLib1"/>
+            <value n="version" v="2.0"/>
+         </hash>
       </list>
    </hash>
    <hash n="oracle.jdevimpl.webapp.jsp.libraries.model.ProjectTagLibraries">
@@ -563,5 +590,8 @@
             <value n="version" v="1.1"/>
          </hash>
       </list>
+   </hash>
+   <hash n="ResourceBundleOptions">
+      <list n="RegisteredResourceBundles"/>
    </hash>
 </jpr:project>
