@@ -2,11 +2,13 @@
 <adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
   <task-flow-definition id="tester-tf">
     <default-activity>tester</default-activity>
+<!--
     <input-parameter-definition id="__1">
       <name>taskFlowId</name>
       <value>#{pageFlowScope.taskFlowId}</value>
       <class>java.lang.String</class>
     </input-parameter-definition>
+-->
     <managed-bean id="__2">
       <managed-bean-name>TaskFlowTester</managed-bean-name>
       <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.TaskFlowTester</managed-bean-class>
