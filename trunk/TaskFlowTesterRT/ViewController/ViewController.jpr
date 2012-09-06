@@ -114,9 +114,14 @@
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.ant.AntConfiguration">
-      <value n="makeTarget" v="jaxb"/>
+      <value n="makeTarget" v="all"/>
       <url n="projectBuildfile" path="build/build.xml"/>
       <list n="targetList">
+         <string v="all"/>
+         <string v="clean"/>
+         <string v="compile"/>
+         <string v="copy"/>
+         <string v="deploy"/>
          <string v="init"/>
          <string v="jaxb"/>
       </list>
@@ -192,7 +197,7 @@
                   </hash>
                </list>
             </hash>
-            <url n="jarURL" path="deploy/org.emg.adf.AdfTaskFlowTester.jar"/>
+            <url n="jarURL" path="deploy/org.emg.adf.AdfTaskFlowTesterRT.jar"/>
             <hash n="libraryDependencies">
                <value n="IncludeLibrariesFromOtherContainers" v="true"/>
             </hash>
@@ -202,84 +207,9 @@
             <value n="profileClass" v="oracle.adfdt.common.deploy.impl.AdfLibraryProfile"/>
             <value n="profileName" v="AdfLibrary"/>
          </hash>
-         <hash n="TaskFlowsToTest_ViewController_webapp">
-            <hash n="appletArchives"/>
-            <hash n="appletFiles">
-               <value n="autoInclude" v="true"/>
-               <list n="selectionFilters">
-                  <string v="oracle.jdevimpl.deploy.common.JavaSelectionFilter"/>
-               </list>
-            </hash>
-            <hash n="archiveOptions">
-               <value n="hasManifest" v="false"/>
-            </hash>
-            <value n="enterpriseAppName" v="TaskFlowsToTest_ViewController_webapp"/>
-            <hash n="fileGroups">
-               <list n="groups">
-                  <hash>
-                     <list n="contributors">
-                        <hash>
-                           <value n="type" v="5"/>
-                        </hash>
-                     </list>
-                     <value n="displayName" v="Web Files"/>
-                     <hash n="filters">
-                        <list n="rules">
-                           <hash>
-                              <value n="DefaultFilters" v=""/>
-                           </hash>
-                        </list>
-                     </hash>
-                     <value n="internalName" v="web-files"/>
-                     <value n="type" v="1"/>
-                  </hash>
-                  <hash>
-                     <list n="contributors">
-                        <hash>
-                           <value n="type" v="2"/>
-                        </hash>
-                        <hash>
-                           <value n="type" v="7"/>
-                        </hash>
-                     </list>
-                     <value n="displayName" v="WEB-INF/classes"/>
-                     <hash n="filters">
-                        <list n="rules">
-                           <hash>
-                              <value n="DefaultFilters" v=""/>
-                           </hash>
-                        </list>
-                     </hash>
-                     <value n="internalName" v="project-output"/>
-                     <value n="targetWithinJar" v="WEB-INF/classes"/>
-                     <value n="type" v="1"/>
-                  </hash>
-                  <hash>
-                     <value n="displayName" v="WEB-INF/lib"/>
-                     <hash n="filters">
-                        <list n="rules">
-                           <hash>
-                              <value n="pattern" v="**"/>
-                           </hash>
-                        </list>
-                     </hash>
-                     <value n="internalName" v="libraries"/>
-                     <value n="targetWithinJar" v="WEB-INF/lib"/>
-                     <value n="type" v="3"/>
-                  </hash>
-               </list>
-            </hash>
-            <url n="jarURL" path="deploy/TaskFlowsToTest_ViewController_webapp.war"/>
-            <hash n="libraryDependencies">
-               <value n="IncludeLibrariesFromOtherContainers" v="true"/>
-            </hash>
-            <value n="profileClass" v="oracle.jdeveloper.deploy.war.WarProfile"/>
-            <value n="profileName" v="TaskFlowsToTest_ViewController_webapp"/>
-         </hash>
       </hash>
       <list n="profileList">
          <string v="AdfLibrary"/>
-         <string v="TaskFlowsToTest_ViewController_webapp"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
