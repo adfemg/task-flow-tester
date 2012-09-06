@@ -1,0 +1,110 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+
+<project name="ADF EMG Task Flow Tester Stage" default="stage" basedir="..">
+
+  <property file="build/build.properties"/>
+  <property file="../Runtime/build/build.properties"/>
+
+  <echo message="${oracle.home}"/>
+
+   <!--Set the classpath-->
+   <path id="classpath">
+
+      <fileset dir="${jdev.home}/jdev/extensions">
+        <include name="**/*.jar"/>
+      </fileset>
+
+      <pathelement location="${jdev.home}/ide/lib/javax-ide.jar"/>
+      <pathelement location="${jdev.home}/ide/lib/idert.jar"/>
+      <pathelement location="${jdev.home}/ide/lib/javatools.jar"/>
+      <pathelement location="${jdev.home}/lib/xml.jar"/>
+      <pathelement location="${jdev.home}/lib/xmlparserv2.jar"/>
+
+   </path>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${tft.design.output.dir}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${tft.stage.dir}"/>
+  </target>
+
+  <target name="compile" description="Compile Java source files" depends="init">
+    <javac destdir="${tft.design.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
+           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.6" target="1.6">
+      <src path="${tft.design.source.dir}"/>
+    </javac>
+  </target>
+
+   <target name="createjar" depends="compile">
+     <jar destfile="${tft.design.deploy.jar}">
+<!--
+       <metainf dir="src/META-INF" includes="extension.xml"/>
+-->
+       <!-- put the version information in the manifest file as well -->
+       <manifest>
+         <attribute name="Export-Package" value="org.emg.adf.tftester.dt.addin"/>
+         <attribute name="Require-Bundle" value="oracle.jdeveloper.common,oracle.jdeveloper.runner,oracle.adf.pageflow.dt,oracle.controller.dt,oracle.ide,oracle.ide.xmlef,oracle.ide.runner,oracle.j2ee.xml.descriptors,oracle.j2ee.server,oracle.j2ee.webapp,oracle.j2ee.webapp.runner,oracle.xmlef,oracle.xmlef-core,oracle.xmlef-swing,oracle.idert,oracle.icons,oracle.uic,oracle.javatools,oracle.javatools-nodeps,oracle.jdeveloper.java.core,oracle.javaxide,oracle.adf-controller-api,oracle.jewt-core,oracle.xml-descriptor,oracle.jgoodies-looks,oracle.ide.library,oracle.adf.pageflow.dt.runner"/>
+         <attribute name="Bundle-ClassPath" value="."/>
+         <attribute name="Bundle-Version" value="11.1.2"/>
+         <attribute name="Bundle-ManifestVersion" value="2"/>
+         <attribute name="Bundle-SymbolicName" value="org.emg.adf.taskflowtester"/>
+       </manifest>
+       <fileset dir="${tft.design.output.dir}" />
+<!--
+       <fileset dir="${tft.design.source.dir}" includes="**/*.xml"/>     
+-->
+     </jar>
+   </target>
+
+  <target name="deploy" depends="createjar">
+    <copy todir="${jdev.extensions.dir}"> 
+      <fileset dir="${tft.design.deploy.dir}"/>
+    </copy>
+  </target>
+
+  <target name="stage" depends="clean, createjar">
+
+    <!-- Build runtime ADF library first -->
+    <ant antfile="build.xml" dir="${tft.runtime.build.dir}" target="stage"/>
+
+    <replaceregexp file="${tft.design.build.dir}/bundle.xml" 
+                   match="&lt;u:version&gt;(\s*)(.*)&lt;/u:version&gt;"
+                   replace="&lt;u:version&gt;${tft.version.number}&lt;/u:version&gt;"/>
+    <replaceregexp file="${tft.design.build.dir}/center.xml" 
+                   match="&lt;version&gt;(\s*)(.*)&lt;/version&gt;"
+                   replace="&lt;version&gt;${tft.version.number}&lt;/version&gt;"/>
+    <replaceregexp file="${tft.design.build.dir}/center.xml" 
+                   match="&lt;bundle-url&gt;(\s*)(.*)&lt;/bundle-url&gt;"
+                   replace="&lt;bundle-url&gt;jhs${tft.version.number}-install.zip&lt;/bundle-url&gt;"/>
+    <copy file="${tft.design.build.dir}/bundle.xml" todir="${tft.stage.dir}/META-INF"/>
+    <copy file="${tft.design.build.dir}/center.xml" todir="${tft.stage.dir}"/>
+    <copy file="${tft.design.deploy.dir}/org.emg.adf.taskflowtester.jar" todir="${tft.stage.dir}"/>
+
+    <copy todir="${tft.stage.extension.dir}"> 
+      <fileset dir="${tft.runtime.deploy.dir}">
+         <include name="*.jar"/>
+      </fileset>
+    </copy>
+
+<!--
+    <copy todir="${tft.stage.documentation.dir}"> 
+      <fileset dir="${tft.documentation.dir}"/>
+    </copy>
+-->
+     <zip destfile="${tft.stage.dir}/adfemg-tftester-${tft.version.number}-install.zip" basedir="${tft.stage.dir}">
+       <include name="**/*.*"/>
+       <exclude name="*.zip"/>
+       <exclude name="center.xml"/>
+     </zip>  
+
+    <delete>
+      <fileset dir="${tft.stage.dir}">
+        <include name="**/.rvi"/>
+      </fileset>
+    </delete>
+  </target>
+
+</project>
