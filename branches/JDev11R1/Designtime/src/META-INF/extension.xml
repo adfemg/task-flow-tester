@@ -1,0 +1,31 @@
+<extension xmlns="http://jcp.org/jsr/198/extension-manifest"
+           id="org.emg.adf.taskflowtester"
+           version="11.1.1.6"
+           esdk-version="1.0">
+  <name>ADF EMG Task Flow Tester</name>
+  <owner>ADF Enterprise Methodology Group</owner>
+   <dependencies>
+    <import>oracle.jdeveloper.runner</import>
+    <import>oracle.adf.pageflow.dt</import>
+    <import>oracle.controller.dt</import>
+    <import>oracle.ide</import>
+    <import>oracle.ide.xmlef</import>
+    <import>oracle.ide.runner</import>
+  </dependencies>
+  <hooks>
+      <libraries xmlns="http://xmlns.oracle.com/jdeveloper/1013/jdev-libraries">
+        <library  name="ADF EMG Task Flow Tester" deployed="true" forceExtensionInitialization="true">
+            <classpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar</classpath>
+<!--
+            <docpath>oracle.jheadstart/runtime/doc/api/jhsadfrt_javadoc.zip</docpath>
+            <srcpath>oracle.jheadstart/runtime/src/jhsadfrt_source.zip</srcpath>
+-->
+        </library>    
+      </libraries>
+    <jdeveloper-hook xmlns="http://xmlns.oracle.com/jdeveloper/1013/extension">
+      <addins>
+        <addin>org.emg.adf.tftester.dt.addin.TesterAddin</addin>
+      </addins>
+    </jdeveloper-hook>
+  </hooks>
+</extension>
