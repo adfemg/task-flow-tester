@@ -10,17 +10,25 @@
    <!--Set the classpath-->
    <path id="classpath">
 
-      <fileset dir="${jdev.home}/jdev/extensions">
+      <pathelement location="${oracle.home}/ide/extensions/oracle.ide.jar"/>
+      <pathelement location="${oracle.home}/jdev/extensions/oracle.ide.library.jar"/>
+      <pathelement location="${oracle.home}/jdev/extensions/oracle.jdeveloper.runner.jar"/>
+      <pathelement location="${oracle.commons}/modules/oracle.javatools_11.1.1/javatools-nodeps.jar"/>
+      <pathelement location="${oracle.home}//ide/lib/javatools.jar"/>
+
+<!--
+      <fileset dir="${oracle.home}/jdev/extensions">
         <include name="**/*.jar"/>
       </fileset>
-
-      <pathelement location="${jdev.home}/ide/lib/javax-ide.jar"/>
-      <pathelement location="${jdev.home}/ide/lib/idert.jar"/>
-      <pathelement location="${jdev.home}/ide/lib/javatools.jar"/>
-      <pathelement location="${jdev.home}/lib/xml.jar"/>
-      <pathelement location="${jdev.home}/lib/xmlparserv2.jar"/>
-
+      <fileset dir="${oracle.home}/ide">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${oracle.commons}">
+        <include name="**/*.jar"/>
+      </fileset>
+-->
    </path>
+
 
   <target name="init">
     <tstamp/>
@@ -38,7 +46,8 @@
     </javac>
   </target>
 
-   <target name="createjar" depends="compile">
+   <target name="createjar" depends="clean, compile">
+     <mkdir dir="${tft.design.deploy.dir}"/>
      <jar destfile="${tft.design.deploy.jar}">
 <!--
        <metainf dir="src/META-INF" includes="extension.xml"/>
