@@ -1,24 +1,33 @@
 package org.emg.adf.tftester.rt.model;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
-import javax.xml.XMLConstants;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.faces.context.FacesContext;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
 import javax.xml.bind.Unmarshaller;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-
-import javax.xml.validation.SchemaFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import oracle.adf.share.logging.ADFLogger;
 
@@ -30,9 +39,19 @@ import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTesterType;
 import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowType;
 import org.emg.adf.tftester.rt.model.xml.jaxb.TestCaseType;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+
 public class TaskFlowTesterService
 {
   private List<TaskFlow> testTaskFlows = new ArrayList<TaskFlow>();
+  private Map<String, TaskFlow> testTaskFlowsMap = new HashMap<String,TaskFlow>();
   ADFLogger sLog = ADFLogger.createADFLogger(TaskFlowTesterService.class);
 
   public TaskFlowTesterService()
@@ -41,9 +60,43 @@ public class TaskFlowTesterService
     loadDefaultTestcases();
   }
 
-  public void setTestTaskFlows(List<TaskFlow> testTaskFlows)
+  public TaskFlow addTaskFlow(String taskFlowId, String displayName, boolean throwError, boolean returnExisting)
   {
-    this.testTaskFlows = testTaskFlows;
+    boolean exists = testTaskFlowsMap.containsKey(taskFlowId);
+    if (exists)
+    {
+      if (returnExisting)
+      {
+        return testTaskFlowsMap.get(taskFlowId);        
+      }
+      else if (throwError)
+      {
+        throw new JboException("Task flow with this id already exists.");
+      }
+      else
+      {
+        return null;
+      }
+    }
+    TaskFlow tf = new TaskFlow();
+    tf.setTaskFlowIdString(taskFlowId);
+    try
+    {
+      tf.getTaskFlowDefinition();
+      tf.setDisplayName(displayName);    
+      // call getDisplayName as final test, will throw NPE when task flow path is OK but id after # is wrong
+      tf.getDisplayName();
+      getTestTaskFlows().add(tf);       
+      testTaskFlowsMap.put(taskFlowId, tf);
+    }
+    catch (Exception e)
+    {
+      if (throwError)
+      {
+        throw new JboException("Invalid task flow id");        
+      }
+    }
+    return tf;
   }
 
   public List<TaskFlow> getTestTaskFlows()
@@ -65,7 +118,8 @@ public class TaskFlowTesterService
     }
     catch (Exception exc)
     {
-      throw new JboException("Error importing testcases from XML: " + exc.getMessage());
+      throw new JboException("Error importing testcases from XML: " +
+                             exc.getMessage());
     }
     // create bean model from jaxbmodel
   }
@@ -95,8 +149,11 @@ public class TaskFlowTesterService
         {
           for (Object jaxbVoObject: jaxbTc.getParamValueObject())
           {
-            ParamValueObjectType jaxbVo = (ParamValueObjectType) jaxbVoObject;
-            ValueObject vo = new ValueObject(jaxbVo.getName(), jaxbVo.getClassName(), null, false);
+            ParamValueObjectType jaxbVo =
+              (ParamValueObjectType) jaxbVoObject;
+            ValueObject vo =
+              new ValueObject(jaxbVo.getName(), jaxbVo.getClassName(),
+                              null, false);
             tc.getParamValueObjects().add(vo);
             String value = jaxbVo.getValueAsString();
             if (value != null && !"".equals(value))
@@ -115,15 +172,18 @@ public class TaskFlowTesterService
     }
   }
 
-  private void addNestedValueObjects(ValueObject vo, ParamValueObjectType jaxbVo)
+  private void addNestedValueObjects(ValueObject vo,
+                                     ParamValueObjectType jaxbVo)
   {
     if (jaxbVo.getParamValueObject() != null)
     {
       for (Object jaxbDetailVoObject: jaxbVo.getParamValueObject())
       {
-        ParamValueObjectType jaxbDetailVo = (ParamValueObjectType) jaxbDetailVoObject;
+        ParamValueObjectType jaxbDetailVo =
+          (ParamValueObjectType) jaxbDetailVoObject;
         ValueObject detailVo =
-          new ValueObject(jaxbDetailVo.getName(), jaxbDetailVo.getClassName(), vo, vo.isMapType());
+          new ValueObject(jaxbDetailVo.getName(), jaxbDetailVo.getClassName(),
+                          vo, vo.isMapType());
         vo.getValueProperties().add(detailVo);
         String value = jaxbDetailVo.getValueAsString();
         if (value != null && !"".equals(value))
@@ -153,7 +213,8 @@ public class TaskFlowTesterService
     //      Source source = new StreamSource(stream);
     //      Schema schema = factory.newSchema(source);
     //      u.setSchema(schema);
-    TaskFlowTesterType tftester = (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+    TaskFlowTesterType tftester =
+      (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
     return tftester;
   }
 
@@ -197,13 +258,15 @@ public class TaskFlowTesterService
     return root;
   }
 
-  private void addNestedParamValues(ObjectFactory factory, ValueObject vo, ParamValueObjectType jaxbVo)
+  private void addNestedParamValues(ObjectFactory factory, ValueObject vo,
+                                    ParamValueObjectType jaxbVo)
   {
     if (vo.getValueProperties() != null)
     {
       for (ValueObject detailVo: vo.getValueProperties())
       {
-        ParamValueObjectType jaxbDetailVo = factory.createParamValueObject();
+        ParamValueObjectType jaxbDetailVo =
+          factory.createParamValueObject();
         jaxbDetailVo.setName(detailVo.getName());
         jaxbDetailVo.setClassName(detailVo.getClassName());
         jaxbDetailVo.setValueAsString(detailVo.getValueAsString());
@@ -242,7 +305,8 @@ public class TaskFlowTesterService
       //      else
       //      {
       StringWriter sw = new StringWriter();
-      m.marshal(taskFlows, sw); // new FileOutputStream("c:/temp/appstruct-test.xml"));
+      m.marshal(taskFlows,
+                sw); // new FileOutputStream("c:/temp/appstruct-test.xml"));
       output = sw.toString();
       //      }
 
@@ -254,14 +318,33 @@ public class TaskFlowTesterService
     return output;
   }
 
+  /**
+   * Load all task flows and testcases that are defined in adf-emg-task-flow-tester.xml on the classpath.
+   * If multiple files are found, they will all be loaded, unless the task flow or testcase is already in the list.
+   */
   private void loadDefaultTestcases()
   {
-    InputStream stream =
-      Thread.currentThread().getContextClassLoader().getResourceAsStream("adf-emg-task-flow-tester.xml");
-    if (stream != null)
+    try
     {
-      String xml = convertStreamToString(stream, "UTF-8");
-      importFromXml(xml);
+      Enumeration<URL> enump =
+        Thread.currentThread().getContextClassLoader().getResources("adf-emg-task-flow-tester.xml");
+      while (enump.hasMoreElements())
+      {
+        try
+        {
+          URL url = enump.nextElement();
+          InputStream stream = url.openStream();
+          String xml = convertStreamToString(stream, "UTF-8");
+          importFromXml(xml);
+        }
+        catch (IOException e)
+        {          
+          // we catch IO exception here as well, so we go to next resource
+        }
+      }
+    }
+    catch (IOException e)
+    {
     }
   }
 
@@ -274,11 +357,13 @@ public class TaskFlowTesterService
    * @param encoding
    * @return
    */
-  private String convertStreamToString(java.io.InputStream is, String encoding)
+  private String convertStreamToString(java.io.InputStream is,
+                                       String encoding)
   {
     try
     {
-      return new java.util.Scanner(is, encoding).useDelimiter("\\A").next();
+      return new java.util.Scanner(is,
+                                   encoding).useDelimiter("\\A").next();
     }
     catch (java.util.NoSuchElementException e)
     {
@@ -293,4 +378,184 @@ public class TaskFlowTesterService
     System.err.println(s.exportToXML());
   }
 
+  public void loadTaskFlowsFromClassPath(String startDir, boolean recurseInSubDirs,
+                                boolean searchAdfLibs)
+  {
+    List<String> taskFlows = new ArrayList<String>();
+    addLocalTaskFlows(taskFlows, startDir, recurseInSubDirs);
+    if (searchAdfLibs)
+    {
+      addAdfLibraryTaskFlows(taskFlows);
+    }
+    // loop over discovered task flow id's, and call addTaskFlow
+    // In addTaskFlow we check whether the atask flow is already added
+    for (String taskFlowId : taskFlows)
+    {
+      addTaskFlow(taskFlowId, null, false, false);
+    }
+  }
+
+  private void addAdfLibraryTaskFlows(List<String> taskflows)
+  {
+    try
+    {
+      DocumentBuilderFactory dbFactory =
+        DocumentBuilderFactory.newInstance();
+      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      Enumeration<URL> enump =
+        Thread.currentThread().getContextClassLoader().getResources("META-INF/task-flow-registry.xml");
+      while (enump.hasMoreElements())
+      {
+        try
+        {
+          URL url = enump.nextElement();
+          InputStream is = url.openStream();
+          Document doc = dBuilder.parse(is);
+          NodeList tfList =
+            doc.getDocumentElement().getElementsByTagName("task-flow-descriptor");
+          for (int i = 0; i < tfList.getLength(); i++)
+          {
+            Element tf = (Element) tfList.item(i);
+            String path = tf.getAttribute("path");
+            String id = tf.getAttribute("id");
+            String tfId = path + "#" + id;
+            String type = tf.getAttribute("type");
+            String internal = tf.getAttribute("library-internal");
+            if ("task-flow-definition".equals(type) &&
+                "false".equals(internal))
+            {
+              taskflows.add(tfId);
+            }
+          }
+        }
+        catch (SAXException e)
+        {
+          // ignore errors, continue with next tf registry file
+        }
+      }
+    }
+    catch (IOException e)
+    {
+      //
+    }
+    catch (ParserConfigurationException e)
+    {
+    }
+  }
+
+  public void addLocalTaskFlows(List<String> taskFlows, String startDir,
+                                boolean recursive)
+  {
+    Set<String> set =
+      FacesContext.getCurrentInstance().getExternalContext().getResourcePaths(startDir);
+    if (set==null)
+    {
+      return;
+    }
+    for (String resourcePath: set)
+    {
+      if (resourcePath.endsWith(".xml"))
+      {
+        addTaskFlowIdFromResourcePath(taskFlows, resourcePath);
+      }
+      else
+      {
+        try
+        {
+          URL url =
+            FacesContext.getCurrentInstance().getExternalContext().getResource(resourcePath);
+          File file = new File(url.toURI());
+          if (file.isDirectory() && recursive)
+          {
+            addLocalTaskFlows(taskFlows, resourcePath, recursive);
+          }
+        }
+        catch (MalformedURLException e)
+        {
+        }
+        catch (URISyntaxException e)
+        {
+        }
+      }
+    }
+  }
+
+  private void addTaskFlowIdFromResourcePath(List<String> taskFlows,
+                                             String resourcePath)
+  {
+    TaskFlowXMLHandler handler = null;
+    try
+    {
+      InputStream is =
+        FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(resourcePath);
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser saxParser = factory.newSAXParser();
+      handler = new TaskFlowXMLHandler();
+      saxParser.parse(is, handler);
+    }
+    catch (ParserConfigurationException e)
+    {
+    }
+    catch (SAXException e)
+    {
+    }
+    catch (IOException e)
+    {
+    }
+    if (handler != null && handler.getTaskFlowId() != null)
+    {
+      String path = resourcePath+"#"+handler.getTaskFlowId();
+      taskFlows.add(path);
+    }
+  }
+
+  /**
+   * private class to parse an XML document and check whether it is a bounded task flow definition.
+   * We use the Sax parser to increase performance and reduce memory usage because
+   * we might very large xml files.
+   */
+  class TaskFlowXMLHandler
+    extends DefaultHandler
+  {
+    int elcount = 0;
+    String taskFlowId;
+
+    public void startDocument()
+    {
+      elcount = 0;
+      taskFlowId = null;
+    }
+
+    public String getTaskFlowId()
+    {
+      return taskFlowId;
+    }
+
+    public void startElement(String uri, String localName, String qName,
+                             Attributes attributes)
+      throws SAXException
+    {
+      elcount++;
+      if (elcount == 2 && qName.equalsIgnoreCase("task-flow-definition"))
+      {
+        taskFlowId = attributes.getValue("", "id");
+      }
+      // task-flow-definition is second element, so always stop prcoessing now
+      if (elcount == 2)
+      {
+        throw new SAXException("done");
+      }
+    }
+
+    public void endElement(String uri, String localName, String qName)
+      throws SAXException
+    {
+
+    }
+
+    public void characters(char[] ch, int start, int length)
+      throws SAXException
+    {
+    }
+  }
 }

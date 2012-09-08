@@ -200,7 +200,7 @@
   </path>
   <target name="init">
     <tstamp/>
-    <mkdir dir="${output.dir}"/>
+    <mkdir dir="${tft.runtime.output.dir}"/>
   </target>
   <target name="all" description="Build the project" depends="deploy,compile,copy"/>
   <target name="clean" description="Clean the project">
@@ -209,7 +209,7 @@
     </delete>
   </target>
 
-  <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile">
+  <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile,  sourcezipfile">
     <taskdef name="ojdeploy" classname="oracle.jdeveloper.deploy.ant.OJDeployAntTask" uri="oraclelib:OJDeployAntTask"
              classpath="${oracle.jdeveloper.ant.library}"/>
     <ora:ojdeploy xmlns:ora="oraclelib:OJDeployAntTask" executable="${oracle.jdeveloper.ojdeploy.path}"        
@@ -225,10 +225,22 @@
     </ora:ojdeploy>
   </target>
 
+   <target name="sourcezipfile" depends="init">
+     <!-- create the output directory if it doesn't exist-->
+     <mkdir dir="${tft.runtime.deploy.dir}"/>
+     <!-- zip up all the sources and place them with the jarfile in the deployment directory --> 
+     <zip destfile="${tft.runtime.deploy.src.zip}" basedir="../src">
+       <include name="**/*.properties"/>
+       <include name="**/*.java"/>
+       <include name="**/*.xml"/>
+     </zip>  
+   </target>
+
   <target name="deploy" depends="stage">
     <copy todir="${tft.extensions.dir}"> 
       <fileset dir="${tft.runtime.deploy.dir}">
          <include name="*.jar"/>
+         <include name="*.zip"/>
       </fileset>
     </copy>
   </target>

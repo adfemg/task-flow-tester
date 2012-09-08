@@ -76,9 +76,9 @@
       <libraries xmlns="http://xmlns.oracle.com/jdeveloper/1013/jdev-libraries">
         <library  name="ADF EMG Task Flow Tester" deployed="true" forceExtensionInitialization="true">
             <classpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar</classpath>
+            <srcpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT-src.zip</srcpath>
 <!--
             <docpath>oracle.jheadstart/runtime/doc/api/jhsadfrt_javadoc.zip</docpath>
-            <srcpath>oracle.jheadstart/runtime/src/jhsadfrt_source.zip</srcpath>
 -->
         </library>    
       </libraries>
