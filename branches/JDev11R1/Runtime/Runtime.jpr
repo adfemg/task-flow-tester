@@ -101,13 +101,16 @@
    </hash>
    <hash n="oracle.jdeveloper.compiler.ant.AntConfiguration">
       <value n="makeTarget" v="all"/>
-      <url n="projectBuildfile" path="build.xml"/>
+      <url n="projectBuildfile" path="build/build.xml"/>
       <list n="targetList">
          <string v="all"/>
          <string v="clean"/>
          <string v="compile"/>
          <string v="copy"/>
          <string v="deploy"/>
+         <string v="init"/>
+         <string v="jaxb"/>
+         <string v="stage"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">

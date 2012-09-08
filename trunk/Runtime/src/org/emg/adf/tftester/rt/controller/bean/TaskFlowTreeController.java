@@ -6,15 +6,14 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import oracle.adf.view.rich.component.rich.data.RichTree;
 import oracle.adf.view.rich.event.DialogEvent;
+
+import oracle.jbo.JboException;
 
 import org.apache.myfaces.trinidad.event.SelectionEvent;
 import org.apache.myfaces.trinidad.model.ChildPropertyMenuModel;
 import org.apache.myfaces.trinidad.model.MenuModel;
-
 import org.apache.myfaces.trinidad.model.RowKeySet;
-
 import org.apache.myfaces.trinidad.model.RowKeySetImpl;
 
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
@@ -65,15 +64,9 @@ public class TaskFlowTreeController
   {
     if (dialogEvent.getOutcome()==DialogEvent.Outcome.ok)
     {
-      TaskFlow tf = new TaskFlow();
-      tf.setTaskFlowIdString(getTaskFlowId());
       try
       {
-        tf.getTaskFlowDefinition();
-        tf.setDisplayName(getDisplayName());    
-        // call getDisplayName as final test, will throw NPE when task flow path is OK but id after # is wrong
-        tf.getDisplayName();
-        taskFlowTesterService.getTestTaskFlows().add(tf);               
+        TaskFlow tf = taskFlowTesterService.addTaskFlow(getTaskFlowId(), getDisplayName(),true, false);              
         TaskFlowTester.getInstance().refreshTreeArea();
         int count = taskFlowTesterService.getTestTaskFlows().size();
         List keys = new ArrayList();
@@ -84,10 +77,10 @@ public class TaskFlowTreeController
         setSelectedRowKeySet(rksSelected);
         TaskFlowTester.getInstance().setCurrentTestTaskFlow(tf);
       }
-      catch (Exception e)
+      catch (JboException e)
       {
         UIComponent tfiInput = JsfUtils.findComponent(dialogEvent.getComponent(), "tfiInput");
-        JsfUtils.addError(tfiInput.getClientId(FacesContext.getCurrentInstance()), "Invalid Task Flow Id");
+        JsfUtils.addError(tfiInput.getClientId(FacesContext.getCurrentInstance()), e.getMessage());
         JsfUtils.setInputFocus(tfiInput.getClientId(FacesContext.getCurrentInstance()));
       }
     }
