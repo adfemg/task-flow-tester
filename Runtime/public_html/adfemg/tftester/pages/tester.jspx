@@ -40,6 +40,13 @@
                               <f:facet name="menuBar"/>
                               <f:facet name="toolbar">
                                 <af:toolbar id="t2">
+                                  <af:commandToolbarButton icon="/adfemg/images/loaddata.png"
+                                                           shortDesc="Load Test Task Flows from Classpath"
+                                                           id="ctb16"
+                                                           immediate="true"
+                                                           partialSubmit="true"
+                                                           actionListener="#{viewScope.TaskFlowLoader.load}">
+                                  </af:commandToolbarButton>
                                   <af:commandToolbarButton icon="/adfemg/images/addRow.png"
                                                            shortDesc="Add Test Task Flow"
                                                            id="ctb1"
