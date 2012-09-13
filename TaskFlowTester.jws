@@ -1,5 +1,8 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <jws:workspace xmlns:jws="http://xmlns.oracle.com/ide/project">
+   <hash n="adrs-workspace-properties">
+      <value n="adrs-instance-binding" v="DefaultServer"/>
+   </hash>
    <value n="application-package-prefix" v="org.emg.adf.tftester"/>
    <value n="appTemplateId" v="#genericApplicationTemplate"/>
    <hash n="component-versions">

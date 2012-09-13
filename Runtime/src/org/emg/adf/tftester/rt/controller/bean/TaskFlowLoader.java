@@ -3,13 +3,14 @@ package org.emg.adf.tftester.rt.controller.bean;
 import javax.faces.event.ActionEvent;
 
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
+import org.emg.adf.tftester.rt.model.TaskFlow;
 
 
 public class TaskFlowLoader
 {
   private String startDir = "/WEB-INF/";
   private boolean recurseInSubDirs = true;
-  private boolean searchAdfLibs = true;
+  private boolean searchAdfLibs = false;
 
   public TaskFlowLoader()
   {
@@ -48,8 +49,10 @@ public class TaskFlowLoader
   
   public void load(ActionEvent event)
   {
-    TaskFlowTesterServiceFactory.getInstance().loadTaskFlowsFromClassPath(getStartDir(), isRecurseInSubDirs(), isSearchAdfLibs());
-    TaskFlowTester.getInstance().refreshTreeArea();
+    TaskFlowTesterServiceFactory.getInstance().loadAvailableTaskFlows(getStartDir(), isRecurseInSubDirs(), isSearchAdfLibs());
+    TaskFlowTester tester = TaskFlowTester.getInstance();    
+    tester.refreshTreeArea();
+    tester.setCurrentTestTaskFlowIfNeeded();
   }
 
 }
