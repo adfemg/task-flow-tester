@@ -378,7 +378,7 @@ public class TaskFlowTesterService
     System.err.println(s.exportToXML());
   }
 
-  public void loadTaskFlowsFromClassPath(String startDir, boolean recurseInSubDirs,
+  public void loadAvailableTaskFlows(String startDir, boolean recurseInSubDirs,
                                 boolean searchAdfLibs)
   {
     List<String> taskFlows = new ArrayList<String>();
