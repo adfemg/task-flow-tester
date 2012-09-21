@@ -6,6 +6,9 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import javax.faces.event.ActionEvent;
+
+import oracle.adf.view.rich.component.rich.data.RichTree;
 import oracle.adf.view.rich.event.DialogEvent;
 
 import oracle.jbo.JboException;
@@ -18,6 +21,7 @@ import org.apache.myfaces.trinidad.model.RowKeySetImpl;
 
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
 import org.emg.adf.tftester.rt.model.TaskFlow;
+import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
@@ -28,7 +32,7 @@ public class TaskFlowTreeController
   private String displayName;
 
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
-  RowKeySet selectedRowKeySet = new RowKeySetImpl();
+  RowKeySet selectedRowKeySet;
 
   public TaskFlowTreeController()
   {
@@ -86,14 +90,20 @@ public class TaskFlowTreeController
     }
   }
 
+  /**
+   * Return the rowkey set of the selected task flow or testcase.
+   * Returns the first task flow by default
+   * @return
+   */
   public RowKeySet getSelectedRowKeySet()
   {
-    List keys = new ArrayList();
-    // first add key of parent region, then country id!!
-    keys.add(new Integer(0));
-    RowKeySet rksSelected = new RowKeySetImpl();
-    rksSelected.add(keys);
-//    return rksSelected;
+    if (selectedRowKeySet==null)
+    {
+      List keys = new ArrayList();
+      keys.add(new Integer(0));
+      selectedRowKeySet = new RowKeySetImpl();
+      selectedRowKeySet.add(keys);      
+    }
     return selectedRowKeySet;
   }
 
@@ -111,4 +121,5 @@ public class TaskFlowTreeController
   {
     this.selectedRowKeySet = selectedRowKeySet;
   }
+
 }

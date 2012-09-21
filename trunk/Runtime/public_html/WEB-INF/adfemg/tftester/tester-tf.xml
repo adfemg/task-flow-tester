@@ -76,5 +76,8 @@
         <to-activity-id>testTaskFlowCall</to-activity-id>
       </control-flow-case>
     </control-flow-rule>
+    <visibility>
+      <library-internal/>
+    </visibility>
   </task-flow-definition>
 </adfc-config>

@@ -84,6 +84,7 @@
    </hash>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
+         <string v="Ant"/>
          <string v="ExtensionDT"/>
          <string v="Java"/>
          <string v="XML"/>
@@ -193,6 +194,20 @@
    <hash n="oracle.jdeveloper.model.J2eeSettings">
       <value n="j2eeWebAppName" v="TaskFlowTester-TFTester-webapp"/>
       <value n="j2eeWebContextRoot" v="TaskFlowTester-TFTester-context-root"/>
+   </hash>
+   <hash n="oracle.jdeveloper.runner.RunConfigurations">
+      <hash n="runConfigurationDefinitions">
+         <hash n="Task Flow Tester">
+            <value n="allowInput" v="true"/>
+            <value n="custom" v="false"/>
+            <value n="name" v="Task Flow Tester"/>
+            <url n="targetURL" protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml"/>
+         </hash>
+      </hash>
+      <list n="runConfigurationList">
+         <string v="Default"/>
+         <string v="Task Flow Tester"/>
+      </list>
    </hash>
    <hash n="oracle.jdevimpl.config.JProjectLibraries">
       <list n="exportedReferences">
