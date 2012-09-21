@@ -1,57 +1,68 @@
 <extension xmlns="http://jcp.org/jsr/198/extension-manifest"
            id="org.emg.adf.taskflowtester"
-           version="11.1.2.0"
+           version="11.1.2.1.7"
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
    <dependencies>
-    <import>oracle.jdeveloper.common</import>
-    <import>oracle.jdeveloper.runner</import>
+<!--
     <import>oracle.adf.pageflow.dt</import>
+    <import>oracle.adf.pageflow.dt.runner</import>    
+    <import>oracle.adf.pageflow.dt.debug</import>    
     <import>oracle.controller.dt</import>
-    <import>oracle.ide</import>
-    <import>oracle.ide.xmlef</import>
-    <import>oracle.ide.runner</import>
     <import>oracle.j2ee.xml.descriptors</import>
     <import>oracle.j2ee.server</import>
     <import>oracle.j2ee.webapp</import>
     <import>oracle.j2ee.webapp.runner</import>
-    </dependencies>
+    <import>oracle.adf.controller.dt</import>    
+    <import>oracle.adf.controller.config.dt</import>    
+    <import>oracle.adf.controller.deploy.dt</import>    
+    <import>oracle.j2ee.webapp.runner</import>        
+    <import>oracle.j2ee.jstl</import>        
+-->
+    <import>oracle.ide</import>
+    <import>oracle.ide.runner</import>
+    <import>oracle.ide.xmlef</import>
+    <import>oracle.jdeveloper.common</import>
+    <import>oracle.jdeveloper.runner</import>
+    <import>oracle.jdeveloper.runner.core</import>
+    <import>oracle.ide.library.navigator</import>    
+
+</dependencies>
    <required-bundles>
-    <bundle>oracle.ide</bundle>
+<!--
     <bundle>oracle.xmlef</bundle>
     <bundle>oracle.xmlef-core</bundle>
     <bundle>oracle.xmlef-swing</bundle>
-    <bundle>oracle.idert</bundle>
     <bundle>oracle.icons</bundle>
     <bundle>oracle.uic</bundle>
-    <bundle>oracle.javatools</bundle>
-    <bundle>oracle.javatools-nodeps</bundle>
-    <bundle>oracle.jdeveloper.java.core</bundle>
-    <bundle>oracle.javaxide</bundle>
     <bundle>oracle.adf-controller-api</bundle>
     <bundle>oracle.jewt-core</bundle>
     <bundle>oracle.xml-descriptor</bundle>
     <bundle>oracle.jgoodies-looks</bundle>
-    <bundle>oracle.ide.library</bundle>    
     <bundle>oracle.adf.pageflow.dt</bundle>    
     <bundle>oracle.adf.pageflow.dt.runner</bundle>    
-   </required-bundles>
-   
-  <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
-    <rules>
-    <rule id="context-has-tf-node" type="context-has-node" >
-      <parameters>
-        <param name="node-class" value="oracle.adfdt.controller.adfc.source.navigator.AdfcConfigNode"/>
-      </parameters>        
-    </rule>
-    <rule id="on-adf-faces-init" type="on-extension-init" >
-      <parameters>
-        <param name="extension-id" value="oracle.adf-faces-dt"/>
-      </parameters>        
-    </rule>
+    <bundle>oracle.adf.controller.dt</bundle>    
+    <bundle>oracle.adf.controller.config.dt</bundle>    
+    <bundle>oracle.adf.controller.deploy.dt</bundle>    
+    <bundle>oracle.adf.pageflow.dt.debug</bundle>    
+    <bundle>oracle.j2ee.webapp.runner</bundle>        
+    <bundle>oracle.j2ee.jstl</bundle>        
+-->
+    <bundle>oracle.jdeveloper.java.core</bundle>
+    <bundle>oracle.ide</bundle>
+    <bundle>oracle.javaxide</bundle>
+    <bundle>oracle.idert</bundle>
+    <bundle>oracle.javatools</bundle>
+    <bundle>oracle.javatools-nodeps</bundle>
+    <bundle>oracle.jdeveloper.runner</bundle>
+    <bundle>oracle.jdeveloper.runner.core</bundle>
+    <bundle>oracle.ide.library</bundle>    
+    <bundle>oracle.ide.library.navigator</bundle>    
+</required-bundles>
 
-    </rules>
+  <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
+
     <triggers>
 
 <!--

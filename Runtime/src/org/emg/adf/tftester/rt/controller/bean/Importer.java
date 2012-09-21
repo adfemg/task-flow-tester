@@ -58,6 +58,7 @@ public class Importer
       taskFlowTesterService.importFromXml(xml);
       getPopup().hide();      
       TaskFlowTester.getInstance().refreshTreeArea();
+      TaskFlowTester.getInstance().setCurrentTestTaskFlowIfNeeded();
     }
     catch (JboException e)
     {

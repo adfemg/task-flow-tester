@@ -37,15 +37,43 @@
                               <f:facet name="menuBar"/>
                               <f:facet name="toolbar">
                                 <af:toolbar id="t2">
-                                   <af:commandToolbarButton icon="/adfemg/images/loaddata.png"
-                                                           shortDesc="Load Test Task Flows from Classpath"
+                                  <af:commandToolbarButton icon="/adfemg/images/loaddata.png"
+                                                           shortDesc="Load available task flows"
                                                            id="ctb16"
                                                            immediate="true"
-                                                           partialSubmit="true"
-                                                           actionListener="#{viewScope.TaskFlowLoader.load}">
+                                                           partialSubmit="true">
+                                    <af:showPopupBehavior popupId="p4"/>
                                   </af:commandToolbarButton>
-                                 <af:commandToolbarButton icon="/adfemg/images/addRow.png"
-                                                           shortDesc="Add Test Task Flow"
+                                  <af:popup id="p4">
+                                    <af:dialog id="d5"
+                                               title="Load Available Task Flows"
+                                               type="cancel">
+                                      <af:panelFormLayout id="pfl3"
+                                                          maxColumns="1"
+                                                          rows="1">
+                                        <f:facet name="footer"/>
+                                        <af:inputText label="Load from Directory"
+                                                      id="it11"
+                                                      value="#{viewScope.TaskFlowLoader.startDir}"/>
+                                        <af:selectBooleanCheckbox label="Recurse into Sub-Directories?"
+                                                                  id="sbc1"
+                                                                  value="#{viewScope.TaskFlowLoader.recurseInSubDirs}"/>
+                                        <af:selectBooleanCheckbox label="Load from ADF Libraries?"
+                                                                  id="sbc2"
+                                                                  value="#{viewScope.TaskFlowLoader.searchAdfLibs}"/>
+                                      </af:panelFormLayout>
+                                      <f:facet name="buttonBar">
+                                        <af:panelGroupLayout id="pgl5"
+                                                             halign="right">
+                                          <af:commandButton text="OK"
+                                                            id="cb7"
+                                                            actionListener="#{viewScope.TaskFlowLoader.load}"/>
+                                        </af:panelGroupLayout>
+                                      </f:facet>
+                                    </af:dialog>
+                                  </af:popup>
+                                  <af:commandToolbarButton icon="/adfemg/images/addRow.png"
+                                                           shortDesc="Add test task flow"
                                                            id="ctb1"
                                                            immediate="true"
                                                            partialSubmit="true">
@@ -141,32 +169,59 @@
                               <f:facet name="statusbar"/>
                               <af:tree initiallyExpanded="true" var="node"
                                        value="#{pageFlowScope.TaskFlowTreeController.menuModel}"
-                                       id="tree"
+                                       id="tree"  contextMenuSelect="true"
                                        selectedRowKeys="#{pageFlowScope.TaskFlowTreeController.selectedRowKeySet}"
-                                       rowSelection="single"
+                                       rowSelection="single"   
                                        selectionListener="#{pageFlowScope.TaskFlowTreeController.treeNodeSelected}">
                                 <f:facet name="nodeStamp">
-                                  <af:group>
-                                    <af:commandLink text="#{node.name}"
-                                                    id="selectTF"
+                                  <af:switcher facetName="#{node.class.name}">
+<!--
+                                    <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
+                                        <af:panelGroupLayout id="pgl6">
+                                          <af:image  source="/adfemg/images/taskflow.png"
+                                               inlineStyle="margin-right:3px; vertical-align:middle;"     id="i3"/>                                                              
+                                          <af:outputText value="#{node.name}" shortDesc="#{node.taskFlowIdString}"
+                                                         id="ot2"/>
+                                        </af:panelGroupLayout>
+                                    </f:facet>
+-->
+                                    <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
+                                    <af:commandImageLink   text="#{node.name}"
+                                                    id="selectTF"  icon="/adfemg/images/taskflow.png"
+                                                    iconPosition="leading" shortDesc="#{node.taskFlowIdString}"
                                                     partialSubmit="true"
-                                                    rendered="#{node.class.name=='org.emg.adf.tftester.rt.model.TaskFlow'}"
                                                     immediate="true">
                                       <af:setPropertyListener type="action"
                                                               to="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow}"
                                                               from="#{node}"/>
-                                    </af:commandLink>
-                                    <af:commandLink text="#{node.name}"
-                                                    id="selectTC"
+                                    </af:commandImageLink>
+                                    </f:facet>
+                                    <f:facet name="org.emg.adf.tftester.rt.model.TaskFlowTestCase">
+                                    <af:commandImageLink text="#{node.name}" 
+                                                    id="selectTC" icon="/adfemg/images/testcase.png"
+                                                    iconPosition="leading" shortDesc="#{node.description}"
                                                     partialSubmit="true"
-                                                    rendered="#{node.class.name!='org.emg.adf.tftester.rt.model.TaskFlow'}"
                                                     immediate="true">
                                       <af:setPropertyListener type="action"
                                                               to="#{pageFlowScope.TaskFlowTester.currentTestCase}"
                                                               from="#{node}"/>
-                                    </af:commandLink>
-                                  </af:group>
+                                    </af:commandImageLink>
+                                    </f:facet>
+                                  </af:switcher>
                                 </f:facet>
+<!--
+                                <f:facet name="contextMenu">
+                                  <af:popup id="p5" childCreation="immediate" contentDelivery="immediate">
+                                    <af:menu text="menu 1" id="m1">
+                                      <af:commandMenuItem textAndAccessKey="Delete"
+                                                          id="cmi1"
+                                                          icon="/adfemg/images/deleteRow.png"
+                                                          immediate="true"
+                                                          actionListener="#{pageFlowScope.TaskFlowTreeController.deleteNode}"/>
+                                    </af:menu>
+                                  </af:popup>
+                                </f:facet>
+-->
                               </af:tree>
                             </af:panelCollection>
                           </f:facet>

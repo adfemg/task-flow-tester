@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -405,11 +407,7 @@ public class TaskFlowTester
     {
       return "Task Flow "+getCurrentTestTaskFlow().getDisplayName();
     }
-    else if (taskFlowTesterService.getTestTaskFlows().size()>0)
-    {
-      return "Select a task flow from the tree menu or add a new task flow by clicking the green plus Icon";
-    }
-    return "Add a task flow by clicking the green plus icon";
+    return "Add, load or import task flows using the iconic buttons bar";
   }
 
   public void changeRunAsOption(ValueChangeEvent valueChangeEvent)
@@ -555,6 +553,24 @@ public class TaskFlowTester
     }    
   }
 
+  @PostConstruct
+  /**
+   * If the current task flow is not yet set, set it to the first
+   * task flow in the list of available task flows
+   */
+  public void setCurrentTestTaskFlowIfNeeded()
+  {
+    if (getCurrentTestTaskFlow()==null && getTestTaskFlows().size()>0)
+    {
+       TaskFlow tf = getTestTaskFlows().get(0);
+       if (tf!=null)
+       {
+         setCurrentTestTaskFlow(tf);       
+         refreshTestArea();
+       }
+    }
+  }
+  
   public static TaskFlowTester getInstance()
   {
     return (TaskFlowTester) JsfUtils.getExpressionValue("#{pageFlowScope.TaskFlowTester}");
