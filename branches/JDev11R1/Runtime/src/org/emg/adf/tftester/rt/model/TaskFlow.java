@@ -16,11 +16,14 @@ import oracle.adf.controller.internal.metadata.TaskFlowInputParameter;
 //import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
 
 
+import oracle.adf.share.logging.ADFLogger;
+
 import oracle.jbo.JboException;
 
 public class TaskFlow
 {
   
+  private static ADFLogger sLog = ADFLogger.createADFLogger(TaskFlow.class);
   private TaskFlowDefinition taskFlowDefinition;
   private List<org.emg.adf.tftester.rt.model.InputParameter> inputParams;
   private List<TaskFlowTestCase> testCases = new ArrayList<TaskFlowTestCase>();
@@ -190,9 +193,12 @@ public class TaskFlow
         InputParameter ip = getInputParameter(vo.getName());
         if (ip==null)
         {
-          throw new JboException("Input parameter "+vo.getName()+" not found in task flow "+getTaskFlowIdString());
+          sLog.warning("Input parameter "+vo.getName()+" not found in task flow "+getTaskFlowIdString());
         }
-        ip.setValueObject(vo.clone());
+        else
+        {
+          ip.setValueObject(vo.clone());          
+        }
       }      
     }
   }

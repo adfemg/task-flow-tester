@@ -92,8 +92,8 @@ in the correct context
                               value="#{prop.name}" columns="30" id="it4"
                               simple="true"/>
                 <af:inputText label="Value" autoSubmit="true"
-                              shortDesc="#{prop.hintText}" required="true"
-                              value="#{prop.value}" columns="60" id="it5"
+                              shortDesc="#{prop.hintText}" required="false"
+                              value="#{InputParameterController.rawParamValue}" columns="60" id="it5"
                               simple="true"/>
                 <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
                                          id="dc1"/>

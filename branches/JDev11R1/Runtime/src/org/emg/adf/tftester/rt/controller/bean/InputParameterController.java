@@ -137,6 +137,11 @@ public class InputParameterController
     try
     {
       param.constructComplexValue();
+      UIComponent component = event.getComponent().getParent().getParent();
+      if (component instanceof RichPopup)
+      {
+        ((RichPopup)component).hide();
+      }
     }
     catch (JboException e)
     {
@@ -165,15 +170,18 @@ public class InputParameterController
    */
   public void classNameChanged(ValueChangeEvent event)
   {
+    ValueObject vo = getValueObject();
+    String oldType = vo.getType();
     try
     {
-      ValueObject vo = getValueObject();
       vo.setClassName((String) event.getNewValue());
+      // Set the type to same value, so that we can use map editor if type is a map
+      // or just simply enter a string value direvctly in the parameter field
+      // we need to set this before check on instantiation because map entry by default has
+      // string type causing isAssignable error
+      vo.setType(vo.getClassName());
       // check whether the class is instantiable
       vo.instantiateComplexType();
-      // instantiable class, now set the type to same value, so that we can use map editor if type is a map
-      // or just simply enter a string value direvctly in the parameter field
-      vo.setType(vo.getClassName());
       // clear existing valueProperties
       vo.getValueProperties().clear();
       // determine new value properties based on new class name
@@ -182,6 +190,7 @@ public class InputParameterController
     }
     catch (JboException e)
     {
+      vo.setType(oldType);
       // TODO: Add catch code
       DCBindingContainer bc = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
       bc.processException(e);

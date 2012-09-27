@@ -332,10 +332,14 @@ public class ValueObject
           }
           else 
           {
+             Object convertedValue = pp.getValue();
             // Spring beanwrapper does not support map 
             // we use helper bean that has all types as properties so we can still
-            // use Spring to do type conversions using registered property editors            
-            Object convertedValue = ConverterHelperBean.convertValue(pp.getType(), (String) pp.getValue());
+            // use Spring to do type conversions using registered property editors          
+            if (!pp.isElExpressionUsed() && pp.getValue() instanceof String)
+            {
+              convertedValue = ConverterHelperBean.convertValue(pp.getType(), (String) pp.getValue());
+            }
             PropertyUtils.setProperty(value, pp.getName(), convertedValue);
           }
         }
