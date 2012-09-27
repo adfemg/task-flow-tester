@@ -3,9 +3,11 @@ package org.emg.adf.tftester.rt.controller.bean;
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-
 import javax.faces.event.ValueChangeEvent;
 
+import oracle.adf.model.BindingContext;
+import oracle.adf.model.binding.DCBindingContainer;
+import oracle.adf.view.rich.component.rich.RichPopup;
 import oracle.adf.view.rich.context.AdfFacesContext;
 import oracle.adf.view.rich.event.DialogEvent;
 import oracle.adf.view.rich.event.PopupFetchEvent;
@@ -117,21 +119,34 @@ public class InputParameterController
     }
   }
 
-  public void createComplexParamValue(DialogEvent event) throws AbortProcessingException
+  public void createComplexParamValue(ActionEvent event)
   {
-    if (event.getOutcome()==DialogEvent.Outcome.ok || event.getOutcome()==DialogEvent.Outcome.yes)
+    ValueObject param = getValueObject();
+    if (param.isMapType() || !param.isComplexType())
     {
-      ValueObject param = getValueObject();
-      try
+      // refresh test area so we get a map icon and help text
+      TaskFlowTester.getInstance().refreshTestArea(false);
+      UIComponent component = event.getComponent().getParent().getParent();
+      if (component instanceof RichPopup)
       {
-        param.constructComplexValue();
+        ((RichPopup)component).hide();
       }
-      catch (JboException e)
+      return;
+    }
+    try
+    {
+      param.constructComplexValue();
+      UIComponent component = event.getComponent().getParent().getParent();
+      if (component instanceof RichPopup)
       {
-        JsfUtils.addError(null, e.getLocalizedMessage());
+        ((RichPopup)component).hide();
+      }
+    }
+    catch (JboException e)
+    {
+      JsfUtils.addError(null, e.getLocalizedMessage());
 //        DCBindingContainer container = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
 //        container.processException(e);
-      }
     }
   }
 
@@ -154,6 +169,29 @@ public class InputParameterController
    */
   public void classNameChanged(ValueChangeEvent event)
   {
-    AdfFacesContext.getCurrentInstance().addPartialTarget(event.getComponent().getParent().getParent());
+    ValueObject vo = getValueObject();
+    try
+    {
+      vo.setClassName((String) event.getNewValue());
+      if (vo.isMapEntry())
+      {
+        // In case of map, set type tp same value, sow we don't get isAssignable error
+        // because we inialized a map entry with type String
+        vo.setType(vo.getClassName());        
+      }
+      // check whether the class is instantiable
+      vo.instantiateComplexType();
+      // clear existing valueProperties
+      vo.getValueProperties().clear();
+      // determine new value properties based on new class name
+      vo.initComplexValueObject();
+      AdfFacesContext.getCurrentInstance().addPartialTarget(event.getComponent().getParent());      
+    }
+    catch (JboException e)
+    {
+      // TODO: Add catch code
+      DCBindingContainer bc = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
+      bc.processException(e);
+    }
   }
 }

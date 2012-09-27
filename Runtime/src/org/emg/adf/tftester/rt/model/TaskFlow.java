@@ -10,8 +10,7 @@ import oracle.adf.controller.metadata.MetadataService;
 import oracle.adf.controller.metadata.model.NamedParameter;
 import oracle.adf.controller.metadata.model.TaskFlowDefinition;
 import oracle.adf.controller.metadata.model.TaskFlowInputParameter;
-
-import oracle.jbo.JboException;
+import oracle.adf.share.logging.ADFLogger;
 
 
 //import oracle.adf.controller.internal.metadata.Activity;
@@ -22,6 +21,7 @@ import oracle.jbo.JboException;
 public class TaskFlow
 {
   
+  private static ADFLogger sLog = ADFLogger.createADFLogger(TaskFlow.class);
   private TaskFlowDefinition taskFlowDefinition;
   private List<org.emg.adf.tftester.rt.model.InputParameter> inputParams;
   private List<TaskFlowTestCase> testCases = new ArrayList<TaskFlowTestCase>();
@@ -191,9 +191,12 @@ public class TaskFlow
         InputParameter ip = getInputParameter(vo.getName());
         if (ip==null)
         {
-          throw new JboException("Input parameter "+vo.getName()+" not found in task flow "+getTaskFlowIdString());
+          sLog.warning("Input parameter "+vo.getName()+" not found in task flow "+getTaskFlowIdString());
         }
-        ip.setValueObject(vo.clone());
+        else
+        {
+          ip.setValueObject(vo.clone());          
+        }
       }      
     }
   }
@@ -205,6 +208,9 @@ public class TaskFlow
       ip.getValueObject().setValue(null);
       ip.getValueObject().setValueAsString(null);
       ip.getValueObject().getValueProperties().clear();
+      // reset type and class name as well
+      ip.getValueObject().setClassName(ip.getType());
+      ip.getValueObject().setType(ip.getType());
     }      
   }
   
