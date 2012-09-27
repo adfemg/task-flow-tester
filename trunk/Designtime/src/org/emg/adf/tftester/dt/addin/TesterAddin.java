@@ -63,16 +63,16 @@ public class TesterAddin
     Project prj =  Ide.getActiveProject(); 
     if (!prj.isOpen()) {
             try {
-                System.err.println("OPEN PROJECT NOW");
+//                System.err.println("OPEN PROJECT NOW");
                 prj.open();
-                System.err.println("PROJECT OPENED");                
+//                System.err.println("PROJECT OPENED");                
             } catch (IOException e) {
-                System.err.println("ERROR PROJECT OPENED: "+e.getMessage());                
+//                System.err.println("ERROR PROJECT OPENED: "+e.getMessage());                
                 
             }
         }
     else {
-        System.err.println(" PROJECT ALREADY OPEN");        
+ //       System.err.println(" PROJECT ALREADY OPEN");        
     }
     boolean exists = RunConfigurations.getRunConfigurationByName(Ide.getActiveProject(), RUN_CONFIG_NAME) !=null;
     if (exists)
@@ -87,16 +87,20 @@ public class TesterAddin
     String homeDir = Ide.getProductHomeDirectory();
     homeDir = homeDir.replace('\\', '/');
     String filePrefix = homeDir.startsWith("/") ? "file:" : "file:/";
-    String jarloc =
-      filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml";
+    // Commented out: run tester inside its own task flow
+    //      String jarloc =
+    //        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml";
+          String jarloc =
+            filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jsf";
     try
     {
       URL runUrl = new URL("jar", null, jarloc);
 //        System.err.println("ADING RUN URL: "+runUrl);
       rc.setTargetURL(runUrl);
       rc.setAllowInput(true);
-      RunConfigurations.addRunConfiguration(Ide.getActiveProject(), rc);    
-      String message =   "A run configuration named 'Task Flow Tester' has been added to the project run configurations."+ "\n" +
+      RunConfigurations.addRunConfiguration(prj, rc);   
+      RunConfigurations.setActiveRunConfiguration(prj, rc);
+      String message =   "A run configuration named 'Task Flow Tester' has been added to the project as active run configuration."+ "\n" +
       "Use this run configuration to launch the ADF EMG Task Flow Tester."
                            ;
       JOptionPane.showMessageDialog(Ide.getMainWindow(), message

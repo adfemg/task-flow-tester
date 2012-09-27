@@ -213,8 +213,8 @@
       </list>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
-      <value n="j2eeWebAppName" v="TaskFlowsToTest-ViewController-webapp"/>
-      <value n="j2eeWebContextRoot" v="TaskFlowsToTest-ViewController-context-root"/>
+      <value n="j2eeWebAppName" v="TaskFlowTesterRuntime"/>
+      <value n="j2eeWebContextRoot" v="TaskFlowTesterRuntime"/>
    </hash>
    <hash n="oracle.jdeveloper.runner.RunConfigurations">
       <hash n="runConfigurationDefinitions">

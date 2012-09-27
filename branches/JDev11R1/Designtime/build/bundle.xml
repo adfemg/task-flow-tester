@@ -4,9 +4,9 @@
   xmlns:u="http://xmlns.oracle.com/jdeveloper/update">
    <u:update id="org.emg.adf.taskflowtester">
       <u:name>ADF EMG Task Flow Tester</u:name>
-      <u:version>11.1.1.6.9</u:version>
+      <u:version>11.1.1.6.14</u:version>
       <u:author>ADF Enterprise Methodology Group (Steven Davelaar)</u:author>
-      <u:author-url>https://sites.google.com/site/oracleemg/adf</u:author-url>
+      <u:author-url>http://java.net/projects/adf-task-flow-tester/pages/Home</u:author-url>
       <u:description>ADF EMG Task Flow Tester is a web-based testing tool for ADF bounded task flows. 
 It supports testing of task flows that use pages as well as task flows using page fragments. A sophisticated mechanism to specify task flow input parameters is provided.
 A set of task flow input parameters and run options can be saved as a task flow testcase. Task flows and their testcases can be exported to XML and imported from XML.

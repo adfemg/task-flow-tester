@@ -53,7 +53,7 @@
        <!-- put the version information in the manifest file as well -->
        <manifest>
          <attribute name="Export-Package" value="org.emg.adf.tftester.dt.addin"/>
-         <attribute name="Require-Bundle" value="oracle.j2ee.jstl,oracle.j2ee.webapp.runner,oracle.ide.library.navigator,oracle.jdeveloper.common,oracle.jdeveloper.runner,oracle.jdeveloper.runner.core,oracle.adf.pageflow.dt,oracle.controller.dt,oracle.ide,oracle.ide.xmlef,oracle.ide.runner,oracle.j2ee.xml.descriptors,oracle.j2ee.server,oracle.j2ee.webapp,oracle.j2ee.webapp.runner,oracle.xmlef,oracle.xmlef-core,oracle.xmlef-swing,oracle.idert,oracle.icons,oracle.uic,oracle.javatools,oracle.javatools-nodeps,oracle.jdeveloper.java.core,oracle.javaxide,oracle.adf-controller-api,oracle.jewt-core,oracle.xml-descriptor,oracle.jgoodies-looks,oracle.ide.library,oracle.adf.pageflow.dt.runner,oracle.adf.pageflow.dt.debug,oracle.adf.controller.dt,oracle.adf.controller.config.dt,oracle.adf.controller.deploy.dt"/>
+         <attribute name="Require-Bundle" value="oracle.ide.library,oracle.jdeveloper.runner,oracle.jdeveloper.runner.core,oracle.ide,oracle.ide.runner,oracle.idert,oracle.javatools,oracle.javatools-nodeps"/>
          <attribute name="Bundle-ClassPath" value="."/>
          <attribute name="Bundle-Version" value="11.1.2"/>
          <attribute name="Bundle-ManifestVersion" value="2"/>
@@ -93,6 +93,7 @@
     <copy todir="${tft.stage.extension.dir}"> 
       <fileset dir="${tft.runtime.deploy.dir}">
          <include name="*.jar"/>
+         <include name="*.zip"/>
       </fileset>
     </copy>
 

@@ -6,14 +6,10 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import javax.faces.event.ActionEvent;
-
-import oracle.adf.view.rich.component.rich.data.RichTree;
 import oracle.adf.view.rich.event.DialogEvent;
 
 import oracle.jbo.JboException;
 
-import org.apache.myfaces.trinidad.event.SelectionEvent;
 import org.apache.myfaces.trinidad.model.ChildPropertyMenuModel;
 import org.apache.myfaces.trinidad.model.MenuModel;
 import org.apache.myfaces.trinidad.model.RowKeySet;
@@ -32,7 +28,6 @@ public class TaskFlowTreeController
   private String displayName;
 
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
-  RowKeySet selectedRowKeySet;
 
   public TaskFlowTreeController()
   {
@@ -72,13 +67,6 @@ public class TaskFlowTreeController
       {
         TaskFlow tf = taskFlowTesterService.addTaskFlow(getTaskFlowId(), getDisplayName(),true, false);              
         TaskFlowTester.getInstance().refreshTreeArea();
-        int count = taskFlowTesterService.getTestTaskFlows().size();
-        List keys = new ArrayList();
-        // first add key of parent region, then country id!!
-        keys.add(new Integer(count-1));
-        RowKeySet rksSelected = new RowKeySetImpl();
-        rksSelected.add(keys);
-        setSelectedRowKeySet(rksSelected);
         TaskFlowTester.getInstance().setCurrentTestTaskFlow(tf);
       }
       catch (JboException e)
@@ -97,29 +85,27 @@ public class TaskFlowTreeController
    */
   public RowKeySet getSelectedRowKeySet()
   {
-    if (selectedRowKeySet==null)
+    List keys = new ArrayList();
+    TaskFlow currentTf = TaskFlowTester.getInstance().getCurrentTestTaskFlow();
+    if (currentTf!=null)
     {
-      List keys = new ArrayList();
-      keys.add(new Integer(0));
-      selectedRowKeySet = new RowKeySetImpl();
-      selectedRowKeySet.add(keys);      
+      int tfIndex = getTestTaskFlows().indexOf(currentTf);      
+      keys.add(new Integer(tfIndex));
+      TaskFlowTestCase currentTc = TaskFlowTester.getInstance().getCurrentTestCase();
+      if (currentTc!=null)
+      {
+        int tcIndex = currentTf.getTestCases().indexOf(currentTc);      
+        keys.add(new Integer(tcIndex));        
+      }
     }
+    RowKeySetImpl selectedRowKeySet = new RowKeySetImpl();
+    selectedRowKeySet.add(keys);      
     return selectedRowKeySet;
   }
 
   public List<TaskFlow> getTestTaskFlows()
   {
     return taskFlowTesterService.getTestTaskFlows();
-  }
-
-  public void treeNodeSelected(SelectionEvent selectionEvent)
-  {
-    setSelectedRowKeySet(selectionEvent.getAddedSet());
-  }
-
-  public void setSelectedRowKeySet(RowKeySet selectedRowKeySet)
-  {
-    this.selectedRowKeySet = selectedRowKeySet;
   }
 
 }

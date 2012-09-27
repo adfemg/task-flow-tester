@@ -30,26 +30,39 @@ in the correct context
                          rendered="#{prop.mapType}">
       <af:showPopupBehavior popupId="p2"/>
     </af:commandImageLink>
-    <af:popup childCreation="deferred" autoCancel="disabled" id="p1" contentDelivery="lazyUncached"
-              popupFetchListener="#{InputParameterController.openComplexParamPopup}">
-      <af:dialog id="d2" title="Construct Complex Parameter #{row.name}" type="ok"
-                 dialogListener="#{InputParameterController.createComplexParamValue}">
-        <af:panelFormLayout id="pfl2" labelAlignment="start">
-          <af:inputText label="Class Name" value="#{prop.className}" id="it3" columns="60"/>
-          <af:iterator var="prop" value="#{prop.valueProperties}" id="i2">
-            <af:panelLabelAndMessage label="#{prop.name}" id="plam1">
-              <af:panelGroupLayout id="pgl3" layout="horizontal">
-                <af:inputText label="#{prop.name}" shortDesc="#{prop.hintText}"
-                              value="#{InputParameterController.rawParamValue}" columns="60" simple="true" id="it1"/>
-                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf" id="dc2"/>
-              </af:panelGroupLayout>
-            </af:panelLabelAndMessage>
-          </af:iterator>
-          <f:facet name="footer"/>
-        </af:panelFormLayout>
-        <f:facet name="buttonBar"/>
-      </af:dialog>
-    </af:popup>
+      <af:popup childCreation="deferred" autoCancel="disabled" id="p1"
+                contentDelivery="lazyUncached"  
+                popupFetchListener="#{InputParameterController.openComplexParamPopup}">
+        <af:dialog id="d2" title="Construct Complex Parameter #{row.name}"
+                   type="none">
+          <af:panelFormLayout id="pfl2" labelAlignment="start">
+                <af:inputText label="Class name" autoSubmit="true"
+                              required="true" 
+                              valueChangeListener="#{InputParameterController.classNameChanged}"
+                              value="#{prop.className}" columns="60" id="it3"/>
+            <af:iterator var="prop" value="#{prop.valueProperties}" id="i2">
+              <af:panelLabelAndMessage label="#{prop.name}" id="plam1">
+                <af:panelGroupLayout id="pgl3" layout="horizontal">
+                  <af:inputText label="#{prop.name}"
+                                shortDesc="#{prop.hintText}"
+                                value="#{InputParameterController.rawParamValue}"
+                                columns="60" simple="true" id="it1"/>
+                  <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf"
+                                           id="dc2"/>
+                </af:panelGroupLayout>
+              </af:panelLabelAndMessage>
+            </af:iterator>
+            <af:outputText rendered="#{prop.mapType}" value="You specified a map-type class, close this dialog and use edit icon to enter map entries"
+                           id="dc_ot1"/>
+            <af:outputText rendered="#{!prop.complexType and !prop.mapType}" value="You specified a simple type, close this dialog and enter the value directly in the parameter field"
+                           id="dc_ot2"/>
+            <f:facet name="footer"/>
+          </af:panelFormLayout>
+          <f:facet name="buttonBar">
+            <af:commandButton partialSubmit="true" text="OK" id="dc_cb1" actionListener="#{InputParameterController.createComplexParamValue}"/>
+          </f:facet>
+        </af:dialog>
+      </af:popup>
     <af:popup childCreation="deferred" autoCancel="disabled" id="p2" contentDelivery="lazyUncached"
               popupFetchListener="#{InputParameterController.openMapParamPopup}">
       <af:dialog id="d3" title="Construc Map Parameter" type="ok"
@@ -70,8 +83,8 @@ in the correct context
                             columns="30" id="it6"/>
               <af:inputText label="Key" autoSubmit="true" required="true" false="true" value="#{prop.name}" columns="30"
                             id="it4" simple="true"/>
-              <af:inputText label="Value" autoSubmit="true" shortDesc="#{prop.hintText}" required="true"
-                            value="#{prop.value}" columns="60" id="it5" simple="true"/>
+              <af:inputText label="Value" autoSubmit="true" shortDesc="#{prop.hintText}" required="false"
+                            value="#{InputParameterController.rawParamValue}" columns="60" id="it5" simple="true"/>
               <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf" id="dc1"/>
               <af:commandImageLink shortDesc="Remove map entry" immediate="true"
                                    actionListener="#{InputParameterController.removeMapEntry}"

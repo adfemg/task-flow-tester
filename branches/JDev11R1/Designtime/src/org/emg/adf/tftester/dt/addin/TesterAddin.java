@@ -83,11 +83,12 @@ public class TesterAddin
     rc.setName(RUN_CONFIG_NAME);
     String homeDir = Ide.getProductHomeDirectory();
     homeDir = homeDir.replace('\\', '/');
+    String filePrefix = homeDir.startsWith("/") ? "file:" : "file:/";
 // Commented out: run tester inside its own task flow
 //      String jarloc =
 //        "file:/" + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml";
       String jarloc =
-        "file:/" + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jspx";
+        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jspx";
     try
     {
       URL runUrl = new URL("jar", null, jarloc);

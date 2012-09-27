@@ -19,7 +19,6 @@ import oracle.jbo.domain.Timestamp;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import org.emg.adf.tftester.rt.model.beaneditor.ConverterHelperBean;
-
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
 import org.springframework.beans.BeanWrapper;
@@ -88,6 +87,10 @@ public class ValueObject
       || getType().equals(Timestamp.class.getName()); 
   }
   
+  public boolean isJboKey()
+  {
+   return getType().equals(oracle.jbo.Key.class.getName()); 
+  }
 
   public void setType(String type)
   {
@@ -123,6 +126,10 @@ public class ValueObject
     else if (isDate())
     {
       return "Enter EL expression or literal date value using format dd-MM-yyyy";
+    }
+    else if (isJboKey())
+    {
+      return "Enter EL expression or comma-delimited list of key attribute values. Note that the values must be specified in the same sequence as the attributes are defined in the key.";
     }
     return "Enter EL expression or literal value matching " + getType();
   }
@@ -172,8 +179,9 @@ public class ValueObject
   {
     if (isComplexType() && getValueProperties().size()==0)
     {
-      Class c = getClass(getType());
-      setClassName(getType());
+      String className = getClassName()!=null ? getClassName() : getType();
+      Class c = getClass(className);
+      setClassName(className);
       //    BeanWrapper bw = paramValue!=null ? new BeanWrapperImpl(paramValue) : new BeanWrapperImpl(c);
       BeanWrapper bw = new BeanWrapperImpl(c);
       registerPropertyEditors(bw);
@@ -323,10 +331,14 @@ public class ValueObject
           }
           else 
           {
+             Object convertedValue = pp.getValue();
             // Spring beanwrapper does not support map 
             // we use helper bean that has all types as properties so we can still
-            // use Spring to do type conversions using registered property editors            
-            Object convertedValue = ConverterHelperBean.convertValue(pp.getType(), (String) pp.getValue());
+            // use Spring to do type conversions using registered property editors          
+            if (!pp.isElExpressionUsed() && pp.getValue() instanceof String)
+            {
+              convertedValue = ConverterHelperBean.convertValue(pp.getType(), (String) pp.getValue());
+            }
             PropertyUtils.setProperty(value, pp.getName(), convertedValue);
           }
         }
@@ -493,10 +505,12 @@ public class ValueObject
   {
     ValueObject clone = new ValueObject(getName(),getType(),getParent(),isMapEntry());
     clone.setValue(getValue());
+    // need to set ELExpressionUsed before calling setValueAsString otherwise
+    // we get type converter mismatch
+    clone.setElExpressionUsed(isElExpressionUsed());
     clone.setValueAsString(getValueAsString());
     clone.setIndex(getIndex());
     clone.setClassName(getClassName());
-    clone.setElExpressionUsed(isElExpressionUsed());
     if (getValueProperties()!=null)
     {
       for (ValueObject childVo : getValueProperties())

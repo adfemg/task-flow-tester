@@ -14,8 +14,13 @@
               <f:facet name="bottom"/>
               <f:facet name="end">
                 <af:panelGroupLayout id="pgl4" layout="horizontal" halign="end">
+                  <af:goLink text="Help" destination="http://java.net/projects/adf-task-flow-tester/pages/Home" targetFrame="_blank"
+                             id="gl1"/>
                   <af:statusIndicator id="si1"/>
-                </af:panelGroupLayout>
+                <f:facet name="separator">
+                  <af:spacer width="10" height="10" id="s1"/>
+                </f:facet>
+              </af:panelGroupLayout>
               </f:facet>
               <f:facet name="top"/>
               <af:spacer width="10" height="10" id="s4"/>
@@ -110,21 +115,21 @@
                                                            id="ctb2"
                                                            icon="/adfemg/images/exporttoxml.png"
                                                            immediate="true"
-                                                           actionListener="#{viewScope.Exporter.exportToXml}"/>
+                                                           actionListener="#{viewScope.TestCaseExporter.exportToXml}"/>
                                   <af:popup childCreation="deferred"
                                             autoCancel="disabled" id="p2"
-                                            binding="#{viewScope.Exporter.popup}">
+                                            binding="#{viewScope.TestCaseExporter.popup}">
                                     <af:dialog id="d3" type="ok"
                                                title="Task Flow Testcases XML">
                                       <af:inputText simple="false" label="Xml"
                                                     columns="150" rows="20"
                                                     id="it4" disabled="true"
-                                                    value="#{viewScope.Exporter.xml}"/>
+                                                    value="#{viewScope.TestCaseExporter.xml}"/>
                                       <f:facet name="buttonBar">
                                         <af:commandButton text="Export to File"
                                                           shortDesc="Save the XML to a file. If you store the file under name 'adf-emg-task-flow-tester.xml' in the source root directory of your ADF project, the XML will be automatically loaded when starting the tester."
                                                           id="cb6">
-                                          <af:fileDownloadActionListener method="#{viewScope.Exporter.exportToFile}"
+                                          <af:fileDownloadActionListener method="#{viewScope.TestCaseExporter.exportToFile}"
                                                                          filename="adf-emg-task-flow-tester.xml"
                                                                          contentType="text/xml"/>
                                         </af:commandButton>
@@ -135,21 +140,21 @@
                                                            id="ctb3"
                                                            icon="/adfemg/images/loadxml.png"
                                                            immediate="true"
-                                                           actionListener="#{Importer.showImportPopup}"/>
+                                                           actionListener="#{TestCaseImporter.showImportPopup}"/>
                                   <af:popup childCreation="deferred"
                                             autoCancel="disabled" id="p34"
-                                            binding="#{Importer.popup}">
+                                            binding="#{TestCaseImporter.popup}">
                                     <af:dialog id="d44" type="none"
                                                title="Import Task Flow Testcases from XML">
                                       <af:inputText simple="false" label="Xml"
                                                     columns="150" rows="20"
                                                     id="it5"
-                                                    value="#{Importer.xml}"/>
+                                                    value="#{TestCaseImporter.xml}"/>
                                       <f:facet name="buttonBar">
                                         <af:toolbar id="t3">
                                           <af:commandButton text="Import"
                                                             partialSubmit="true"
-                                                            actionListener="#{Importer.doImport}"
+                                                            actionListener="#{TestCaseImporter.doImport}"
                                                             id="cb5"/>
                                         </af:toolbar>
                                       </f:facet>
@@ -171,8 +176,7 @@
                                        value="#{pageFlowScope.TaskFlowTreeController.menuModel}"
                                        id="tree"  contextMenuSelect="true"
                                        selectedRowKeys="#{pageFlowScope.TaskFlowTreeController.selectedRowKeySet}"
-                                       rowSelection="single"   
-                                       selectionListener="#{pageFlowScope.TaskFlowTreeController.treeNodeSelected}">
+                                       rowSelection="single" >
                                 <f:facet name="nodeStamp">
                                   <af:switcher facetName="#{node.class.name}">
 <!--
