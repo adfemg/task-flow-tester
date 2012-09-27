@@ -27,19 +27,20 @@ in the correct context
         <af:showPopupBehavior popupId="p1"/>
       </af:commandImageLink>
       <af:commandImageLink shortDesc="Construct Map" id="cb5" immediate="true"
-                           icon="/adfemg/images/editRow.png"
+                           icon="/adfemg/images/editRow.png" 
                            rendered="#{prop.mapType}">
         <af:showPopupBehavior popupId="p2"/>
       </af:commandImageLink>
       <af:popup childCreation="deferred" autoCancel="disabled" id="p1"
-                contentDelivery="lazyUncached"
+                contentDelivery="lazyUncached"  
                 popupFetchListener="#{InputParameterController.openComplexParamPopup}">
         <af:dialog id="d2" title="Construct Complex Parameter #{row.name}"
-                   type="ok"
-                   dialogListener="#{InputParameterController.createComplexParamValue}">
+                   type="none">
           <af:panelFormLayout id="pfl2" labelAlignment="start">
-            <af:inputText label="Class Name" value="#{prop.className}" id="it3"
-                          columns="60"/>
+                <af:inputText label="Class name" autoSubmit="true"
+                              required="true" 
+                              valueChangeListener="#{InputParameterController.classNameChanged}"
+                              value="#{prop.className}" columns="60" id="it3"/>
             <af:iterator var="prop" value="#{prop.valueProperties}" id="i2">
               <af:panelLabelAndMessage label="#{prop.name}" id="plam1">
                 <af:panelGroupLayout id="pgl3" layout="horizontal">
@@ -52,9 +53,15 @@ in the correct context
                 </af:panelGroupLayout>
               </af:panelLabelAndMessage>
             </af:iterator>
+            <af:outputText rendered="#{prop.mapType}" value="You specified a map-type class, close this dialog and use edit icon to enter map entries"
+                           id="dc_ot1"/>
+            <af:outputText rendered="#{!prop.complexType and !prop.mapType}" value="You specified a simple type, close this dialog and enter the value directly in the parameter field"
+                           id="dc_ot2"/>
             <f:facet name="footer"/>
           </af:panelFormLayout>
-          <f:facet name="buttonBar"/>
+          <f:facet name="buttonBar">
+            <af:commandButton partialSubmit="true" text="OK" id="dc_cb1" actionListener="#{InputParameterController.createComplexParamValue}"/>
+          </f:facet>
         </af:dialog>
       </af:popup>
       <af:popup childCreation="deferred" autoCancel="disabled" id="p2"
