@@ -86,6 +86,7 @@
     <copy todir="${tft.stage.extension.dir}"> 
       <fileset dir="${tft.runtime.deploy.dir}">
          <include name="*.jar"/>
+         <include name="*.zip"/>
       </fileset>
     </copy>
 

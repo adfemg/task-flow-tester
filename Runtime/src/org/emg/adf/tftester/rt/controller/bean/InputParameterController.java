@@ -171,15 +171,15 @@ public class InputParameterController
   public void classNameChanged(ValueChangeEvent event)
   {
     ValueObject vo = getValueObject();
-    String oldType = vo.getType();
     try
     {
       vo.setClassName((String) event.getNewValue());
-      // Set the type to same value, so that we can use map editor if type is a map
-      // or just simply enter a string value direvctly in the parameter field
-      // we need to set this before check on instantiation because map entry by default has
-      // string type causing isAssignable error
-      vo.setType(vo.getClassName());
+      if (vo.isMapEntry())
+      {
+        // In case of map, set type to same value, so we don't get isAssignable error
+        // because we inialized a map entry with type String
+        vo.setType(vo.getClassName());        
+      }
       // check whether the class is instantiable
       vo.instantiateComplexType();
       // clear existing valueProperties
@@ -190,7 +190,6 @@ public class InputParameterController
     }
     catch (JboException e)
     {
-      vo.setType(oldType);
       // TODO: Add catch code
       DCBindingContainer bc = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
       bc.processException(e);
