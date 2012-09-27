@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="windows-1252" ?>
 <adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
   <task-flow-definition id="tester-tf">
-    <default-activity>tester</default-activity>
+    <default-activity>tftester</default-activity>
+<!--
     <input-parameter-definition id="__1">
       <name>taskFlowId</name>
       <value>#{pageFlowScope.taskFlowId}</value>
       <class>java.lang.String</class>
     </input-parameter-definition>
+-->
     <managed-bean id="__2">
       <managed-bean-name>TaskFlowTester</managed-bean-name>
       <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.TaskFlowTester</managed-bean-class>
@@ -35,12 +37,12 @@
       <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean id="__6">
-      <managed-bean-name>Exporter</managed-bean-name>
+      <managed-bean-name>TestCaseExporter</managed-bean-name>
       <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.Exporter</managed-bean-class>
       <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
     <managed-bean id="__67">
-      <managed-bean-name>Importer</managed-bean-name>
+      <managed-bean-name>TestCaseImporter</managed-bean-name>
       <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.Importer</managed-bean-class>
       <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
@@ -49,7 +51,7 @@
       <managed-bean-class id="__11">org.emg.adf.tftester.rt.controller.bean.TaskFlowLoader</managed-bean-class>
       <managed-bean-scope id="__14">view</managed-bean-scope>
     </managed-bean>
-    <view id="tester">
+    <view id="tftester">
       <page>/adfemg/tftester/pages/tester.jspx</page>
     </view>
     <task-flow-call id="testTaskFlowCall">
@@ -68,7 +70,7 @@
       </run-as-dialog>
     </task-flow-call>
     <control-flow-rule id="__8">
-      <from-activity-id>tester</from-activity-id>
+      <from-activity-id>tftester</from-activity-id>
       <control-flow-case id="__9">
         <from-outcome>testTFInDialog</from-outcome>
         <to-activity-id>testTaskFlowCall</to-activity-id>

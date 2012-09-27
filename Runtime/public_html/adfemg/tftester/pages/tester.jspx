@@ -17,7 +17,13 @@
               <f:facet name="bottom"/>
               <f:facet name="end">
                 <af:panelGroupLayout id="pgl4" layout="horizontal" halign="end">
+                  <af:goLink text="Help"
+                             destination="http://java.net/projects/adf-task-flow-tester/pages/Home"
+                             targetFrame="_blank" id="gl1"/>
                   <af:statusIndicator id="si1"/>
+                  <f:facet name="separator">
+                    <af:spacer width="10" height="10" id="s1"/>
+                  </f:facet>
                 </af:panelGroupLayout>
               </f:facet>
               <f:facet name="top"/>
@@ -68,8 +74,7 @@
                                       <f:facet name="buttonBar">
                                         <af:panelGroupLayout id="pgl5"
                                                              halign="right">
-                                          <af:commandButton text="OK"
-                                                            id="cb7"
+                                          <af:commandButton text="OK" id="cb7"
                                                             actionListener="#{viewScope.TaskFlowLoader.load}"/>
                                         </af:panelGroupLayout>
                                       </f:facet>
@@ -113,21 +118,21 @@
                                                            id="ctb2"
                                                            icon="/adfemg/images/exporttoxml.png"
                                                            immediate="true"
-                                                           actionListener="#{viewScope.Exporter.exportToXml}"/>
+                                                           actionListener="#{viewScope.TestCaseExporter.exportToXml}"/>
                                   <af:popup childCreation="deferred"
                                             autoCancel="disabled" id="p2"
-                                            binding="#{viewScope.Exporter.popup}">
+                                            binding="#{viewScope.TestCaseExporter.popup}">
                                     <af:dialog id="d3" type="ok"
                                                title="Task Flow Testcases XML">
                                       <af:inputText simple="false" label="Xml"
                                                     columns="150" rows="20"
                                                     id="it4" disabled="true"
-                                                    value="#{viewScope.Exporter.xml}"/>
+                                                    value="#{viewScope.TestCaseExporter.xml}"/>
                                       <f:facet name="buttonBar">
                                         <af:commandButton text="Export to File"
                                                           shortDesc="Save the XML to a file. If you store the file under name 'adf-emg-task-flow-tester.xml' in the source root directory of your ADF project, the XML will be automatically loaded when starting the tester."
                                                           id="cb6">
-                                          <af:fileDownloadActionListener method="#{viewScope.Exporter.exportToFile}"
+                                          <af:fileDownloadActionListener method="#{viewScope.TestCaseExporter.exportToFile}"
                                                                          filename="adf-emg-task-flow-tester.xml"
                                                                          contentType="text/xml"/>
                                         </af:commandButton>
@@ -138,21 +143,21 @@
                                                            id="ctb3"
                                                            icon="/adfemg/images/loadxml.png"
                                                            immediate="true"
-                                                           actionListener="#{Importer.showImportPopup}"/>
+                                                           actionListener="#{TestCaseImporter.showImportPopup}"/>
                                   <af:popup childCreation="deferred"
                                             autoCancel="disabled" id="p34"
-                                            binding="#{Importer.popup}">
+                                            binding="#{TestCaseImporter.popup}">
                                     <af:dialog id="d44" type="none"
                                                title="Import Task Flow Testcases from XML">
                                       <af:inputText simple="false" label="Xml"
                                                     columns="150" rows="20"
                                                     id="it5"
-                                                    value="#{Importer.xml}"/>
+                                                    value="#{TestCaseImporter.xml}"/>
                                       <f:facet name="buttonBar">
                                         <af:toolbar id="t3">
                                           <af:commandButton text="Import"
                                                             partialSubmit="true"
-                                                            actionListener="#{Importer.doImport}"
+                                                            actionListener="#{TestCaseImporter.doImport}"
                                                             id="cb5"/>
                                         </af:toolbar>
                                       </f:facet>
@@ -172,13 +177,12 @@
                               <f:facet name="statusbar"/>
                               <af:tree initiallyExpanded="true" var="node"
                                        value="#{pageFlowScope.TaskFlowTreeController.menuModel}"
-                                       id="tree"  contextMenuSelect="true"
+                                       id="tree" contextMenuSelect="true"
                                        selectedRowKeys="#{pageFlowScope.TaskFlowTreeController.selectedRowKeySet}"
-                                       rowSelection="single"   
-                                       selectionListener="#{pageFlowScope.TaskFlowTreeController.treeNodeSelected}">
+                                       rowSelection="single">
                                 <f:facet name="nodeStamp">
                                   <af:switcher facetName="#{node.class.name}">
-<!--
+                                    <!--
                                     <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
                                         <af:panelGroupLayout id="pgl6">
                                           <af:image  source="/adfemg/images/taskflow.png"
@@ -189,30 +193,34 @@
                                     </f:facet>
 -->
                                     <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
-                                    <af:commandImageLink   text="#{node.name}"
-                                                    id="selectTF"  icon="/adfemg/images/taskflow.png"
-                                                    iconPosition="leading" shortDesc="#{node.taskFlowIdString}"
-                                                    partialSubmit="true"
-                                                    immediate="true">
-                                      <af:setPropertyListener type="action"
-                                                              to="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow}"
-                                                              from="#{node}"/>
-                                    </af:commandImageLink>
+                                      <af:commandImageLink text="#{node.name}"
+                                                           id="selectTF"
+                                                           icon="/adfemg/images/taskflow.png"
+                                                           iconPosition="leading"
+                                                           shortDesc="#{node.taskFlowIdString}"
+                                                           partialSubmit="true"
+                                                           immediate="true">
+                                        <af:setPropertyListener type="action"
+                                                                to="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow}"
+                                                                from="#{node}"/>
+                                      </af:commandImageLink>
                                     </f:facet>
                                     <f:facet name="org.emg.adf.tftester.rt.model.TaskFlowTestCase">
-                                    <af:commandImageLink text="#{node.name}" 
-                                                    id="selectTC" icon="/adfemg/images/testcase.png"
-                                                    iconPosition="leading" shortDesc="#{node.description}"
-                                                    partialSubmit="true"
-                                                    immediate="true">
-                                      <af:setPropertyListener type="action"
-                                                              to="#{pageFlowScope.TaskFlowTester.currentTestCase}"
-                                                              from="#{node}"/>
-                                    </af:commandImageLink>
+                                      <af:commandImageLink text="#{node.name}"
+                                                           id="selectTC"
+                                                           icon="/adfemg/images/testcase.png"
+                                                           iconPosition="leading"
+                                                           shortDesc="#{node.description}"
+                                                           partialSubmit="true"
+                                                           immediate="true">
+                                        <af:setPropertyListener type="action"
+                                                                to="#{pageFlowScope.TaskFlowTester.currentTestCase}"
+                                                                from="#{node}"/>
+                                      </af:commandImageLink>
                                     </f:facet>
                                   </af:switcher>
                                 </f:facet>
-<!--
+                                <!--
                                 <f:facet name="contextMenu">
                                   <af:popup id="p5" childCreation="immediate" contentDelivery="immediate">
                                     <af:menu text="menu 1" id="m1">
@@ -408,7 +416,7 @@
                         <af:decorativeBox id="db1" topHeight="5"
                                           theme="default">
                           <f:facet name="center">
-<!--
+                            <!--
                             <af:group>
                                 <af:region value="#{bindings.dynamicRegion1.regionModel}"  rendered="#{pageFlowScope.TaskFlowTester.stretchLayout}"
                                            id="r1"/>
@@ -422,7 +430,7 @@
                             <af:switcher facetName="#{pageFlowScope.TaskFlowTester.stretchLayout ? 'stretch' : 'nostretch'}"
                                          id="s7">
                               <f:facet name="stretch">
-                                <af:region value="#{bindings.stretchRegion.regionModel}" 
+                                <af:region value="#{bindings.stretchRegion.regionModel}"
                                            id="r1"/>
                               </f:facet>
                               <f:facet name="nostretch">

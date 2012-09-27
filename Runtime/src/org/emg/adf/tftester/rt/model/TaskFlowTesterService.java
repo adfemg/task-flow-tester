@@ -129,10 +129,13 @@ public class TaskFlowTesterService
     for (Object jaxbTfObject: tftester.getTaskFlow())
     {
       TaskFlowType jaxbTf = (TaskFlowType) jaxbTfObject;
-      TaskFlow tf = new TaskFlow();
-      tf.setDisplayName(jaxbTf.getDisplayName());
-      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
-      getTestTaskFlows().add(tf);
+        //      TaskFlow tf = new TaskFlow();
+        //      tf.setDisplayName(jaxbTf.getDisplayName());
+        //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
+        //      getTestTaskFlows().add(tf);
+        // last argument is true so addTaskFlow will return existing task flow if present, so new testcases
+        // will be added under existing node    
+      TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);  
       // loop over TF testcases
       for (Object jaxbTcObject: jaxbTf.getTestCase())
       {

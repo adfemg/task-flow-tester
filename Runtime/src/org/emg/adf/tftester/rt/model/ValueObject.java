@@ -88,6 +88,10 @@ public class ValueObject
       || getType().equals(Timestamp.class.getName()); 
   }
   
+  public boolean isJboKey()
+  {
+   return getType().equals(oracle.jbo.Key.class.getName()); 
+  }
 
   public void setType(String type)
   {
@@ -123,6 +127,10 @@ public class ValueObject
     else if (isDate())
     {
       return "Enter EL expression or literal date value using format dd-MM-yyyy";
+    }
+    else if (isJboKey())
+    {
+      return "Enter EL expression or comma-delimited list of key attribute values. Note that the values must be specified in the same sequence as the attributes are defined in the key.";
     }
     return "Enter EL expression or literal value matching " + getType();
   }
@@ -172,8 +180,9 @@ public class ValueObject
   {
     if (isComplexType() && getValueProperties().size()==0)
     {
-      Class c = getClass(getType());
-      setClassName(getType());
+      String className = getClassName()!=null ? getClassName() : getType();
+      Class c = getClass(className);
+      setClassName(className);
       //    BeanWrapper bw = paramValue!=null ? new BeanWrapperImpl(paramValue) : new BeanWrapperImpl(c);
       BeanWrapper bw = new BeanWrapperImpl(c);
       registerPropertyEditors(bw);
@@ -493,10 +502,12 @@ public class ValueObject
   {
     ValueObject clone = new ValueObject(getName(),getType(),getParent(),isMapEntry());
     clone.setValue(getValue());
+    // need to set ELExpressionUsed before calling setValueAsString otherwise
+    // we get type converter mismatch
+    clone.setElExpressionUsed(isElExpressionUsed());
     clone.setValueAsString(getValueAsString());
     clone.setIndex(getIndex());
     clone.setClassName(getClassName());
-    clone.setElExpressionUsed(isElExpressionUsed());
     if (getValueProperties()!=null)
     {
       for (ValueObject childVo : getValueProperties())

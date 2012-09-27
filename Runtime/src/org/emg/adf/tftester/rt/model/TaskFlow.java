@@ -204,6 +204,9 @@ public class TaskFlow
       ip.getValueObject().setValue(null);
       ip.getValueObject().setValueAsString(null);
       ip.getValueObject().getValueProperties().clear();
+      // reset type and class name as well
+      ip.getValueObject().setClassName(ip.getType());
+      ip.getValueObject().setType(ip.getType());
     }      
   }
   
