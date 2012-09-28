@@ -184,6 +184,12 @@
    </hash>
    <hash n="oracle.jdeveloper.runner.RunConfigurations">
       <hash n="runConfigurationDefinitions">
+         <hash n="Task Flow Tester">
+            <value n="allowInput" v="true"/>
+            <value n="custom" v="false"/>
+            <value n="name" v="Task Flow Tester"/>
+            <url n="targetURL" protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jsf"/>
+         </hash>
          <hash n="Test Task Flow pagetf">
             <value n="allowInput" v="true"/>
             <value n="custom" v="false"/>
@@ -207,6 +213,7 @@
       <list n="runConfigurationList">
          <string v="Test Task Flow pagetf"/>
          <string v="Test Task Flow sample1-tf"/>
+         <string v="Task Flow Tester"/>
       </list>
    </hash>
    <hash n="oracle.jdevimpl.config.JProjectLibraries">
@@ -303,6 +310,10 @@
             <value n="id" v="ADF EMG Task Flow Tester"/>
             <value n="isJDK" v="false"/>
          </hash>
+         <hash>
+            <url n="id" protocol="file" path="/C:/Users/sdavelaa/AppData/Roaming/JDeveloper/system11.1.2.2.39.61.83/o.jdeveloper/ADF Source.library"/>
+            <value n="isJDK" v="false"/>
+         </hash>
       </list>
       <hash n="internalDefinitions">
          <list n="libraryDefinitions"/>
@@ -385,10 +396,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="ADF_Library_Dependencies.library"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="ADF Common Web Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -402,6 +409,14 @@
          </hash>
          <hash>
             <value n="id" v="ADF EMG Task Flow Tester"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <url n="id" path="ADF_Library_Dependencies.library"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <url n="id" protocol="file" path="/C:/Users/sdavelaa/AppData/Roaming/JDeveloper/system11.1.2.2.39.61.83/o.jdeveloper/ADF Source.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

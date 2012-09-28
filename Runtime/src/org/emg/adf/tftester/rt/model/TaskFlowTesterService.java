@@ -129,13 +129,19 @@ public class TaskFlowTesterService
     for (Object jaxbTfObject: tftester.getTaskFlow())
     {
       TaskFlowType jaxbTf = (TaskFlowType) jaxbTfObject;
-      //      TaskFlow tf = new TaskFlow();
-      //      tf.setDisplayName(jaxbTf.getDisplayName());
-      //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
-      //      getTestTaskFlows().add(tf);
-      // last argument is true so addTaskFlow will return existing task flow if present, so new testcases
-      // will be added under existing node    
+        //      TaskFlow tf = new TaskFlow();
+        //      tf.setDisplayName(jaxbTf.getDisplayName());
+        //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
+        //      getTestTaskFlows().add(tf);
+        // last argument is true so addTaskFlow will return existing task flow if present, so new testcases
+        // will be added under existing node    
       TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);  
+      if (tf==null)
+      {
+        // this happens when XML contains tf that no longer exists in context of this app
+        sLog.warning("Task flow definition "+jaxbTf.getTaskFlowId()+" no longer exists or is not available in this application");
+        continue;
+      }
       // loop over TF testcases
       for (Object jaxbTcObject: jaxbTf.getTestCase())
       {
@@ -154,6 +160,13 @@ public class TaskFlowTesterService
           {
             ParamValueObjectType jaxbVo =
               (ParamValueObjectType) jaxbVoObject;
+            // check whether param name still exists in TF, if not ignore it.
+            if (tf.getInputParameter(jaxbVo.getName())==null)
+            {
+              // input paramter no longer exists in TF, skip it
+              sLog.warning("Input parameter "+jaxbVo.getName()+" no longer exists in "+tf.getTaskFlowIdString());
+              continue;
+            }
             ValueObject vo =
               new ValueObject(jaxbVo.getName(), jaxbVo.getClassName(),
                               null, false);

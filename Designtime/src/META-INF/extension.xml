@@ -1,6 +1,6 @@
 <extension xmlns="http://jcp.org/jsr/198/extension-manifest"
            id="org.emg.adf.taskflowtester"
-           version="11.1.2.1.14"
+           version="11.1.2.1.15"
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
