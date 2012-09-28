@@ -8,7 +8,7 @@
       <input-parameter-map>#{pageFlowScope.TaskFlowTester.runParamMap}</input-parameter-map>
       <!-- actual return value mapping is specified at runtime when actual TF to test is known -->
       <return-value id="__7" >
-        <name>dummyValue</name>
+        <name>dummyValueUBTF</name>
         <value>#{pageFlowScope.dummyValue}</value>
       </return-value>
       <after-listener>#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}</after-listener>

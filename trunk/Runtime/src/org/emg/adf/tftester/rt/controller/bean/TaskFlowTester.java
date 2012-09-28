@@ -11,8 +11,16 @@ import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
+import oracle.adf.controller.ControllerContext;
 import oracle.adf.controller.TaskFlowId;
+import oracle.adf.controller.metadata.ActivityId;
+import oracle.adf.controller.metadata.MetadataService;
+import oracle.adf.controller.metadata.model.Activity;
+import oracle.adf.controller.metadata.model.NamedParameter;
+import oracle.adf.controller.metadata.model.TaskFlowDefinition;
 import oracle.adf.view.rich.context.AdfFacesContext;
+
+import oracle.adfinternal.controller.metadata.model.xml.ActivityXmlImpl;
 
 import oracle.xml.parser.v2.XMLElement;
 
@@ -26,24 +34,12 @@ import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
 
-import oracle.adfinternal.controller.metadata.model.xml.ActivityXmlImpl;
-import oracle.adf.controller.metadata.ActivityId;
-import oracle.adf.controller.metadata.MetadataService;
-import oracle.adf.controller.metadata.model.Activity;
-import oracle.adf.controller.metadata.model.NamedParameter;
-import oracle.adf.controller.metadata.model.TaskFlowCall;
-import oracle.adf.controller.metadata.model.TaskFlowDefinition;
-import oracle.adf.controller.metadata.model.UIInfo;
-import oracle.adf.controller.metadata.model.ValueMapping;
-
 //import oracle.adf.controller.internal.metadata.Activity;
 //import oracle.adf.controller.internal.metadata.ActivityId;
 //import oracle.adf.controller.internal.metadata.MetadataService;
 //import oracle.adf.controller.internal.metadata.NamedParameter;
 //import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
 //import oracle.adf.controller.internal.metadata.ValueMapping;
-
-import org.w3c.dom.Node;
 
 
 //import oracle.adf.controller.internal.metadata.Activity;
@@ -247,22 +243,46 @@ public class TaskFlowTester
   private void replaceTaskFlowCallXMLNode()
   {
     // now get the TF call activity and change return values to map the return value defs of the TF we are going to test
-    TaskFlowId launcherTfi = getCurrentTestTaskFlow().isUsesPageFragments() ? TaskFlowId.parse(LAUNCHER_TASK_FLOW_ID) : TaskFlowId.parse(TESTER_TASK_FLOW_ID);    
-    TaskFlowDefinition launcherTFDef = MetadataService.getInstance().getTaskFlowDefinition(launcherTfi);
-    Map<ActivityId, Activity> activities = launcherTFDef.getActivities();
-    // loop over activites until  activity  'testTaskFlowCall' is found 
-    Map<String,ValueMapping> returnValues = null;
+    // in case of TF with pages, we need to check whether we started the tester page directly, in unbounded adfc-config task flow
+    // or using the tester task flow.
+    Map<ActivityId, Activity> activities = null;
+    TaskFlowId callingTfId = ControllerContext.getInstance().getCurrentViewPort().getTaskFlowContext().getTaskFlowId();
+    if (callingTfId==null)
+    {
+      // The AdfPageFlow contains combined activities of all adfc-config.xml files that are in context of
+      // this app (can be many, eacg ADF lib has one)
+      activities = MetadataService.getInstance().getAdfPageFlow().getActivities();
+    }
+    else
+    {
+      // we are in the tester task flow
+      TaskFlowId launcherTfi = getCurrentTestTaskFlow().isUsesPageFragments() ? TaskFlowId.parse(LAUNCHER_TASK_FLOW_ID) : callingTfId;    
+      TaskFlowDefinition launcherTFDef = MetadataService.getInstance().getTaskFlowDefinition(launcherTfi);
+      activities = launcherTFDef.getActivities();
+    }  
+    ActivityId callActId = getTestTaskFlowCallActivity(activities);
+    if (callActId!=null)
+    {
+      Activity act = activities.get(callActId);
+      XMLElement el = createTaskFlowCallXmlNode();
+      Activity actNew = ActivityXmlImpl.parse(act.getParsingContext(), el);
+      // replace the activity with the newly created activity that has correct return values
+      activities.put(callActId, actNew);          
+    }      
+  }
+
+  private ActivityId getTestTaskFlowCallActivity(Map<ActivityId, Activity> activities)
+  {
+    ActivityId found = null;
     for (ActivityId actId: activities.keySet())
     {
       if (actId.getLocalActivityId().equals("testTaskFlowCall"))
       {
-        Activity act = activities.get(actId);
-        XMLElement el = createTaskFlowCallXmlNode();
-        Activity actNew = ActivityXmlImpl.parse(act.getParsingContext(), el);
-        // replace the activity with the newly created activity that has correct return values
-        activities.put(actId, actNew);
+        found = actId;
+        break;
       }
     }
+    return found;     
   }
 
   /**

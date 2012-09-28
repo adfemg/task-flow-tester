@@ -119,13 +119,13 @@
                                                            icon="/adfemg/images/exporttoxml.png"
                                                            immediate="true"
                                                            actionListener="#{viewScope.TestCaseExporter.exportToXml}"/>
-                                  <af:popup childCreation="deferred"
+                                  <af:popup childCreation="deferred" 
                                             autoCancel="disabled" id="p2"
                                             binding="#{viewScope.TestCaseExporter.popup}">
-                                    <af:dialog id="d3" type="ok"
+                                    <af:dialog id="d3" type="ok" resize="on"
                                                title="Task Flow Testcases XML">
                                       <af:inputText simple="false" label="Xml"
-                                                    columns="150" rows="20"
+                                                    columns="120" rows="20"
                                                     id="it4" disabled="true"
                                                     value="#{viewScope.TestCaseExporter.xml}"/>
                                       <f:facet name="buttonBar">
@@ -147,7 +147,7 @@
                                   <af:popup childCreation="deferred"
                                             autoCancel="disabled" id="p34"
                                             binding="#{TestCaseImporter.popup}">
-                                    <af:dialog id="d44" type="none"
+                                    <af:dialog id="d44" type="none" resize="on"
                                                title="Import Task Flow Testcases from XML">
                                       <af:inputText simple="false" label="Xml"
                                                     columns="150" rows="20"

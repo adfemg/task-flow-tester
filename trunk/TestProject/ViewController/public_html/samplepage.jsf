@@ -3,7 +3,7 @@
 <f:view xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich">
   <af:document title="samplepage.jsf" id="d1">
     <af:form id="f1">
-      <af:panelHeader text="This is a page, not a apage fragment" id="ph1">
+      <af:panelHeader text="This is a page, not a page fragment" id="ph1">
         <f:facet name="context"/>
         <f:facet name="menuBar"/>
         <f:facet name="toolbar"/>
