@@ -34,10 +34,10 @@ in the correct context
       <af:popup childCreation="deferred" autoCancel="disabled" id="p1"
                 contentDelivery="lazyUncached"  
                 popupFetchListener="#{InputParameterController.openComplexParamPopup}">
-        <af:dialog id="d2" title="Construct Complex Parameter #{row.name}"
+        <af:dialog id="d2" title="Construct Complex Parameter #{prop.name}"
                    type="none">
           <af:panelFormLayout id="pfl2" labelAlignment="start">
-                <af:inputText label="Class name" autoSubmit="true"
+                <af:inputText label="Class Name" autoSubmit="true"
                               required="true" 
                               valueChangeListener="#{InputParameterController.classNameChanged}"
                               value="#{prop.className}" columns="60" id="it3"/>
@@ -67,7 +67,7 @@ in the correct context
       <af:popup childCreation="deferred" autoCancel="disabled" id="p2"
                 contentDelivery="lazyUncached"
                 popupFetchListener="#{InputParameterController.openMapParamPopup}">
-        <af:dialog id="d3" title="Construc Map Parameter" type="ok"
+        <af:dialog id="d3" title="Construc Map Parameter #{prop.name}" type="ok"
                    dialogListener="#{InputParameterController.createMapParamValue}"
                    contentWidth="400">
           <f:facet name="buttonBar"/>
@@ -84,7 +84,7 @@ in the correct context
                 <af:outputLabel value="Value" id="dc_ol3" showRequired="true"/>
               </af:panelGroupLayout>
               <af:panelGroupLayout id="dc_pgl3" layout="horizontal">
-                <af:inputText label="Class name" autoSubmit="true"
+                <af:inputText label="Class Name" autoSubmit="true"
                               required="true" simple="true"
                               valueChangeListener="#{InputParameterController.classNameChanged}"
                               value="#{prop.className}" columns="30" id="it6"/>

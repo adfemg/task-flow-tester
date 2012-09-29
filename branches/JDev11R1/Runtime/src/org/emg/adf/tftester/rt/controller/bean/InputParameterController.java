@@ -35,6 +35,7 @@ public class InputParameterController
   public void setRawParamValue(String rawParamValue)
   {
     ValueObject param = getValueObject();
+    String className = param.getClassName()!=null ?param.getClassName() : param.getType();
     if (rawParamValue==null || "".equals(rawParamValue))
     {
       param.setValueAsString(null);         
@@ -180,8 +181,17 @@ public class InputParameterController
         // because we inialized a map entry with type String
         vo.setType(vo.getClassName());        
       }
-      // check whether the class is instantiable
-      vo.instantiateComplexType();
+      // check whether the class is instantiable and can be assigned to the type of the parameter if it is a complex type
+      // if it is a simple type, we only check whether it is assignable to the type
+      if (vo.isComplexType())
+      {
+        // in instantiation we also check the type
+        vo.instantiateComplexType();        
+      }
+      else
+      {
+        vo.checkAssignable();
+      }
       // clear existing valueProperties
       vo.getValueProperties().clear();
       // determine new value properties based on new class name

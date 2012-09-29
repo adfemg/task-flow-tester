@@ -352,6 +352,7 @@
                                                        rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow!=null}">
                                     <af:selectBooleanCheckbox value="#{pageFlowScope.TaskFlowTester.stretchLayout}"
                                                               label="Stretch Layout?"
+                                                              rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
                                                               id="stretchLayout"/>
                                     <af:selectOneRadio layout="horizontal"
                                                        rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"

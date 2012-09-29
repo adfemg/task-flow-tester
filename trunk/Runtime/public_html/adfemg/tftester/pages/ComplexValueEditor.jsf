@@ -21,22 +21,24 @@ in the correct context
       </afc:component-extension>
     </afc:component>
   </af:xmlContent>
-  <af:group id="dc_g1">
-    <af:commandImageLink shortDesc="Construct Complex Value" id="cb4" immediate="true"
-                         icon="/adfemg/images/editRow.png" rendered="#{prop.complexType and !prop.mapType}">
-      <af:showPopupBehavior popupId="p1"/>
-    </af:commandImageLink>
-    <af:commandImageLink shortDesc="Construct Map" id="cb5" immediate="true" icon="/adfemg/images/editRow.png"
-                         rendered="#{prop.mapType}">
-      <af:showPopupBehavior popupId="p2"/>
-    </af:commandImageLink>
+    <af:group id="dc_g1">
+      <af:commandImageLink shortDesc="Construct Complex Value" id="cb4"
+                           immediate="true" icon="/adfemg/images/editRow.png"
+                           rendered="#{prop.complexType and !prop.mapType}">
+        <af:showPopupBehavior popupId="p1"/>
+      </af:commandImageLink>
+      <af:commandImageLink shortDesc="Construct Map" id="cb5" immediate="true"
+                           icon="/adfemg/images/editRow.png" 
+                           rendered="#{prop.mapType}">
+        <af:showPopupBehavior popupId="p2"/>
+      </af:commandImageLink>
       <af:popup childCreation="deferred" autoCancel="disabled" id="p1"
                 contentDelivery="lazyUncached"  
                 popupFetchListener="#{InputParameterController.openComplexParamPopup}">
-        <af:dialog id="d2" title="Construct Complex Parameter #{row.name}"
+        <af:dialog id="d2" title="Construct Complex Parameter #{prop.name}"
                    type="none">
           <af:panelFormLayout id="pfl2" labelAlignment="start">
-                <af:inputText label="Class name" autoSubmit="true"
+                <af:inputText label="Class Name" autoSubmit="true"
                               required="true" 
                               valueChangeListener="#{InputParameterController.classNameChanged}"
                               value="#{prop.className}" columns="60" id="it3"/>
@@ -63,41 +65,55 @@ in the correct context
           </f:facet>
         </af:dialog>
       </af:popup>
-    <af:popup childCreation="deferred" autoCancel="disabled" id="p2" contentDelivery="lazyUncached"
-              popupFetchListener="#{InputParameterController.openMapParamPopup}">
-      <af:dialog id="d3" title="Construc Map Parameter" type="ok"
-                 dialogListener="#{InputParameterController.createMapParamValue}" contentWidth="400">
-        <f:facet name="buttonBar"/>
-        <af:panelGroupLayout id="pfl3" layout="scroll">
-          <af:iterator var="prop" varStatus="vs" value="#{prop.valueProperties}" id="i3">
-          <af:panelGroupLayout id="dc_pgl2" layout="horizontal" rendered="#{vs.index==0}">
-            <af:outputLabel value="Class Name" id="dc_ol1" showRequired="true"/>
-            <af:spacer width="110" height="10" id="dc_s1"/>
-            <af:outputLabel value="Key" id="dc_ol2" showRequired="true"/>
-            <af:spacer width="170" height="10" id="dc_s2"/>
-            <af:outputLabel value="Value" id="dc_ol3" showRequired="true"/>
-          </af:panelGroupLayout>
-            <af:panelGroupLayout id="dc_pgl3" layout="horizontal">
-              <af:inputText label="Class name" autoSubmit="true" required="true" simple="true"
-                            valueChangeListener="#{InputParameterController.classNameChanged}" value="#{prop.className}"
-                            columns="30" id="it6"/>
-              <af:inputText label="Key" autoSubmit="true" required="true" false="true" value="#{prop.name}" columns="30"
-                            id="it4" simple="true"/>
-              <af:inputText label="Value" autoSubmit="true" shortDesc="#{prop.hintText}" required="false"
-                            value="#{InputParameterController.rawParamValue}" columns="60" id="it5" simple="true"/>
-              <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf" id="dc1"/>
-              <af:commandImageLink shortDesc="Remove map entry" immediate="true"
-                                   actionListener="#{InputParameterController.removeMapEntry}"
-                                   icon="/adfemg/images/deleteRow.png" partialSubmit="true" id="cb6"/>
+      <af:popup childCreation="deferred" autoCancel="disabled" id="p2"
+                contentDelivery="lazyUncached"
+                popupFetchListener="#{InputParameterController.openMapParamPopup}">
+        <af:dialog id="d3" title="Construc Map Parameter #{prop.name}" type="ok"
+                   dialogListener="#{InputParameterController.createMapParamValue}"
+                   contentWidth="400">
+          <f:facet name="buttonBar"/>
+          <af:panelGroupLayout id="pfl3" layout="scroll">
+            <af:iterator var="prop" varStatus="vs"
+                         value="#{prop.valueProperties}" id="i3">
+              <af:panelGroupLayout id="dc_pgl2" layout="horizontal"
+                                   rendered="#{vs.index==0}">
+                <af:outputLabel value="Class Name" id="dc_ol1"
+                                showRequired="true"/>
+                <af:spacer width="110" height="10" id="dc_s1"/>
+                <af:outputLabel value="Key" id="dc_ol2" showRequired="true"/>
+                <af:spacer width="170" height="10" id="dc_s2"/>
+                <af:outputLabel value="Value" id="dc_ol3" showRequired="true"/>
+              </af:panelGroupLayout>
+              <af:panelGroupLayout id="dc_pgl3" layout="horizontal">
+                <af:inputText label="Class Name" autoSubmit="true"
+                              required="true" simple="true"
+                              valueChangeListener="#{InputParameterController.classNameChanged}"
+                              value="#{prop.className}" columns="30" id="it6"/>
+                <af:inputText label="Key" autoSubmit="true" required="true"
+                              value="#{prop.name}" columns="30" id="it4"
+                              simple="true"/>
+                <af:inputText label="Value" autoSubmit="true"
+                              shortDesc="#{prop.hintText}" required="false"
+                              value="#{InputParameterController.rawParamValue}" columns="60" id="it5"
+                              simple="true"/>
+                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
+                                         id="dc1"/>
+                <af:commandImageLink shortDesc="Remove map entry"
+                                     immediate="true"
+                                     actionListener="#{InputParameterController.removeMapEntry}"
+                                     icon="/adfemg/images/deleteRow.png"
+                                     partialSubmit="true" id="cb6"/>
+              </af:panelGroupLayout>
+            </af:iterator>
+            <af:panelGroupLayout id="pgl5" layout="horizontal" halign="right">
+              <af:spacer width="1" height="20" id="s2"/>
+              <af:commandButton text="Add Map Entry" immediate="true"
+                                partialSubmit="true"
+                                actionListener="#{InputParameterController.addParamMapEntry}"
+                                id="cb7"/>
             </af:panelGroupLayout>
-          </af:iterator>
-          <af:panelGroupLayout id="pgl5" layout="horizontal" halign="right">
-            <af:spacer width="1" height="20" id="s2"/>
-            <af:commandButton text="Add Map Entry" immediate="true" partialSubmit="true"
-                              actionListener="#{InputParameterController.addParamMapEntry}" id="cb7"/>
           </af:panelGroupLayout>
-        </af:panelGroupLayout>
-      </af:dialog>
-    </af:popup>
-  </af:group>
+        </af:dialog>
+      </af:popup>
+    </af:group>
 </af:componentDef>

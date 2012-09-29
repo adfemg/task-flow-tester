@@ -47,7 +47,6 @@ public class ValueObject
   {
     simpleTypes.add(Integer.class);
     simpleTypes.add(String.class);
-    simpleTypes.add(Number.class);
     simpleTypes.add(BigDecimal.class);
     simpleTypes.add(Long.class);
     simpleTypes.add(Short.class);
@@ -81,16 +80,27 @@ public class ValueObject
     this.mapEntry = mapEntry;
   }
 
+  public boolean isObject()
+  {
+    String className = getClassName(true);
+    return className==null || className.equals(Object.class.getName()) ;
+  }
+
   public boolean isDate()
   {
-    return getType().equals(Date.class.getName()) 
-      || getType().equals(java.util.Date.class.getName()) 
-      || getType().equals(Timestamp.class.getName()); 
+    String className = getClassName(true);
+    if (className==null)
+    {
+      return false;
+    }
+    return className.equals(Date.class.getName()) 
+      || className.equals(java.util.Date.class.getName()) 
+      || className.equals(Timestamp.class.getName()); 
   }
   
   public boolean isJboKey()
   {
-   return getType().equals(oracle.jbo.Key.class.getName()); 
+   return getClassName(true).equals(oracle.jbo.Key.class.getName()); 
   }
 
   public void setType(String type)
@@ -122,7 +132,7 @@ public class ValueObject
   {
     if (isComplexType())
     {
-      return "Enter EL expression or click edit icon to construct/view instance of " + getType();        
+      return "Enter EL expression or click edit icon to construct/view instance of " + getClassName(true);        
     }
     else if (isDate())
     {
@@ -132,17 +142,30 @@ public class ValueObject
     {
       return "Enter EL expression or comma-delimited list of key attribute values. Note that the values must be specified in the same sequence as the attributes are defined in the key.";
     }
-    return "Enter EL expression or literal value matching " + getType();
+    return "Enter EL expression or literal value matching " + getClassName(true);
   }
 
+  public String getClassName(boolean defaultToType)
+  {
+    if (getClassName()!=null)
+    {
+      return getClassName();
+    }
+    else if (defaultToType)
+    {
+      return getType();
+    }
+    return null;
+  }
+  
   public boolean isComplexType()
   {
-    if (getType()==null)
+    if (getClassName(true)==null)
     {
       // can happen with map entry
       return false;
     }
-    Class c = getClass(getType());
+    Class c = getClass(getClassName(true));
     if (c==null)
     {
       // c  is null when property is primitive like int or char
@@ -159,7 +182,7 @@ public class ValueObject
 
   public boolean isMapType()
   {
-    Class c = getClass(getType());
+    Class c = getClass(getClassName(true));
     if (c==null)
     {
       return false;
@@ -180,7 +203,7 @@ public class ValueObject
   {
     if (isComplexType() && getValueProperties().size()==0)
     {
-      String className = getClassName()!=null ? getClassName() : getType();
+      String className = getClassName(true);
       Class c = getClass(className);
       setClassName(className);
       //    BeanWrapper bw = paramValue!=null ? new BeanWrapperImpl(paramValue) : new BeanWrapperImpl(c);
@@ -267,16 +290,7 @@ public class ValueObject
         throw new JboException("Class " + getClassName() + " does not exist");
       }
       instance = c.newInstance();
-      if (!(getType().equals(getClassName())))
-      {
-        //check whether we can cast the specified class name to the parameter type
-        Class typeClass = getClass(getType());
-        boolean isAssignable = typeClass.isAssignableFrom(instance.getClass());
-        if (!isAssignable)
-        {
-          throw new JboException("Class " + getClassName() + " cannot be cast to " + getType());
-        }
-      }
+      checkAssignable();
     }
     catch (InstantiationException e)
     {
@@ -287,6 +301,26 @@ public class ValueObject
     }
     return instance;
   }
+
+  /**
+   *  Method checks whether the class name specified is assignable to the type of the value object.
+   *  If not, a JboException is thrown
+   */
+  public void checkAssignable()
+  {
+    if (!(getType().equals(getClassName())))
+    {
+      //check whether we can cast the specified class name to the parameter type
+      Class typeClass = getClass(getType());
+      Class classClass = getClass(getClassName());
+      boolean isAssignable = classClass==null || typeClass.isAssignableFrom(classClass);
+      if (!isAssignable)
+      {
+        throw new JboException("Class " + getClassName() + " cannot be cast to " + getType());
+      }
+    }    
+  }
+
 
   /**
    * This method is called just before a test is run to ensure the value object is constructed
@@ -338,7 +372,7 @@ public class ValueObject
             // use Spring to do type conversions using registered property editors          
             if (!pp.isElExpressionUsed() && pp.getValue() instanceof String)
             {
-              convertedValue = ConverterHelperBean.convertValue(pp.getType(), (String) pp.getValue());
+              convertedValue = ConverterHelperBean.convertValue(pp.getClassName(true), (String) pp.getValue());
             }
             PropertyUtils.setProperty(value, pp.getName(), convertedValue);
           }
@@ -412,7 +446,7 @@ public class ValueObject
     else if (!isElExpressionUsed())
     {
       // convert to actucal value using spring beanwrapper to get automatic type conversions.
-      this.value = ConverterHelperBean.convertValue(getType(), valueAsString);
+      this.value = ConverterHelperBean.convertValue(getClassName(true), valueAsString);
     }
   }
 
