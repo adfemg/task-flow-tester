@@ -18,9 +18,13 @@ import oracle.adf.controller.metadata.MetadataService;
 import oracle.adf.controller.metadata.model.Activity;
 import oracle.adf.controller.metadata.model.NamedParameter;
 import oracle.adf.controller.metadata.model.TaskFlowDefinition;
+import oracle.adf.model.BindingContext;
+import oracle.adf.model.binding.DCBindingContainer;
 import oracle.adf.view.rich.context.AdfFacesContext;
 
 import oracle.adfinternal.controller.metadata.model.xml.ActivityXmlImpl;
+
+import oracle.jbo.JboException;
 
 import oracle.xml.parser.v2.XMLElement;
 
@@ -49,28 +53,28 @@ import org.emg.adf.tftester.rt.util.JsfUtils;
 
 public class TaskFlowTester
 {
-  
-  private final static String TESTER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/tester-tf.xml#tester-tf"; 
-  private final static String LAUNCHER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/launcher-tf.xml#launcher-tf"; 
+
+  private final static String TESTER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/tester-tf.xml#tester-tf";
+  private final static String LAUNCHER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/launcher-tf.xml#launcher-tf";
   private TaskFlow currentTestTaskFlow;
   private TaskFlowTestCase currentTestCase;
 
   private String testNavigationOutcome;
   private String runTaskFlowId;
-  private String regionTaskFlowId = LAUNCHER_TASK_FLOW_ID;  
+  private String regionTaskFlowId = LAUNCHER_TASK_FLOW_ID;
   private TaskFlowDefinition taskFlowDefinition;
   private Map runParamMap = new HashMap();
   private Map regionParamMap = new HashMap();
-  
+
   private boolean runInRegion = true;
   private boolean runAsCall = false;
   private boolean testActive = false;
   private boolean stretchLayout = true;
-  
+
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
 
   List<ReturnValue> testReturnValues;
-  
+
   public TaskFlowTester()
   {
     super();
@@ -84,47 +88,60 @@ public class TaskFlowTester
   public void setTestTaskFlowId(String taskFlowId)
   {
     TaskFlow tf = new TaskFlow();
-    tf.setTaskFlowIdString(taskFlowId);    
+    tf.setTaskFlowIdString(taskFlowId);
     setCurrentTestTaskFlow(tf);
     getTestTaskFlows().add(tf);
   }
 
   public String getTestTaskFlowId()
   {
-    return getCurrentTestTaskFlow()!=null ? getCurrentTestTaskFlow().getTaskFlowIdString() : null;
+    return getCurrentTestTaskFlow() != null? getCurrentTestTaskFlow().getTaskFlowIdString(): null;
   }
-  
+
   public void doTest(ActionEvent event)
   {
-    setTestActive(true);
-    // set up return values again, so values from previous run are cleared
-    setUpDynamicTFCallReturnValues();
-    Map testParamMap = new HashMap();
-    for (InputParameter param : getCurrentTestTaskFlow().getInputParams())
+    try
     {
-      // first construct value
-      param.getValueObject().constructValue();
-      if (param.getParamValue()!=null && !"".equals(param.getParamValue()))
+      setTestActive(true);
+      // set up return values again, so values from previous run are cleared
+      setUpDynamicTFCallReturnValues();
+      Map testParamMap = new HashMap();
+      for (InputParameter param: getCurrentTestTaskFlow().getInputParams())
       {
-        testParamMap.put(param.getName(), param.getParamValue());             
+        // first construct value
+        param.getValueObject().constructValue();
+        if (param.getParamValue() != null && !"".equals(param.getParamValue()))
+        {
+          testParamMap.put(param.getName(), param.getParamValue());
+        }
       }
-    }    
-    if (!getCurrentTestTaskFlow().isUsesPageFragments())
-    {
-      setRunTaskFlowId(getTestTaskFlowId());    
-      runParamMap = testParamMap;      
+      if (!getCurrentTestTaskFlow().isUsesPageFragments())
+      {
+        setRunTaskFlowId(getTestTaskFlowId());
+        runParamMap = testParamMap;
+      }
+      else if (isRunInRegion())
+      {
+        setRegionTaskFlowId(getTestTaskFlowId());
+        regionParamMap = testParamMap;
+      }
+      else
+      {
+        setRegionTaskFlowId(this.LAUNCHER_TASK_FLOW_ID);
+        setRunTaskFlowId(getTestTaskFlowId());
+        regionParamMap = getLauncherParamMap();
+        runParamMap = testParamMap;
+      }
     }
-    else if (isRunInRegion())
+    catch (JboException e)
     {
-      setRegionTaskFlowId(getTestTaskFlowId());
-      regionParamMap = testParamMap;
+      DCBindingContainer container = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
+      container.processException(e);
     }
-    else
+    catch (Exception e)
     {
-      setRegionTaskFlowId(this.LAUNCHER_TASK_FLOW_ID);
-      setRunTaskFlowId(getTestTaskFlowId());    
-      regionParamMap = getLauncherParamMap();
-      runParamMap = testParamMap;
+      DCBindingContainer container = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
+      container.processException(new JboException(e.getMessage()));
     }
   }
 
@@ -138,7 +155,7 @@ public class TaskFlowTester
 
   public Map getLauncherParamMap()
   {
-    Map params = new HashMap();    
+    Map params = new HashMap();
     params.put("TaskFlowTester", this);
     return params;
   }
@@ -150,7 +167,7 @@ public class TaskFlowTester
 
   public void setRunInRegion(boolean runInRegion)
   {
-    this.runAsCall = !runInRegion;    
+    this.runAsCall = !runInRegion;
     this.runInRegion = runInRegion;
   }
 
@@ -162,7 +179,7 @@ public class TaskFlowTester
   public void setRunAsCall(boolean runAsCall)
   {
     this.runInRegion = !runAsCall;
-    this.runAsCall = runAsCall;    
+    this.runAsCall = runAsCall;
   }
 
   public boolean isRunAsCall()
@@ -216,7 +233,7 @@ public class TaskFlowTester
     // get return value definitions from TF that we are going to call
     Map<String, NamedParameter> returnValueDefs = getCurrentTestTaskFlow().getReturnValueDefs();
 
-//    Map<String,ValueMapping> returnValueMappings = getTaskFlowCallReturnValueMappings();
+    //    Map<String,ValueMapping> returnValueMappings = getTaskFlowCallReturnValueMappings();
 
     // now clear dummy returnValues that might be specified for our dynamic TF call
     // and set the return values based on definitions in test TF
@@ -225,19 +242,19 @@ public class TaskFlowTester
     // In JDev 11.1.1.x the return value mappings map is unmodifiable, create new tf call XML node
     // with correct return value defs
     replaceTaskFlowCallXMLNode();
-    
+
     // Also set up return values map that will be populated with actual retunr values
     testReturnValues = new ArrayList<ReturnValue>();
-    for (NamedParameter param : returnValueDefs.values())
+    for (NamedParameter param: returnValueDefs.values())
     {
       String name = param.getName();
-      String expression = "#{pageFlowScope."+name+"}";
-//      ValueMapping vm = new ValueMappingImpl(name,expression);
-//      returnValueMappings.put(param.getName(), vm);
-// makes no sense to add the return value, we cannot show the value in JDev 11.1.1.x
-      testReturnValues.add(new ReturnValue(name,null,expression));
+      String expression = "#{pageFlowScope." + name + "}";
+      //      ValueMapping vm = new ValueMappingImpl(name,expression);
+      //      returnValueMappings.put(param.getName(), vm);
+      // makes no sense to add the return value, we cannot show the value in JDev 11.1.1.x
+      testReturnValues.add(new ReturnValue(name, null, expression));
     }
-    
+
   }
 
   private void replaceTaskFlowCallXMLNode()
@@ -247,7 +264,7 @@ public class TaskFlowTester
     // or using the tester task flow.
     Map<ActivityId, Activity> activities = null;
     TaskFlowId callingTfId = ControllerContext.getInstance().getCurrentViewPort().getTaskFlowContext().getTaskFlowId();
-    if (callingTfId==null)
+    if (callingTfId == null && !getCurrentTestTaskFlow().isUsesPageFragments())
     {
       // The AdfPageFlow contains combined activities of all adfc-config.xml files that are in context of
       // this app (can be many, eacg ADF lib has one)
@@ -256,19 +273,20 @@ public class TaskFlowTester
     else
     {
       // we are in the tester task flow
-      TaskFlowId launcherTfi = getCurrentTestTaskFlow().isUsesPageFragments() ? TaskFlowId.parse(LAUNCHER_TASK_FLOW_ID) : callingTfId;    
+      TaskFlowId launcherTfi =
+        getCurrentTestTaskFlow().isUsesPageFragments()? TaskFlowId.parse(LAUNCHER_TASK_FLOW_ID): callingTfId;
       TaskFlowDefinition launcherTFDef = MetadataService.getInstance().getTaskFlowDefinition(launcherTfi);
       activities = launcherTFDef.getActivities();
-    }  
+    }
     ActivityId callActId = getTestTaskFlowCallActivity(activities);
-    if (callActId!=null)
+    if (callActId != null)
     {
       Activity act = activities.get(callActId);
       XMLElement el = createTaskFlowCallXmlNode();
       Activity actNew = ActivityXmlImpl.parse(act.getParsingContext(), el);
       // replace the activity with the newly created activity that has correct return values
-      activities.put(callActId, actNew);          
-    }      
+      activities.put(callActId, actNew);
+    }
   }
 
   private ActivityId getTestTaskFlowCallActivity(Map<ActivityId, Activity> activities)
@@ -282,7 +300,7 @@ public class TaskFlowTester
         break;
       }
     }
-    return found;     
+    return found;
   }
 
   /**
@@ -291,28 +309,28 @@ public class TaskFlowTester
    */
   private XMLElement createTaskFlowCallXmlNode()
   {
-    XMLElement el  = new XMLElement("task-flow-call");
+    XMLElement el = new XMLElement("task-flow-call");
     el.setAttribute("id", "testTaskFlowCall");
-    XMLElement dynref  = new XMLElement("dynamic-task-flow-reference");
+    XMLElement dynref = new XMLElement("dynamic-task-flow-reference");
     dynref.setTextContent("#{pageFlowScope.TaskFlowTester.runTaskFlowId}");
     el.appendChild(dynref);
-    XMLElement map  = new XMLElement("input-parameter-map");
+    XMLElement map = new XMLElement("input-parameter-map");
     map.setTextContent("#{pageFlowScope.TaskFlowTester.runParamMap}");
     el.appendChild(map);
-    XMLElement al  = new XMLElement("after-listener");
+    XMLElement al = new XMLElement("after-listener");
     al.setTextContent("#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}");
     el.appendChild(al);
 
     Map<String, NamedParameter> returnValueDefs = getCurrentTestTaskFlow().getReturnValueDefs();
-    for (NamedParameter param : returnValueDefs.values())
+    for (NamedParameter param: returnValueDefs.values())
     {
       String name = param.getName();
-      String expression = "#{pageFlowScope."+name+"}";
-      XMLElement rv  = new XMLElement("return-value");
-      XMLElement rvname  = new XMLElement("name");
+      String expression = "#{pageFlowScope." + name + "}";
+      XMLElement rv = new XMLElement("return-value");
+      XMLElement rvname = new XMLElement("name");
       rvname.setTextContent(name);
       rv.appendChild(rvname);
-      XMLElement rvvalue  = new XMLElement("value");
+      XMLElement rvvalue = new XMLElement("value");
       rvvalue.setTextContent(expression);
       rv.appendChild(rvvalue);
       el.appendChild(rv);
@@ -320,15 +338,15 @@ public class TaskFlowTester
     if (!getCurrentTestTaskFlow().getTaskFlowDefinition().usePageFragments())
     {
       // add run as dialog option
-//      <run-as-dialog>
-//        <display-type id="__10">
-//          <inline-popup/>
-//        </display-type>
-//      </run-as-dialog>
+      //      <run-as-dialog>
+      //        <display-type id="__10">
+      //          <inline-popup/>
+      //        </display-type>
+      //      </run-as-dialog>
       XMLElement rad = new XMLElement("run-as-dialog");
       XMLElement dt = new XMLElement("display-type");
       XMLElement ip = new XMLElement("inline-popup");
-//      XMLElement ip = new XMLElement("external-window");
+      //      XMLElement ip = new XMLElement("external-window");
       dt.appendChild(ip);
       rad.appendChild(dt);
       el.appendChild(rad);
@@ -366,12 +384,12 @@ public class TaskFlowTester
    * refreshes the Task Flow config area
    */
   public void returnedFromTestTaskFlowCall()
-  { 
+  {
     refreshTestArea();
     populateTestReturnValues();
     setTestActive(false);
   }
-  
+
   public void refreshTaskFlowArea()
   {
     UIComponent tfarea = JsfUtils.findComponentInRoot("tfarea");
@@ -391,7 +409,7 @@ public class TaskFlowTester
 
   public void setCurrentTestCase(TaskFlowTestCase currentTestCase)
   {
-    if (currentTestCase==null)
+    if (currentTestCase == null)
     {
       this.currentTestCase = null;
       return;
@@ -412,27 +430,27 @@ public class TaskFlowTester
   {
     return currentTestCase;
   }
-  
+
   public String getHeaderText()
   {
-    if (getCurrentTestCase()!=null)
+    if (getCurrentTestCase() != null)
     {
-      return "Task Flow Testcase "+getCurrentTestCase().getName();
+      return "Task Flow Testcase " + getCurrentTestCase().getName();
     }
-    else if (getCurrentTestTaskFlow()!=null)
+    else if (getCurrentTestTaskFlow() != null)
     {
-      return "Task Flow "+getCurrentTestTaskFlow().getDisplayName();
+      return "Task Flow " + getCurrentTestTaskFlow().getDisplayName();
     }
-    else if (getCurrentTestTaskFlow()!=null)
+    else if (getCurrentTestTaskFlow() != null)
     {
-      return "Task Flow "+getCurrentTestTaskFlow().getDisplayName();
+      return "Task Flow " + getCurrentTestTaskFlow().getDisplayName();
     }
     return "Add, load or import task flows using the iconic buttons bar";
   }
 
   public void changeRunAsOption(ValueChangeEvent valueChangeEvent)
   {
-    setRunInRegion((Boolean)valueChangeEvent.getNewValue());
+    setRunInRegion((Boolean) valueChangeEvent.getNewValue());
     refreshTestArea(false);
   }
 
@@ -451,46 +469,46 @@ public class TaskFlowTester
     return testNavigationOutcome;
   }
 
-//  private class ValueMappingImpl implements ValueMapping
-//  {
-//    String name;
-//    String expression;
-//
-//    public ValueMappingImpl(String name, String expression)
-//    {
-//      this.name = name;
-//      this.expression = expression;
-//    }
-//
-//    public String getValueName()
-//    {
-//      return name; 
-//    }
-//
-//    /**
-//     * @return the value EL expression for this mapping
-//     */
-//    public String getValueExpression()
-//    {
-//      return expression;       
-//    }
-//
-//    public boolean shouldPassByValue()
-//    {
-//      return false;
-//    }
-//  }
+  //  private class ValueMappingImpl implements ValueMapping
+  //  {
+  //    String name;
+  //    String expression;
+  //
+  //    public ValueMappingImpl(String name, String expression)
+  //    {
+  //      this.name = name;
+  //      this.expression = expression;
+  //    }
+  //
+  //    public String getValueName()
+  //    {
+  //      return name;
+  //    }
+  //
+  //    /**
+  //     * @return the value EL expression for this mapping
+  //     */
+  //    public String getValueExpression()
+  //    {
+  //      return expression;
+  //    }
+  //
+  //    public boolean shouldPassByValue()
+  //    {
+  //      return false;
+  //    }
+  //  }
 
   public void populateTestReturnValues()
   {
     // if test active, we need to populate with actual values
-    for (ReturnValue param : testReturnValues)
+    for (ReturnValue param: testReturnValues)
     {
       String name = param.getName();
       String expression = param.getValueExpression();
       Object returnValue = JsfUtils.getExpressionValue(expression);
       param.setValue(returnValue);
-    }         
+    }
     String outcome = (String) JsfUtils.getExpressionValue("#{lastNavigationOutcome}");
     setTestNavigationOutcome(outcome);
   }
@@ -499,17 +517,17 @@ public class TaskFlowTester
   {
     return testReturnValues;
   }
-        
+
   public class ReturnValue
   {
     private String name;
     private String valueExpression;
     private Object value;
 
-    public ReturnValue(String name,Object value, String valueExpression)
+    public ReturnValue(String name, Object value, String valueExpression)
     {
       this.name = name;
-      this.value = value;   
+      this.value = value;
       this.valueExpression = valueExpression;
     }
 
@@ -561,36 +579,36 @@ public class TaskFlowTester
     refreshComponent(testArea);
     if (resetComponentTree)
     {
-      JsfUtils.resetComponentTree(testArea);      
+      JsfUtils.resetComponentTree(testArea);
     }
   }
-  
+
   public void refreshComponent(UIComponent comp)
   {
-    if (comp!=null)
+    if (comp != null)
     {
-      AdfFacesContext.getCurrentInstance().addPartialTarget(comp);      
-    }    
+      AdfFacesContext.getCurrentInstance().addPartialTarget(comp);
+    }
   }
 
-  @PostConstruct
   /**
    * If the current task flow is not yet set, set it to the first
    * task flow in the list of available task flows
    */
+  @PostConstruct
   public void setCurrentTestTaskFlowIfNeeded()
   {
-    if (getCurrentTestTaskFlow()==null && getTestTaskFlows().size()>0)
+    if (getCurrentTestTaskFlow() == null && getTestTaskFlows().size() > 0)
     {
-       TaskFlow tf = getTestTaskFlows().get(0);
-       if (tf!=null)
-       {
-         setCurrentTestTaskFlow(tf);       
-         refreshTestArea();
-       }
+      TaskFlow tf = getTestTaskFlows().get(0);
+      if (tf != null)
+      {
+        setCurrentTestTaskFlow(tf);
+        refreshTestArea();
+      }
     }
   }
-  
+
   public static TaskFlowTester getInstance()
   {
     return (TaskFlowTester) JsfUtils.getExpressionValue("#{pageFlowScope.TaskFlowTester}");

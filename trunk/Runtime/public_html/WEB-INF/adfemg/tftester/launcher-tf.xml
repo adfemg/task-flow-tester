@@ -19,8 +19,5 @@
       <after-listener>#{pageFlowScope.TaskFlowTester.returnedFromTestTaskFlowCall}</after-listener>
     </task-flow-call>
     <use-page-fragments/>
-    <visibility>
-      <library-internal/>
-    </visibility>
   </task-flow-definition>
 </adfc-config>

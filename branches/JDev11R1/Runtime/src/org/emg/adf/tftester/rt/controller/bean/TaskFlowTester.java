@@ -20,7 +20,13 @@ import oracle.adf.controller.internal.metadata.NamedParameter;
 import oracle.adf.controller.internal.metadata.TaskFlowDefinition;
 import oracle.adf.controller.internal.metadata.ValueMapping;
 import oracle.adf.controller.internal.metadata.xml.ActivityXmlImpl;
+import oracle.adf.model.BindingContext;
+import oracle.adf.model.binding.DCBindingContainer;
 import oracle.adf.view.rich.context.AdfFacesContext;
+
+import oracle.adfinternal.controller.activity.TaskFlowCallActivityLogic;
+
+import oracle.jbo.JboException;
 
 import oracle.xml.parser.v2.XMLElement;
 
@@ -99,35 +105,49 @@ public class TaskFlowTester
   
   public void doTest(ActionEvent event)
   {
-    setTestActive(true);
-    // set up return values again, so values from previous run are cleared
-    setUpDynamicTFCallReturnValues();
-    Map testParamMap = new HashMap();
-    for (InputParameter param : getCurrentTestTaskFlow().getInputParams())
+    try
     {
-      // first construct value
-      param.getValueObject().constructValue();
-      if (param.getParamValue()!=null && !"".equals(param.getParamValue()))
+      setTestActive(true);
+      // set up return values again, so values from previous run are cleared
+      setUpDynamicTFCallReturnValues();
+      Map testParamMap = new HashMap();
+      for (InputParameter param: getCurrentTestTaskFlow().getInputParams())
       {
-        testParamMap.put(param.getName(), param.getParamValue());             
+        // first construct value
+        param.getValueObject().constructValue();
+        if (param.getParamValue() != null &&
+            !"".equals(param.getParamValue()))
+        {
+          testParamMap.put(param.getName(), param.getParamValue());
+        }
       }
-    }    
-    if (!getCurrentTestTaskFlow().isUsesPageFragments())
-    {
-      setRunTaskFlowId(getTestTaskFlowId());    
-      runParamMap = testParamMap;      
+      if (!getCurrentTestTaskFlow().isUsesPageFragments())
+      {
+        setRunTaskFlowId(getTestTaskFlowId());
+        runParamMap = testParamMap;
+      }
+      else if (isRunInRegion())
+      {
+        setRegionTaskFlowId(getTestTaskFlowId());
+        regionParamMap = testParamMap;
+      }
+      else
+      {
+        setRegionTaskFlowId(this.LAUNCHER_TASK_FLOW_ID);
+        setRunTaskFlowId(getTestTaskFlowId());
+        regionParamMap = getLauncherParamMap();
+        runParamMap = testParamMap;
+      }
     }
-    else if (isRunInRegion())
+    catch (JboException e)
     {
-      setRegionTaskFlowId(getTestTaskFlowId());
-      regionParamMap = testParamMap;
+      DCBindingContainer container = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
+      container.processException(e);        
     }
-    else
+    catch (Exception e)
     {
-      setRegionTaskFlowId(this.LAUNCHER_TASK_FLOW_ID);
-      setRunTaskFlowId(getTestTaskFlowId());    
-      regionParamMap = getLauncherParamMap();
-      runParamMap = testParamMap;
+      DCBindingContainer container = (DCBindingContainer) BindingContext.getCurrent().getCurrentBindingsEntry();
+      container.processException(new JboException(e.getMessage()));        
     }
   }
 
@@ -250,7 +270,7 @@ public class TaskFlowTester
     // or using the tester task flow.
     Map<ActivityId, Activity> activities = null;
     TaskFlowId callingTfId = ControllerContext.getInstance().getCurrentViewPort().getTaskFlowContext().getTaskFlowId();
-    if (callingTfId==null)
+    if (callingTfId==null && !getCurrentTestTaskFlow().isUsesPageFragments())
     {
       // The AdfPageFlow contains combined activities of all adfc-config.xml files that are in context of
       // this app (can be many, eacg ADF lib has one)

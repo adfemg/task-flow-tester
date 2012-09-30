@@ -2,21 +2,6 @@
 <SDM>
    <OverallProperties
       id="OverallProperties1"/>
-   <View
-      id="View6">
-      <property
-         name="activityId">tester</property>
-      <property
-         name="page">/adfemg/tftester/pages/tester.jspx</property>
-      <property
-         name="description">&lt;html>&lt;p>&lt;b>tester&lt;/b>&lt;/p>&lt;p>Activity Type:  View&lt;/p></property>
-      <property
-         name="exceptionHandler">false</property>
-      <property
-         name="y">71.79883</property>
-      <property
-         name="x">55.5</property>
-   </View>
    <TaskFlowCall
       id="TaskFlowCall7">
       <property
@@ -32,14 +17,29 @@
       <property
          name="x">70.67676</property>
    </TaskFlowCall>
+   <View
+      id="View5">
+      <property
+         name="activityId">tftester</property>
+      <property
+         name="page">/adfemg/tftester/pages/tester.jspx</property>
+      <property
+         name="description">&lt;html>&lt;p>&lt;b>tftester&lt;/b>&lt;/p>&lt;p>Activity Type:  View&lt;/p></property>
+      <property
+         name="exceptionHandler">false</property>
+      <property
+         name="y">234.64844</property>
+      <property
+         name="x">44.5</property>
+   </View>
    <ControlFlowCase
       islink="true"
-      id="ControlFlowCase9"
-      from="View6"
+      id="ControlFlowCase6"
+      from="View5"
       to="TaskFlowCall7">
       <property
          name="fromOutcome">testTFInDialog</property>
       <property
-         name="sdm:polyPoints">R50,96.5,71.44824,111.67676,173.44824,R50</property>
+         name="sdm:polyPoints">B50,44.5,288.64844,111.67676,288.64844,111.67676,173.44824,R50</property>
    </ControlFlowCase>
 </SDM>
