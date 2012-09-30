@@ -349,7 +349,14 @@ public class ValueObject
     {
       return;
     }
-    this.value = instantiateComplexType();
+    if (getValueProperties().size()==0)
+    {
+      this.value = null;
+    }
+    else
+    {
+      this.value = instantiateComplexType();      
+    }
     for (ValueObject pp: getValueProperties())
     {
         try

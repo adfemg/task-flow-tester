@@ -433,11 +433,12 @@ public class TaskFlowTesterService
           {
             Element tf = (Element) tfList.item(i);
             String path = tf.getAttribute("path");
+            boolean testerTf = path!=null && path.startsWith("WEB-INF/adfemg/tftester");
             String id = tf.getAttribute("id");
             String tfId = path + "#" + id;
             String type = tf.getAttribute("type");
             String internal = tf.getAttribute("library-internal");
-            if ("task-flow-definition".equals(type) &&
+            if (!testerTf && "task-flow-definition".equals(type) &&
                 "false".equals(internal))
             {
               taskflows.add(tfId);
