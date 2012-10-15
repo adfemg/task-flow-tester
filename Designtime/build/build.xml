@@ -26,7 +26,8 @@
   <target name="clean">
     <delete dir="${tft.stage.dir}"/>
     <delete dir="${tft.design.deploy.dir}"/>
-  </target>
+    <delete dir="${tft.design.output.dir}"/>
+</target>
 
   <target name="compile" description="Compile Java source files" depends="init">
     <javac destdir="${tft.design.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
@@ -38,9 +39,7 @@
    <target name="createjar" depends="clean, compile">
      <mkdir dir="${tft.design.deploy.dir}"/>
      <jar destfile="${tft.design.deploy.jar}">
-<!--
        <metainf dir="src/META-INF" includes="extension.xml"/>
--->
        <!-- put the version information in the manifest file as well -->
        <manifest>
          <attribute name="Export-Package" value="org.emg.adf.tftester.dt.addin"/>
