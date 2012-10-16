@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +30,13 @@ import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
-
-public class TaskFlowTreeController
+/**
+ * Controller class that handles user actions related to the task flow and testcase tree menu
+ */
+public class TaskFlowTreeController implements Serializable
 {
+  @SuppressWarnings("compatibility:6857602582069901148")
+  private static final long serialVersionUID = 1L;
   private String taskFlowId;
   private String displayName;
 

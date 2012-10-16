@@ -1,10 +1,24 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskFlowTestCase
+/**
+ * Model class that holds all data about a task flow testcase.
+ */
+public class TaskFlowTestCase implements Serializable
 {
+  @SuppressWarnings("compatibility:-40669652387037820")
+  private static final long serialVersionUID = 1L;
   private TaskFlow taskFlow;
   private String name; 
   private String description;

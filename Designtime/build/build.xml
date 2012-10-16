@@ -21,6 +21,9 @@
   <target name="init">
     <tstamp/>
     <mkdir dir="${tft.design.output.dir}"/>
+    <replaceregexp file="${tft.design.source.dir}/META-INF/extension.xml" 
+                   match='version="(\s*)(.*)"'
+                   replace='version="${tft.version.number}"'/>
   </target>
 
   <target name="clean">
