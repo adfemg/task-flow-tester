@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +48,6 @@ import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
-
 //import oracle.adf.controller.metadata.ActivityId;
 //import oracle.adf.controller.metadata.MetadataService;
 //import oracle.adf.controller.metadata.model.Activity;
@@ -56,18 +64,24 @@ import org.emg.adf.tftester.rt.util.JsfUtils;
 // import oracle.adf.controller.internal.metadata.ValueMapping;
 
 
-public class TaskFlowTester
+/**
+ * Main controller class that drives the task flow tester page.
+ * This classs keeps track of the current task flow and current task flow testcase and the associated run options.
+ * This class is also responsible for running the actual test and collecting task flow return values.
+ */
+public class TaskFlowTester implements Serializable
 {
   
   private final static String TESTER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/tester-tf.xml#tester-tf"; 
-  private final static String LAUNCHER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/launcher-tf.xml#launcher-tf"; 
+  private final static String LAUNCHER_TASK_FLOW_ID = "/WEB-INF/adfemg/tftester/launcher-tf.xml#launcher-tf";
+  private static final long serialVersionUID = 1L;
   private TaskFlow currentTestTaskFlow;
   private TaskFlowTestCase currentTestCase;
 
   private String testNavigationOutcome;
   private String runTaskFlowId;
   private String regionTaskFlowId = LAUNCHER_TASK_FLOW_ID;  
-  private TaskFlowDefinition taskFlowDefinition;
+  private transient TaskFlowDefinition taskFlowDefinition;
   private Map runParamMap = new HashMap();
   private Map regionParamMap = new HashMap();
   
@@ -78,7 +92,7 @@ public class TaskFlowTester
   
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
 
-  List<ReturnValue> testReturnValues;
+  private transient List<ReturnValue> testReturnValues;
   
   public TaskFlowTester()
   {
@@ -523,7 +537,7 @@ public class TaskFlowTester
     return testReturnValues;
   }
         
-  public class ReturnValue
+  public class ReturnValue 
   {
     private String name;
     private String valueExpression;

@@ -1,6 +1,15 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model;
 
 import java.beans.PropertyDescriptor;
+
+import java.io.Serializable;
 
 import java.math.BigDecimal;
 
@@ -24,13 +33,21 @@ import org.emg.adf.tftester.rt.util.JsfUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
-
-public class ValueObject
+/**
+ * Model class that holds all data about a task flow input parameter value.
+ * If the value is a map or a complex type, the ValueObject is decomposed into 
+ * a list of child ValueObjects. This nesting of value objects is unlimited and 
+ * continues until the level where the end user can enter a simple value (or EL expression) 
+ * in the user interface to populate a property of the (nested) complex type.
+ */
+public class ValueObject implements Serializable
 {
   private static ADFLogger sLog = ADFLogger.createADFLogger(ValueObject.class);
+  @SuppressWarnings("compatibility:-122814710278353953")
+  private static final long serialVersionUID = 1L;
   private String type;
   private String name;
-  Object value;
+  private transient Object value;
   String valueAsString;
   private static List<Class> simpleTypes = new ArrayList<Class>();
   String className;

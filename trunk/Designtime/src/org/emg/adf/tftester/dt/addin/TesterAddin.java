@@ -91,7 +91,9 @@ public class TesterAddin
     //      String jarloc =
     //        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml";
           String jarloc =
-            filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jsf";
+//    filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/adfemg/tftester/pages/tester.jsf";
+// by running adfc-config as target and not the tester page, we no longer get NPE in oracle.adfdtinternal.view.rich.template.addin.ComponentIsNonExecutableSourceNodeHelper            
+    filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/META-INF/adfc-config.xml";
     try
     {
       URL runUrl = new URL("jar", null, jarloc);

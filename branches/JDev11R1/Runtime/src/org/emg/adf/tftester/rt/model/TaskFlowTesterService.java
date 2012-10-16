@@ -1,9 +1,17 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.StringWriter;
 
 import java.net.MalformedURLException;
@@ -47,12 +55,17 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
-public class TaskFlowTesterService
+/**
+ * The service class that maintains the list of task flows and testcases, loads available task flows,
+ * and implements the XML import/export functions.
+ */
+public class TaskFlowTesterService implements Serializable
 {
+  @SuppressWarnings("compatibility:-3144222963419312295")
+  private static final long serialVersionUID = 1L;
   private List<TaskFlow> testTaskFlows = new ArrayList<TaskFlow>();
   private Map<String, TaskFlow> testTaskFlowsMap = new HashMap<String,TaskFlow>();
-  ADFLogger sLog = ADFLogger.createADFLogger(TaskFlowTesterService.class);
+  private static ADFLogger sLog = ADFLogger.createADFLogger(TaskFlowTesterService.class);
 
   public TaskFlowTesterService()
   {

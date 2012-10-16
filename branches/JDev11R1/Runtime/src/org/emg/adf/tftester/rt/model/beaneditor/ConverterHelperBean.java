@@ -1,3 +1,10 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model.beaneditor;
 
 import java.beans.PropertyDescriptor;
@@ -17,11 +24,12 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 /**
- * We use this bean as a helper to convert values when we populate a Map.
- * Spring BeanWrapper does not support a Map.
- * Apache commons PropertyUtils does support a map but does not have the built-in property editors Spring has, and
- * they don't work with maps anyway as they are registered against a class, not a specific property
- *
+ * This class converts String values to the correct type.
+ * It is used when populating a Map type input parameter.
+ * Spring BeanWrapper does not support a Map. Apache commons PropertyUtils does 
+ * support a map but does not have the built-in property editors Spring has, and
+ * they don't work with maps anyway as they are registered against a class, 
+ * not a specific property
  */
 public class ConverterHelperBean
 {

@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
+
+import java.io.Serializable;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
@@ -15,11 +24,18 @@ import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
-public class Importer
+/**
+ * Controller class to support Import from XML function in user interface.
+ * The actual import from XML is delegated to TaskFlowTesterService
+ * @see TaskFlowTesterService
+ */
+public class Importer implements Serializable
 {
+  @SuppressWarnings("compatibility:9210328595572863597")
+  private static final long serialVersionUID = 1L;
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
   private String xml;
-  private RichPopup popup;
+  private transient RichPopup popup;
 
   public Importer()
   {

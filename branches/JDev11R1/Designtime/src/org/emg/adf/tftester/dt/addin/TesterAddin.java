@@ -86,10 +86,11 @@ public class TesterAddin
     String filePrefix = homeDir.startsWith("/") ? "file:" : "file:/";
 // Before JDev 11.1.1.6 we cann run the tester within unbounde dtask flow using tester page
 // We must run it inside its own task flow and mempory scope by running the tf-tester task flow
-   float version = Ide.getVersion();
-   String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/WEB-INF/adfemg/tftester/tester-tf.xml";
+//   float version = Ide.getVersion();
+//      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/WEB-INF/adfemg/tftester/tester-tf.xml";
+//      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/META-INF/adfc-config.xml";
       String jarloc =
-        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!"+runFile;
+        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/META-INF/adfc-config.xml";
     try
     {
       URL runUrl = new URL("jar", null, jarloc);

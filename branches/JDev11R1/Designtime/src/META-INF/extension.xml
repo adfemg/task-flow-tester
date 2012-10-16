@@ -1,6 +1,6 @@
 <extension xmlns="http://jcp.org/jsr/198/extension-manifest"
            id="org.emg.adf.taskflowtester"
-           version="11.1.1.6.18"
+           version="11.1.1.6.20"
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
@@ -17,9 +17,7 @@
         <library  name="ADF EMG Task Flow Tester" deployed="true" forceExtensionInitialization="true">
             <classpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar</classpath>
             <srcpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT-src.zip</srcpath>
-<!--
-            <docpath>oracle.jheadstart/runtime/doc/api/jhsadfrt_javadoc.zip</docpath>
--->
+            <docpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT-javadoc.zip</docpath>
         </library>    
       </libraries>
     <jdeveloper-hook xmlns="http://xmlns.oracle.com/jdeveloper/1013/extension">

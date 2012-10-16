@@ -169,7 +169,7 @@
     </delete>
   </target>
 
-  <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile, sourcezipfile">
+  <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile, sourcezipfile, javadoc">
     <taskdef name="ojdeploy" classname="oracle.jdeveloper.deploy.ant.OJDeployAntTask" uri="oraclelib:OJDeployAntTask"
              classpath="${oracle.jdeveloper.ant.library}"/>
     <ora:ojdeploy xmlns:ora="oraclelib:OJDeployAntTask" executable="${oracle.jdeveloper.ojdeploy.path}"        
@@ -202,8 +202,24 @@
        <include name="**/*.properties"/>
        <include name="**/*.java"/>
        <include name="**/*.xml"/>
+       <include name="readme.txt"/>
      </zip>  
    </target>
+
+   <target name="javadoc" depends="init">
+      <!-- Recreate javadoc directory to prevent html files of renamed
+           classes/packages to linger around -->
+      <delete dir="${tft.runtime.javadoc.dir}"/>
+      <mkdir dir="${tft.runtime.javadoc.dir}"/>
+      <!--Create Javadoc-->
+      <javadoc packagenames="org.emg.adf.tftester.*" sourcepath="../src"  destdir="${tft.runtime.javadoc.dir}" version="false" author="false"/>
+      <!-- zip the javadoc, and put it in the deployment directory -->
+     <!-- create the deploy directory if it doesn't exist-->
+     <mkdir dir="${tft.runtime.deploy.dir}"/>
+      <zip destfile="${tft.runtime.deploy.javadoc.zip}" basedir="${tft.runtime.javadoc.dir}"/>
+   </target>
+
+
 
 
   <target name="compile" description="Compile Java source files" depends="init">

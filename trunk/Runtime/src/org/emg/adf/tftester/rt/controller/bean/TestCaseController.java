@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 
@@ -14,8 +23,13 @@ import org.emg.adf.tftester.rt.model.TaskFlow;
 import org.emg.adf.tftester.rt.model.TaskFlowTestCase;
 import org.emg.adf.tftester.rt.model.ValueObject;
 
-public class TestCaseController
+/**
+ * Controller class that handles user actions related to a task flow testcase.
+ */
+public class TestCaseController implements Serializable
 {
+  @SuppressWarnings("compatibility:8482710135173048412")
+  private static final long serialVersionUID = 1L;
   private String name;
   private String description;
   private RichPopup saveAsPopup;

@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,11 +29,19 @@ import oracle.adf.share.logging.ADFLogger;
 
 import oracle.jbo.JboException;
 
-public class TaskFlow
+/**
+ * Model class that holds all data about a task flow, including the list of test cases for this task flow.
+ * Most data is immutable as it comes from the underlying ADF task flow definition. 
+ * The display name is a special case, it can be set to overwrite the display name that might be defined
+ * against the ADF task flow definition.
+ */
+public class TaskFlow implements Serializable
 {
   
   private static ADFLogger sLog = ADFLogger.createADFLogger(TaskFlow.class);
-  private TaskFlowDefinition taskFlowDefinition;
+  @SuppressWarnings("compatibility:-7803463467216092445")
+  private static final long serialVersionUID = 1L;
+  private transient TaskFlowDefinition taskFlowDefinition;
   private List<org.emg.adf.tftester.rt.model.InputParameter> inputParams;
   private List<TaskFlowTestCase> testCases = new ArrayList<TaskFlowTestCase>();
   private String displayName;
