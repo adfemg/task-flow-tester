@@ -1,3 +1,10 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
 
 import java.io.ByteArrayInputStream;
@@ -5,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import javax.faces.context.FacesContext;
@@ -16,12 +24,19 @@ import oracle.adf.view.rich.component.rich.RichPopup;
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
 
-public class Exporter
+/**
+ * Controller class to support Export to XML function in user interface.
+ * The actual export to XML is delegated to TaskFlowTesterService
+ * @see TaskFlowTesterService
+ */
+public class Exporter implements Serializable
 {
   private static ADFLogger sLog = ADFLogger.createADFLogger(Exporter.class);
+  @SuppressWarnings("compatibility:2359777570024811736")
+  private static final long serialVersionUID = 1L;
   private TaskFlowTesterService taskFlowTesterService = TaskFlowTesterServiceFactory.getInstance();
   private String xml;
-  private RichPopup popup;
+  private transient RichPopup popup;
 
   public Exporter()
   {

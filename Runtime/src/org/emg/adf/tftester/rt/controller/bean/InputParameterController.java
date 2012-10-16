@@ -1,4 +1,13 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
+
+import java.io.Serializable;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
@@ -17,9 +26,15 @@ import oracle.jbo.JboException;
 import org.emg.adf.tftester.rt.model.ValueObject;
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
-
-public class InputParameterController
+/**
+ * Class that controls the user interface functions related to defining (complex) 
+ * input parameter values
+ */
+public class InputParameterController implements Serializable
 {
+
+  @SuppressWarnings("compatibility:8372063873658621885")
+  private static final long serialVersionUID = 1L;
 
   public InputParameterController()
   {

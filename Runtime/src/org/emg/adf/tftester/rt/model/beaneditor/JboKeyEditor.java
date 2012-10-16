@@ -1,3 +1,10 @@
+/*******************************************************************************
+ Copyright: see readme.txt
+ 
+ $revision_history$
+ 06-jun-2012   Steven Davelaar
+ 1.0           initial creation
+******************************************************************************/
 package org.emg.adf.tftester.rt.model.beaneditor;
 
 import java.beans.PropertyEditorSupport;
@@ -10,6 +17,9 @@ import oracle.jbo.Key;
 
 import org.apache.commons.beanutils.Converter;
 
+/**
+ * Custom Java-bean property editor to convert a String value into an oracle.jbo.Key object
+ */
 public class JboKeyEditor
   extends PropertyEditorSupport
   implements Converter
