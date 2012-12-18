@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 17-dec-2012   Steven Davelaar
+ 1.1           added sorting: now implements Comparable
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -15,7 +17,7 @@ import java.util.List;
 /**
  * Model class that holds all data about a task flow testcase.
  */
-public class TaskFlowTestCase implements Serializable
+public class TaskFlowTestCase implements Serializable, Comparable
 {
   @SuppressWarnings("compatibility:-40669652387037820")
   private static final long serialVersionUID = 1L;
@@ -104,12 +106,22 @@ public class TaskFlowTestCase implements Serializable
   }
 
   /**
-   * Dummy method required because "testCases" is defined as child property in tree menu model
+   * Dummy method required because "children" is defined as child property in tree menu model
    * @return
    */
-  public List<TaskFlowTestCase> getTestCases()
+  public List getChildren()
   {
     return null;
   }
 
+  public int compareTo(Object o)
+  {
+    if (o instanceof TaskFlowTestCase)
+    {
+      String name = getName();
+      String otherName = ((TaskFlowTestCase)o).getName();
+      return name.toUpperCase().compareTo(otherName.toUpperCase());
+    }
+    return 0;  
+  }
 }

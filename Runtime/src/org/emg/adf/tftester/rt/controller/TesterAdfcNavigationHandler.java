@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 14-dec-2012   Steven Davelaar
+ 1.1           Class no longer used, updated javadoc.
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -21,6 +23,8 @@ import org.emg.adf.tftester.rt.util.JsfUtils;
  * the navigation outcome in the tester.
  * It will always return null in handleNavigation to ensure default nav handler is used for actual navigation.
  * This class is used by ADF framework because it is specified as class name in file META-INF/services/oracle.adf.controller.internal.AdfcNavigationHandler
+ * NO LONGER USED: Does not work with WebCenter which also uses the META-INF/services/oracle.adf.controller.internal.AdfcNavigationHandler file.
+ * Now using custom JSF navigationhandler, see TesterNavigationHandler class
  */
 public class TesterAdfcNavigationHandler
   extends AdfcNavigationHandler implements Serializable

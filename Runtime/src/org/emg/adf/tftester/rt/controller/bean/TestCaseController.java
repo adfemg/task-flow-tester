@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 17-dec-2012   Steven Davelaar
+ 1.1           added sorting of testcases
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -11,6 +13,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -98,6 +101,7 @@ public class TestCaseController implements Serializable
       tc.setName(getName());
       tc.setDescription(getDescription());
       saveTestcase(tc);      
+      Collections.sort(tf.getTestCases());      
       tester.setCurrentTestCase(tc);
     }    
   }

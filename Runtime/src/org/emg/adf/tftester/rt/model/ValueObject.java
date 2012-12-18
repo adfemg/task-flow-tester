@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 17-dec-2012   Steven Davelaar
+ 1.1           Use java.util.HashMap as class when param type is java.util.Map
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -301,7 +303,13 @@ public class ValueObject implements Serializable
       {
         throw new JboException("Class name is required");        
       }
-      Class c = getClass(getClassName());
+      String className = getClassName();
+      // if it is java.util.Map, we use HashMap as instantiable type
+      if ("java.util.Map".equals(className))
+      {
+        className = "java.util.HashMap";
+      }
+      Class c = getClass(className);
       if (c == null)
       {
         throw new JboException("Class " + getClassName() + " does not exist");

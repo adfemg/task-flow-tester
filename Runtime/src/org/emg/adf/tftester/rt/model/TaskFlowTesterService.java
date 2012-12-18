@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 17-dec-2012   Steven Davelaar
+ 1.1           Added sorting
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -19,6 +21,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -199,6 +202,7 @@ public class TaskFlowTesterService implements Serializable
           }
         }
       }
+      Collections.sort(tf.getTestCases());
     }
   }
 
@@ -376,6 +380,7 @@ public class TaskFlowTesterService implements Serializable
     catch (IOException e)
     {
     }
+    Collections.sort(getTestTaskFlows());
   }
 
   /**
@@ -423,6 +428,7 @@ public class TaskFlowTesterService implements Serializable
     {
       addTaskFlow(taskFlowId, null, false, false);
     }
+    Collections.sort(getTestTaskFlows());
   }
 
   private void addAdfLibraryTaskFlows(List<String> taskflows)

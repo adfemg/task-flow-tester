@@ -13,9 +13,9 @@
       <property
          name="exceptionHandler">false</property>
       <property
-         name="y">173.79883</property>
+         name="y">221.09766</property>
       <property
-         name="x">70.67676</property>
+         name="x">373.67676</property>
    </TaskFlowCall>
    <View
       id="View5">
@@ -28,18 +28,27 @@
       <property
          name="exceptionHandler">false</property>
       <property
-         name="y">234.64844</property>
+         name="y">221.2461</property>
       <property
-         name="x">44.5</property>
+         name="x">62.5</property>
    </View>
+   <WildcardControlFlowRule
+      id="WildcardControlFlowRule5">
+      <property
+         name="activityId">*</property>
+      <property
+         name="y">56.896484</property>
+      <property
+         name="x">373.0</property>
+   </WildcardControlFlowRule>
    <ControlFlowCase
       islink="true"
-      id="ControlFlowCase6"
-      from="View5"
+      id="ControlFlowCase7"
+      from="WildcardControlFlowRule5"
       to="TaskFlowCall7">
       <property
-         name="fromOutcome">testTFInDialog</property>
+         name="fromOutcome">adfemgTestTaskFlowInDialog</property>
       <property
-         name="sdm:polyPoints">B50,44.5,288.64844,111.67676,288.64844,111.67676,173.44824,R50</property>
+         name="sdm:polyPoints">B50,373.0,99.5459,373.67676,166.74707,T50</property>
    </ControlFlowCase>
 </SDM>

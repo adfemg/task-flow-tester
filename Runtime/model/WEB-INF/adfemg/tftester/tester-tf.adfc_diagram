@@ -18,9 +18,9 @@
       <property
          name="exceptionHandler">false</property>
       <property
-         name="y">90.396484</property>
+         name="y">145.18945</property>
       <property
-         name="x">336.67676</property>
+         name="x">482.67676</property>
    </TaskFlowCall>
    <View
       id="View5">
@@ -45,8 +45,8 @@
       from="View5"
       to="TaskFlowCall3">
       <property
-         name="fromOutcome">testTFInDialog</property>
+         name="fromOutcome">adfemgTestTaskFlowInDialog</property>
       <property
-         name="sdm:polyPoints">R50,265.5,152.98242,295.67676,90.0459,L50</property>
+         name="sdm:polyPoints">R50,265.5,152.63184,441.67676,145.18945,L50</property>
    </ControlFlowCase>
 </SDM>

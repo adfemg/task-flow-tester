@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 17-dec-2012   Steven Davelaar
+ 1.1           added sorting: now implements Comparable
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -11,6 +13,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +38,11 @@ import oracle.jbo.JboException;
  * The display name is a special case, it can be set to overwrite the display name that might be defined
  * against the ADF task flow definition.
  */
-public class TaskFlow implements Serializable
+public class TaskFlow implements Serializable, Comparable
 {
   
   private static ADFLogger sLog = ADFLogger.createADFLogger(TaskFlow.class);
-  @SuppressWarnings("compatibility:-7803463467216092445")
+  @SuppressWarnings("compatibility:8649980447270702947")
   private static final long serialVersionUID = 1L;
   private transient TaskFlowDefinition taskFlowDefinition;
   private List<org.emg.adf.tftester.rt.model.InputParameter> inputParams;
@@ -186,6 +189,15 @@ public class TaskFlow implements Serializable
   {
     return testCases;
   }
+
+  /**
+   * Method called because "children" is defined as child property in tree menu model
+   * @return
+   */
+  public List<TaskFlowTestCase> getChildren()
+  {
+    return getTestCases();
+  }
   
   public InputParameter getInputParameter(String name)
   {
@@ -232,5 +244,15 @@ public class TaskFlow implements Serializable
       ip.getValueObject().setType(ip.getType());
     }      
   }
-  
+
+  public int compareTo(Object o)
+  {
+    if (o instanceof TaskFlow)
+    {
+      String name = getName();
+      String otherName = ((TaskFlow)o).getName();
+      return name.toUpperCase().compareTo(otherName.toUpperCase());
+    }
+    return 0;
+  }
 }

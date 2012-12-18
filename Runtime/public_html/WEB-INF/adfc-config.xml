@@ -18,13 +18,13 @@
         </display-type>
       </run-as-dialog>
     </task-flow-call>
-    <control-flow-rule id="__8">
-      <from-activity-id>tftester</from-activity-id>
-      <control-flow-case id="__9">
-        <from-outcome>testTFInDialog</from-outcome>
-        <to-activity-id>testTaskFlowCall</to-activity-id>
-      </control-flow-case>
-    </control-flow-rule>
+  <control-flow-rule id="__1">
+    <from-activity-id id="__15">*</from-activity-id>
+    <control-flow-case id="__17">
+      <from-outcome id="__18">adfemgTestTaskFlowInDialog</from-outcome>
+      <to-activity-id id="__16">testTaskFlowCall</to-activity-id>
+    </control-flow-case>
+  </control-flow-rule>
   <managed-bean id="__2">
       <managed-bean-name>TaskFlowTester</managed-bean-name>
       <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.TaskFlowTester</managed-bean-class>
