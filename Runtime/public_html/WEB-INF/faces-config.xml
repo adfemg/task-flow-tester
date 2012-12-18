@@ -2,5 +2,6 @@
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee">
   <application>
     <default-render-kit-id>oracle.adf.rich</default-render-kit-id>
+    <navigation-handler>org.emg.adf.tftester.rt.controller.TesterNavigationHandler</navigation-handler>
   </application>
 </faces-config>
