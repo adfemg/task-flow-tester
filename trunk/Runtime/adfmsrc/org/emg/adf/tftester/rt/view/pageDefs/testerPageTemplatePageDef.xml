@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.2.61.83" id="testerPageTemplatePageDef"
+                Package="org.emg.adf.tftester.rt.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables"/>
+    <taskFlow id="stretchRegion" taskFlowId="#{pageFlowScope.TaskFlowTester.regionTaskFlowId}"
+              activation="conditional" active="#{pageFlowScope.TaskFlowTester.testActive and pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments and pageFlowScope.TaskFlowTester.stretchLayout}"
+              xmlns="http://xmlns.oracle.com/adf/controller/binding" 
+              parametersMap="#{pageFlowScope.TaskFlowTester.regionParamMap}"/>
+    <taskFlow id="nonStretchRegion" taskFlowId="#{pageFlowScope.TaskFlowTester.regionTaskFlowId}"
+              activation="conditional" active="#{pageFlowScope.TaskFlowTester.testActive and pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments and !pageFlowScope.TaskFlowTester.stretchLayout}"
+              xmlns="http://xmlns.oracle.com/adf/controller/binding" 
+              parametersMap="#{pageFlowScope.TaskFlowTester.regionParamMap}"/>
+  </executables>
+  <bindings/>
+</pageDefinition>

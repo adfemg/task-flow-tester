@@ -4,14 +4,8 @@
   <parameters/>
   <executables>
     <variableIterator id="variables"/>
-    <taskFlow id="stretchRegion" taskFlowId="#{pageFlowScope.TaskFlowTester.regionTaskFlowId}"
-              activation="conditional" active="#{pageFlowScope.TaskFlowTester.testActive and pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments and pageFlowScope.TaskFlowTester.stretchLayout}"
-              xmlns="http://xmlns.oracle.com/adf/controller/binding" 
-              parametersMap="#{pageFlowScope.TaskFlowTester.regionParamMap}"/>
-    <taskFlow id="nonStretchRegion" taskFlowId="#{pageFlowScope.TaskFlowTester.regionTaskFlowId}"
-              activation="conditional" active="#{pageFlowScope.TaskFlowTester.testActive and pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments and !pageFlowScope.TaskFlowTester.stretchLayout}"
-              xmlns="http://xmlns.oracle.com/adf/controller/binding" 
-              parametersMap="#{pageFlowScope.TaskFlowTester.regionParamMap}"/>
+    <page path="org.emg.adf.tftester.rt.view.pageDefs.testerPageTemplatePageDef"
+          id="pageTemplateBinding" Refresh="ifNeeded"/>
   </executables>
   <bindings/>
 </pageDefinition>

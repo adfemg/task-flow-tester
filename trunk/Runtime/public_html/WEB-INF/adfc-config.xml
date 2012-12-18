@@ -19,9 +19,9 @@
       </run-as-dialog>
     </task-flow-call>
     <control-flow-rule id="__8">
-      <from-activity-id>tftester</from-activity-id>
+      <from-activity-id>*</from-activity-id>
       <control-flow-case id="__9">
-        <from-outcome>testTFInDialog</from-outcome>
+        <from-outcome>adfemgTestTaskFlowInDialog</from-outcome>
         <to-activity-id>testTaskFlowCall</to-activity-id>
       </control-flow-case>
     </control-flow-rule>

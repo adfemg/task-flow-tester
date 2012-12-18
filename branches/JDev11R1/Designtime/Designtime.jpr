@@ -48,6 +48,7 @@
       <value n="oracle.modeler.bmmigrate.management.Migration" v="11.1.1.1.0"/>
       <value n="oracle.toplink.workbench.addin.migration.PersistenceProjectMigrator" v="11.1.1.1.0;11.1.1.1.1"/>
       <value n="oracle.toplink.workbench.addin.migration.TopLinkProjectMigrator" v="11.1.1.1.0"/>
+      <value n="oracle.webcenter.internal.dt.migration.WebCenterProjectMigrator" v="11.1.1.4.0.101019.0800"/>
    </hash>
    <list n="contentSets">
       <string v="oracle.jdeveloper.model.J2eeSettings/webContentSet"/>
