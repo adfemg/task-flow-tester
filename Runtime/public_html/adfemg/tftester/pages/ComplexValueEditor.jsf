@@ -96,7 +96,7 @@ in the correct context
                               shortDesc="#{prop.hintText}" required="false"
                               value="#{InputParameterController.rawParamValue}" columns="60" id="it5"
                               simple="true"/>
-                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
+                <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jsf"
                                          id="dc1"/>
                 <af:commandImageLink shortDesc="Remove map entry"
                                      immediate="true"
