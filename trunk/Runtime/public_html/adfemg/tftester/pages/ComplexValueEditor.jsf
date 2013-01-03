@@ -68,7 +68,7 @@ in the correct context
       <af:popup childCreation="deferred" autoCancel="disabled" id="p2"
                 contentDelivery="lazyUncached"
                 popupFetchListener="#{InputParameterController.openMapParamPopup}">
-        <af:dialog id="d3" title="Construc Map Parameter #{prop.name}" type="ok"
+        <af:dialog id="d3" title="Construct Map Parameter #{prop.name}" type="ok"
                    dialogListener="#{InputParameterController.createMapParamValue}"
                    contentWidth="400">
           <f:facet name="buttonBar"/>
