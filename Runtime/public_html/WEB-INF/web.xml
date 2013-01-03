@@ -126,4 +126,7 @@
     <extension>amf</extension>
     <mime-type>application/x-amf</mime-type>
   </mime-mapping>
+  <welcome-file-list>
+    <welcome-file>/adftftester.html</welcome-file>
+  </welcome-file-list>
 </web-app>
