@@ -2,6 +2,8 @@
   Copyright: see readme.txt
   
   $revision_history$
+  03-jan-2013   Wilfred van der Deijl
+  1.2           upgrade JAXB v1 to v2.1
   17-dec-2012   Steven Davelaar
   1.1           Added sorting
   06-jun-2012   Steven Davelaar
@@ -45,10 +47,9 @@
  import oracle.jbo.JboException;
 
  import org.emg.adf.tftester.rt.model.xml.jaxb.ObjectFactory;
- import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObjectType;
- import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTesterType;
- import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowType;
- import org.emg.adf.tftester.rt.model.xml.jaxb.TestCaseType;
+ import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObject;
+ import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTester;
+ import org.emg.adf.tftester.rt.model.xml.jaxb.TestCase;
 
  import org.w3c.dom.Document;
  import org.w3c.dom.Element;
@@ -130,7 +131,7 @@
    {
      try
      {
-       TaskFlowTesterType tftester = createJaxbModelFromXml(xml);
+       TaskFlowTester tftester = createJaxbModelFromXml(xml);
        createBeanModelFromJaxbModel(tftester);
      }
      catch (Exception exc)
@@ -141,11 +142,10 @@
      // create bean model from jaxbmodel
    }
 
-   private void createBeanModelFromJaxbModel(TaskFlowTesterType tftester)
+   private void createBeanModelFromJaxbModel(TaskFlowTester tftester)
    {
-     for (Object jaxbTfObject: tftester.getTaskFlow())
+     for (org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlow jaxbTf: tftester.getTaskFlow())
      {
-       TaskFlowType jaxbTf = (TaskFlowType) jaxbTfObject;
          //      TaskFlow tf = new TaskFlow();
          //      tf.setDisplayName(jaxbTf.getDisplayName());
          //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
@@ -160,9 +160,8 @@
          continue;
        }
        // loop over TF testcases
-       for (Object jaxbTcObject: jaxbTf.getTestCase())
+       for (TestCase jaxbTc: jaxbTf.getTestCase())
        {
-         TestCaseType jaxbTc = (TestCaseType) jaxbTcObject;
          TaskFlowTestCase tc = new TaskFlowTestCase(tf);
          tf.addTestCase(tc);
          tc.setDescription(jaxbTc.getDescription());
@@ -173,10 +172,8 @@
          // loop over param values
          if (jaxbTc.getParamValueObject() != null)
          {
-           for (Object jaxbVoObject: jaxbTc.getParamValueObject())
+           for (ParamValueObject jaxbVo: jaxbTc.getParamValueObject())
            {
-             ParamValueObjectType jaxbVo =
-               (ParamValueObjectType) jaxbVoObject;
              // check whether param name still exists in TF, if not ignore it.
              if (tf.getInputParameter(jaxbVo.getName())==null)
              {
@@ -207,14 +204,12 @@
    }
 
    private void addNestedValueObjects(ValueObject vo,
-                                      ParamValueObjectType jaxbVo)
+                                      ParamValueObject jaxbVo)
    {
      if (jaxbVo.getParamValueObject() != null)
      {
-       for (Object jaxbDetailVoObject: jaxbVo.getParamValueObject())
+       for (ParamValueObject jaxbDetailVo: jaxbVo.getParamValueObject())
        {
-         ParamValueObjectType jaxbDetailVo =
-           (ParamValueObjectType) jaxbDetailVoObject;
          ValueObject detailVo =
            new ValueObject(jaxbDetailVo.getName(), jaxbDetailVo.getClassName(),
                            vo, vo.isMapType());
@@ -234,10 +229,10 @@
      }
    }
 
-   private TaskFlowTesterType createJaxbModelFromXml(String xml)
+   private TaskFlowTester createJaxbModelFromXml(String xml)
      throws JAXBException
    {
-     String instancePath = TaskFlowTesterType.class.getPackage().getName();
+     String instancePath = TaskFlowTester.class.getPackage().getName();
      Unmarshaller u;
      JAXBContext jc = JAXBContext.newInstance(instancePath);
      sLog.fine("JAXBContext: " + jc.getClass());
@@ -247,25 +242,25 @@
      //      Source source = new StreamSource(stream);
      //      Schema schema = factory.newSchema(source);
      //      u.setSchema(schema);
-     TaskFlowTesterType tftester =
-       (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+     TaskFlowTester tftester =
+       (TaskFlowTester) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
      return tftester;
    }
 
-   private TaskFlowTesterType createJaxbModelFromBeanModel()
+   private TaskFlowTester createJaxbModelFromBeanModel()
    {
      ObjectFactory factory = new ObjectFactory();
-     TaskFlowTesterType root = factory.createTaskFlowTester();
+     TaskFlowTester root = factory.createTaskFlowTester();
      for (TaskFlow tf: getTestTaskFlows())
      {
-       TaskFlowType jaxbTf = factory.createTaskFlow();
+       org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlow jaxbTf = factory.createTaskFlow();
        jaxbTf.setDisplayName(tf.getDisplayName());
        jaxbTf.setTaskFlowId(tf.getTaskFlowIdString());
        root.getTaskFlow().add(jaxbTf);
        // loop over TF testcases
        for (TaskFlowTestCase tc: tf.getTestCases())
        {
-         TestCaseType jaxbTc = factory.createTestCase();
+         TestCase jaxbTc = factory.createTestCase();
          jaxbTc.setDescription(tc.getDescription());
          jaxbTc.setName(tc.getName());
          jaxbTc.setRunAscall(tc.isRunAscall());
@@ -277,7 +272,7 @@
          {
            for (ValueObject vo: tc.getParamValueObjects())
            {
-             ParamValueObjectType jaxbVo = factory.createParamValueObject();
+             ParamValueObject jaxbVo = factory.createParamValueObject();
              jaxbVo.setName(vo.getName());
              jaxbVo.setClassName(vo.getClassName());
              jaxbVo.setValueAsString(vo.getValueAsString());
@@ -293,13 +288,13 @@
    }
 
    private void addNestedParamValues(ObjectFactory factory, ValueObject vo,
-                                     ParamValueObjectType jaxbVo)
+                                     ParamValueObject jaxbVo)
    {
      if (vo.getValueProperties() != null)
      {
        for (ValueObject detailVo: vo.getValueProperties())
        {
-         ParamValueObjectType jaxbDetailVo =
+         ParamValueObject jaxbDetailVo =
            factory.createParamValueObject();
          jaxbDetailVo.setName(detailVo.getName());
          jaxbDetailVo.setClassName(detailVo.getClassName());
@@ -312,10 +307,10 @@
      }
    }
 
-   private String writeToXML(TaskFlowTesterType taskFlows)
+   private String writeToXML(TaskFlowTester taskFlows)
    {
      String output = null;
-     String instancePath = TaskFlowTesterType.class.getPackage().getName();
+     String instancePath = TaskFlowTester.class.getPackage().getName();
      try
      {
        JAXBContext jc = JAXBContext.newInstance(instancePath);
