@@ -290,7 +290,8 @@ import org.springframework.beans.BeanWrapperImpl;
        Iterator keys = map.keySet().iterator();
        while (keys.hasNext())
        {
-         String name = (String) keys.next();
+         final Object keyObject = keys.next();
+         String name = keyObject == null?null:keyObject.toString();
          ValueObject vo = new ValueObject(name, map.get(name).getClass().getName(), this, true);
          vo.setValue(map.get(name));
          valueProperties.add(vo);
