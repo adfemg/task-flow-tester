@@ -2,6 +2,8 @@
  Copyright: see readme.txt
 
  $revision_history$
+ 03-jan-2013   Wilfred van der Deijl
+ 1.2           upgrade JAXB v1 to v2.1
  17-dec-2012   Steven Davelaar
  1.1           Added sorting
  06-jun-2012   Steven Davelaar

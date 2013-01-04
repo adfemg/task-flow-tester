@@ -2,6 +2,8 @@
  Copyright: see readme.txt
 
  $revision_history$
+ 03-jan-2013   Wilfred van der Deijl
+ 1.2           logging of exceptions
  17-dec-2012   Steven Davelaar
  1.1           Use java.util.HashMap as class when param type is java.util.Map
  06-jun-2012   Steven Davelaar
