@@ -1,6 +1,6 @@
 /*******************************************************************************
  Copyright: see readme.txt
- 
+
  $revision_history$
  06-jun-2012   Steven Davelaar
  1.0           initial creation
@@ -12,12 +12,12 @@ import java.io.Serializable;
 import javax.faces.event.ActionEvent;
 
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
-import org.emg.adf.tftester.rt.model.TaskFlow;
+
 
 /**
  * Controller class to support task flow loader function in user interface.
  * The actual loading of available task flows is delegated to TaskFlowTesterService
- * @see TaskFlowTesterService
+ * @see org.emg.adf.tftester.rt.model.TaskFlowTesterService
  */
 public class TaskFlowLoader implements Serializable
 {
@@ -61,11 +61,11 @@ public class TaskFlowLoader implements Serializable
   {
     return recurseInSubDirs;
   }
-  
+
   public void load(ActionEvent event)
   {
     TaskFlowTesterServiceFactory.getInstance().loadAvailableTaskFlows(getStartDir(), isRecurseInSubDirs(), isSearchAdfLibs());
-    TaskFlowTester tester = TaskFlowTester.getInstance();    
+    TaskFlowTester tester = TaskFlowTester.getInstance();
     tester.refreshTreeArea();
     tester.setCurrentTestTaskFlowIfNeeded();
   }
