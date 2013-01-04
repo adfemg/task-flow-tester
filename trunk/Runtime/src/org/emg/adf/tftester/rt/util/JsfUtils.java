@@ -154,7 +154,7 @@ public class JsfUtils
    * <code>id</code>, searching recursively starting at the specified
    * <code>base</code>, and examining the base component itself, followed
    * by examining all the base component's facets and children.
-   * Unlike findComponent method of {@link UIComponentBase}, which
+   * Unlike findComponent method of {@link javax.faces.component.UIComponentBase}, which
    * skips recursive scan each time it finds a {@link NamingContainer},
    * this method examines all components, regardless of their namespace
    * (assuming IDs are unique).

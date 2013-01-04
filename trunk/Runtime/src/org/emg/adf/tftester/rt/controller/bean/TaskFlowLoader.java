@@ -17,7 +17,7 @@ import org.emg.adf.tftester.rt.model.TaskFlow;
 /**
  * Controller class to support task flow loader function in user interface.
  * The actual loading of available task flows is delegated to TaskFlowTesterService
- * @see TaskFlowTesterService
+ * @see org.emg.adf.tftester.rt.model.TaskFlowTesterService
  */
 public class TaskFlowLoader implements Serializable
 {

@@ -1,6 +1,6 @@
 /*******************************************************************************
  Copyright: see readme.txt
- 
+
  $revision_history$
  06-jun-2012   Steven Davelaar
  1.0           initial creation
@@ -9,15 +9,12 @@ package org.emg.adf.tftester.rt.util;
 
 import java.io.IOException;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
-
 import javax.el.ValueExpression;
 
 import javax.faces.FactoryFinder;
@@ -31,21 +28,13 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.PhaseId;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import oracle.adf.controller.ControllerContext;
 import oracle.adf.share.logging.ADFLogger;
 import oracle.adf.view.rich.component.rich.fragment.RichRegion;
 import oracle.adf.view.rich.context.AdfFacesContext;
 
-import oracle.adf.view.rich.util.FacesMessageUtils;
-
 import org.apache.myfaces.trinidad.component.UIXCollection;
-import org.apache.myfaces.trinidad.component.UIXCommand;
 import org.apache.myfaces.trinidad.component.UIXEditableValue;
 import org.apache.myfaces.trinidad.component.UIXForm;
 import org.apache.myfaces.trinidad.component.UIXSubform;
@@ -147,14 +136,14 @@ public class JsfUtils
        parent = parent.getParent();
      }
      return comp;
-  } 
+  }
 
   /**
    * <p>Return the {@link UIComponent} (if any) with the specified
    * <code>id</code>, searching recursively starting at the specified
    * <code>base</code>, and examining the base component itself, followed
    * by examining all the base component's facets and children.
-   * Unlike findComponent method of {@link UIComponentBase}, which
+   * Unlike findComponent method of {@link javax.faces.component.UIComponentBase}, which
    * skips recursive scan each time it finds a {@link NamingContainer},
    * this method examines all components, regardless of their namespace
    * (assuming IDs are unique).
@@ -229,7 +218,7 @@ public class JsfUtils
       UIComponent form = getContainingForm(component);
       if (form!=null)
       {
-        resetChildren(form);              
+        resetChildren(form);
       }
     }
   }
@@ -449,7 +438,7 @@ public class JsfUtils
     return ret;
   }
 
-  public static UIComponent findComponentMatchingClientId(String clientCompId) 
+  public static UIComponent findComponentMatchingClientId(String clientCompId)
   {
     FacesContext context = FacesContext.getCurrentInstance();
     UIComponent root = context.getViewRoot();
@@ -458,10 +447,10 @@ public class JsfUtils
 
   /**
    * Method to parse the active component clientId to identify the UIComponent
-   * instance. 
+   * instance.
    * Code based on sample from Frank Nimphius on ADF Code Corner
    *
-   * @param startComp The top-level component where we start finding. 
+   * @param startComp The top-level component where we start finding.
    * @param clientCompId clientId or ClientLocatorId. A clientId contains all the
    *        naming comntainers between the document root and the UI component. A
    *        client locator also contains a row indes if the component is part of a
@@ -528,10 +517,10 @@ public class JsfUtils
 
   public static void setInputFocus(String clientId)
   {
-    String script ="comp = AdfPage.PAGE.findComponent('" + clientId + "');\n" 
+    String script ="comp = AdfPage.PAGE.findComponent('" + clientId + "');\n"
                        +
         "if (comp!=null) comp.focus(); ";
-    writeJavaScriptToClient(script); 
+    writeJavaScriptToClient(script);
   }
 
   public static void writeJavaScriptToClient(String script)
