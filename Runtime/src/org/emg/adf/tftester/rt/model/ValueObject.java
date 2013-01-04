@@ -1,6 +1,6 @@
 /*******************************************************************************
  Copyright: see readme.txt
- 
+
  $revision_history$
  17-dec-2012   Steven Davelaar
  1.1           Use java.util.HashMap as class when param type is java.util.Map
@@ -30,17 +30,18 @@ import oracle.jbo.domain.Timestamp;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import org.emg.adf.tftester.rt.model.beaneditor.ConverterHelperBean;
-
 import org.emg.adf.tftester.rt.util.JsfUtils;
 
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
+
 /**
  * Model class that holds all data about a task flow input parameter value.
- * If the value is a map or a complex type, the ValueObject is decomposed into 
- * a list of child ValueObjects. This nesting of value objects is unlimited and 
- * continues until the level where the end user can enter a simple value (or EL expression) 
+ * If the value is a map or a complex type, the ValueObject is decomposed into
+ * a list of child ValueObjects. This nesting of value objects is unlimited and
+ * continues until the level where the end user can enter a simple value (or EL expression)
  * in the user interface to populate a property of the (nested) complex type.
  */
 public class ValueObject implements Serializable
@@ -87,11 +88,11 @@ public class ValueObject implements Serializable
     this.type = type;
     if (Map.class.getName().equals(getType()))
     {
-      setClassName(HashMap.class.getName());      
+      setClassName(HashMap.class.getName());
     }
     else
     {
-      setClassName(type);      
+      setClassName(type);
     }
     this.name = name;
     this.parent = parent;
@@ -112,14 +113,14 @@ public class ValueObject implements Serializable
     {
       return false;
     }
-    return className.equals(Date.class.getName()) 
-      || className.equals(java.util.Date.class.getName()) 
-      || className.equals(Timestamp.class.getName()); 
+    return className.equals(Date.class.getName())
+      || className.equals(java.util.Date.class.getName())
+      || className.equals(Timestamp.class.getName());
   }
-  
+
   public boolean isJboKey()
   {
-   return getClassName(true).equals(oracle.jbo.Key.class.getName()); 
+   return getClassName(true).equals(oracle.jbo.Key.class.getName());
   }
 
   public void setType(String type)
@@ -130,7 +131,7 @@ public class ValueObject implements Serializable
   public String getType()
   {
     return type;
-  }  
+  }
 
   public void setValue(Object value)
   {
@@ -151,7 +152,7 @@ public class ValueObject implements Serializable
   {
     if (isComplexType())
     {
-      return "Enter EL expression or click edit icon to construct/view instance of " + getClassName(true);        
+      return "Enter EL expression or click edit icon to construct/view instance of " + getClassName(true);
     }
     else if (isDate())
     {
@@ -176,7 +177,7 @@ public class ValueObject implements Serializable
     }
     return null;
   }
-  
+
   public boolean isComplexType()
   {
     if (getClassName(true)==null)
@@ -226,7 +227,16 @@ public class ValueObject implements Serializable
       Class c = getClass(className);
       setClassName(className);
       //    BeanWrapper bw = paramValue!=null ? new BeanWrapperImpl(paramValue) : new BeanWrapperImpl(c);
-      BeanWrapper bw = new BeanWrapperImpl(c);
+      BeanWrapper bw;
+      try
+      {
+        bw = new BeanWrapperImpl(c);
+      }
+      catch (BeanInstantiationException e)
+      {
+        sLog.warning("Failure initializing complex type " + getClassName(), e);
+        throw new JboException("Class " + c.getName() + " cannot be instantiated");
+      }
       registerPropertyEditors(bw);
       PropertyDescriptor[] props = bw.getPropertyDescriptors();
       for (PropertyDescriptor prop: props)
@@ -237,7 +247,7 @@ public class ValueObject implements Serializable
             new ValueObject(prop.getName(), prop.getPropertyType().getName(), this, false);
           valueProperties.add(vo);
         }
-      }      
+      }
     }
   }
 
@@ -301,7 +311,7 @@ public class ValueObject implements Serializable
     {
       if (getClassName()==null)
       {
-        throw new JboException("Class name is required");        
+        throw new JboException("Class name is required");
       }
       String className = getClassName();
       // if it is java.util.Map, we use HashMap as instantiable type
@@ -319,10 +329,13 @@ public class ValueObject implements Serializable
     }
     catch (InstantiationException e)
     {
+      sLog.warning("Failure instantiating complex type " + getClassName(), e);
       throw new JboException("Class " + getClassName() + " cannot be instantiated");
     }
     catch (IllegalAccessException e)
     {
+      sLog.warning("Failure instantiating complex type " + getClassName(), e);
+      throw new JboException("Class " + getClassName() + " cannot be instantiated (IllegalAccessException)");
     }
     return instance;
   }
@@ -343,7 +356,7 @@ public class ValueObject implements Serializable
       {
         throw new JboException("Class " + getClassName() + " cannot be cast to " + getType());
       }
-    }    
+    }
   }
 
 
@@ -367,7 +380,7 @@ public class ValueObject implements Serializable
       constructComplexValue();
     }
     // in other cases, we don't have to construct the value because it is aready set through call top setValueAsString
-  } 
+  }
 
   public void constructMapValue()
   {
@@ -381,7 +394,7 @@ public class ValueObject implements Serializable
     }
     else
     {
-      this.value = instantiateComplexType();      
+      this.value = instantiateComplexType();
     }
     for (ValueObject pp: getValueProperties())
     {
@@ -396,12 +409,12 @@ public class ValueObject implements Serializable
             // how to handle that situation
             throw new JboException("Cannot nullify map value "+pp.getName()+" , you should remove the map entry");
           }
-          else 
+          else
           {
              Object convertedValue = pp.getValue();
-            // Spring beanwrapper does not support map 
+            // Spring beanwrapper does not support map
             // we use helper bean that has all types as properties so we can still
-            // use Spring to do type conversions using registered property editors          
+            // use Spring to do type conversions using registered property editors
             if (!pp.isElExpressionUsed() && pp.getValue() instanceof String)
             {
               convertedValue = ConverterHelperBean.convertValue(pp.getClassName(true), (String) pp.getValue());
@@ -411,7 +424,8 @@ public class ValueObject implements Serializable
         }
         catch (Exception e)
         {
-          throw new JboException("Cannot set property " + pp.getName() + " to value " + pp.getValue() + ": " +
+          sLog.warning("Failure setting map entry " + pp.getName(), e);
+          throw new JboException("Cannot set map entry " + pp.getName() + " to value " + pp.getValue() + ": " +
                                  e.getMessage());
         }
     }
@@ -437,24 +451,25 @@ public class ValueObject implements Serializable
           {
             if (value==null)
             {
-              this.value = instantiateComplexType();              
+              this.value = instantiateComplexType();
             }
             BeanWrapper bw = new BeanWrapperImpl(value);
             registerPropertyEditors(bw);
             if (bw.isWritableProperty(pp.getName()))
             {
-              bw.setPropertyValue(pp.getName(), pp.getValue());                                        
+              bw.setPropertyValue(pp.getName(), pp.getValue());
             }
           }
         }
         catch (Exception e)
         {
+          sLog.warning("Failure setting property " + pp.getName(), e);
           throw new JboException("Cannot set property " + pp.getName() + " to value " + pp.getValue() + ": " +
                                  e.getMessage());
         }
     }
   }
-  
+
   public boolean isPrimitive()
   {
     return getClass(getType())==null;
@@ -520,7 +535,7 @@ public class ValueObject implements Serializable
   {
     return parent;
   }
-  
+
   public boolean equals(Object o)
   {
     if (o instanceof ValueObject)
@@ -552,10 +567,10 @@ public class ValueObject implements Serializable
   {
     ConverterHelperBean.registerPropertyEditors(beanWrapper);
   }
-  
+
   public void clearValue()
   {
-    
+
   }
 
   public void setElExpressionUsed(boolean elExpressionUsed)
@@ -585,7 +600,7 @@ public class ValueObject implements Serializable
         ValueObject childClone = childVo.clone();
         clone.getValueProperties().add(childClone);
         childClone.setParent(clone);
-      }      
+      }
     }
     return clone;
   }
