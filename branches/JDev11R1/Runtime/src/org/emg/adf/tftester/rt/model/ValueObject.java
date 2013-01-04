@@ -289,7 +289,8 @@ public class ValueObject implements Serializable
       Iterator keys = map.keySet().iterator();
       while (keys.hasNext())
       {
-        String name = (String) keys.next();
+        final Object keyObj = keys.next();
+        final String name = keyObj == null ? null : keyObj.toString();
         ValueObject vo = new ValueObject(name, map.get(name).getClass().getName(), this, true);
         vo.setValue(map.get(name));
         valueProperties.add(vo);
