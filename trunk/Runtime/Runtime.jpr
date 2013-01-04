@@ -331,35 +331,12 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-beans.jar"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
-            <value n="id" v="Spring-core.jar"/>
+            <value n="id" v="Java EE 1.5"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
       <hash n="internalDefinitions">
-         <list n="libraryDefinitions">
-            <hash>
-               <list n="classPath">
-                  <url path="public_html/WEB-INF/lib/spring-beans.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="Spring-beans.jar"/>
-               <value n="id" v="Spring-beans.jar"/>
-               <value n="locked" v="true"/>
-            </hash>
-            <hash>
-               <list n="classPath">
-                  <url path="public_html/WEB-INF/lib/spring-core.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="Spring-core.jar"/>
-               <value n="id" v="Spring-core.jar"/>
-               <value n="locked" v="true"/>
-            </hash>
-         </list>
+         <list n="libraryDefinitions"/>
       </hash>
       <list n="libraryReferences">
          <hash>
@@ -455,11 +432,7 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Spring-beans.jar"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
-            <value n="id" v="Spring-core.jar"/>
+            <value n="id" v="Java EE 1.5"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
