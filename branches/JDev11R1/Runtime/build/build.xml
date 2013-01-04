@@ -253,7 +253,9 @@
       <delete dir="${tft.runtime.javadoc.dir}"/>
       <mkdir dir="${tft.runtime.javadoc.dir}"/>
       <!--Create Javadoc-->
-      <javadoc packagenames="org.emg.adf.tftester.*" sourcepath="../src"  destdir="${tft.runtime.javadoc.dir}" version="false" author="false"/>
+      <javadoc packagenames="org.emg.adf.tftester.*" sourcepath="../src"
+               classpathref="classpath"
+               destdir="${tft.runtime.javadoc.dir}" version="false" author="false"/>
       <!-- zip the javadoc, and put it in the deployment directory -->
      <!-- create the deploy directory if it doesn't exist-->
      <mkdir dir="${tft.runtime.deploy.dir}"/>
