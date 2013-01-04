@@ -336,12 +336,7 @@
     </copy>
   </target>
 
-   <path id="adfemg.tftester.classpath">
-      <fileset dir="${install.dir}/oracle_common/modules/oracle.xdk_11.1.0">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>  
-    <target name="jaxb">  
+  <target name="jaxb">
 
     <delete dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
     <mkdir dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
@@ -354,13 +349,14 @@
       will be generated into. Sources will be created in subdirectories
       corresponding to the package structure.
       -->
-      <java classname="oracle.xml.jaxb.orajaxb" description="Generate Java binding for tftester.xsd" classpathref="adfemg.tftester.classpath" >
-         <arg value="-schema"/>
-         <arg value="../src/org/emg/adf/tftester/rt/model/xml/tftester.xsd"/>
-         <arg value="-outputDir"/>
-         <arg value="../src"/>
-         <arg value="-targetPkg"/>
-         <arg value="org.emg.adf.tftester.rt.model.xml.jaxb"/>
+      <java classname="com.sun.tools.internal.xjc.XJCFacade">
+        <arg value="-no-header"/> <!-- suppress generation of a file header with timestamp -->
+        <arg value="-verbose"/>
+        <arg value="-p"/> <!-- specifies the target package -->
+        <arg value="org.emg.adf.tftester.rt.model.xml.jaxb"/>
+        <arg value="-d"/> <!-- generated files will go into this directory -->
+        <arg file="../src"/>
+        <arg file="../src/org/emg/adf/tftester/rt/model/xml/tftester.xsd"/> <!-- schema file/URL/dir/jar -->
       </java>
     <echo message="Created JAXB classes"/>
   </target>
