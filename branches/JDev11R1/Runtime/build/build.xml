@@ -202,22 +202,26 @@
   <target name="all" description="Build the project" depends="deploy,compile,copy"/>
   <target name="clean" description="Clean the project">
     <delete includeemptydirs="true" quiet="true">
-      <fileset dir="${tft.runtime.output.dir}" includes="**/*"/>
+      <fileset dir="${tft.runtime.output.dir}"  includes="**/*"/>
+      <fileset dir="${tft.runtime.deploy.dir}"  includes="**/*"/>
+      <fileset dir="${tft.runtime.javadoc.dir}" includes="**/*"/>
     </delete>
   </target>
 
   <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile, sourcezipfile, javadoc">
     <taskdef name="ojdeploy" classname="oracle.jdeveloper.deploy.ant.OJDeployAntTask" uri="oraclelib:OJDeployAntTask"
              classpath="${oracle.jdeveloper.ant.library}"/>
-    <ora:ojdeploy xmlns:ora="oraclelib:OJDeployAntTask" executable="${oracle.jdeveloper.ojdeploy.path}"        
+    <property name="ojdeploy.workspace.abs"  location="${tft.workspace.path}"/>
+    <property name="ojdeploy.outputfile.abs" location="${tft.runtime.deploy.jar}"/>
+    <ora:ojdeploy xmlns:ora="oraclelib:OJDeployAntTask" executable="${oracle.jdeveloper.ojdeploy.path}"
                   ora:buildscript="${tft.runtime.deploy.dir}/ojdeploy-build.xml"
                   ora:statuslog="${tft.runtime.deploy.dir}/ojdeploy-statuslog.xml">
       <ora:deploy>
-        <ora:parameter name="workspace" value="${tft.workspace.path}"/>
+        <ora:parameter name="workspace" value="${ojdeploy.workspace.abs}"/>
         <ora:parameter name="project" value="${tft.runtime.project.name}"/>
         <ora:parameter name="profile" value="${tft.runtime.deploy.profile.name}"/>
         <ora:parameter name="nocompile" value="false"/>
-        <ora:parameter name="outputfile" value="${tft.runtime.deploy.jar}"/>
+        <ora:parameter name="outputfile" value="${ojdeploy.outputfile.abs}"/>
       </ora:deploy>
     </ora:ojdeploy>
   </target>
