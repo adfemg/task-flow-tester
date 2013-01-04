@@ -1,6 +1,6 @@
 /*******************************************************************************
  Copyright: see readme.txt
- 
+
  $revision_history$
  17-dec-2012   Steven Davelaar
  1.1           Added sorting
@@ -45,10 +45,9 @@ import oracle.adf.share.logging.ADFLogger;
 import oracle.jbo.JboException;
 
 import org.emg.adf.tftester.rt.model.xml.jaxb.ObjectFactory;
-import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObjectType;
-import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTesterType;
-import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowType;
-import org.emg.adf.tftester.rt.model.xml.jaxb.TestCaseType;
+import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObject;
+import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTester;
+import org.emg.adf.tftester.rt.model.xml.jaxb.TestCase;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,6 +56,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
 
 /**
  * The service class that maintains the list of task flows and testcases, loads available task flows,
@@ -83,7 +83,7 @@ public class TaskFlowTesterService implements Serializable
     {
       if (returnExisting)
       {
-        return testTaskFlowsMap.get(taskFlowId);        
+        return testTaskFlowsMap.get(taskFlowId);
       }
       else if (throwError)
       {
@@ -100,17 +100,17 @@ public class TaskFlowTesterService implements Serializable
       tf = new TaskFlow();
       tf.setTaskFlowIdString(taskFlowId);
       tf.getTaskFlowDefinition();
-      tf.setDisplayName(displayName);    
+      tf.setDisplayName(displayName);
       // call getDisplayName as final test, will throw NPE when task flow path is OK but id after # is wrong
       tf.getDisplayName();
-      getTestTaskFlows().add(tf);       
+      getTestTaskFlows().add(tf);
       testTaskFlowsMap.put(taskFlowId, tf);
     }
     catch (Exception e)
     {
       if (throwError)
       {
-        throw new JboException("Invalid task flow id");        
+        throw new JboException("Invalid task flow id");
       }
     }
     return tf;
@@ -130,7 +130,7 @@ public class TaskFlowTesterService implements Serializable
   {
     try
     {
-      TaskFlowTesterType tftester = createJaxbModelFromXml(xml);
+      TaskFlowTester tftester = createJaxbModelFromXml(xml);
       createBeanModelFromJaxbModel(tftester);
     }
     catch (Exception exc)
@@ -141,18 +141,18 @@ public class TaskFlowTesterService implements Serializable
     // create bean model from jaxbmodel
   }
 
-  private void createBeanModelFromJaxbModel(TaskFlowTesterType tftester)
+  private void createBeanModelFromJaxbModel(TaskFlowTester tftester)
   {
     for (Object jaxbTfObject: tftester.getTaskFlow())
     {
-      TaskFlowType jaxbTf = (TaskFlowType) jaxbTfObject;
+      org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlow jaxbTf = (org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlow) jaxbTfObject;
         //      TaskFlow tf = new TaskFlow();
         //      tf.setDisplayName(jaxbTf.getDisplayName());
         //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
         //      getTestTaskFlows().add(tf);
         // last argument is true so addTaskFlow will return existing task flow if present, so new testcases
-        // will be added under existing node    
-      TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);  
+        // will be added under existing node
+      TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);
       if (tf==null)
       {
         // this happens when XML contains tf that no longer exists in context of this app
@@ -160,9 +160,8 @@ public class TaskFlowTesterService implements Serializable
         continue;
       }
       // loop over TF testcases
-      for (Object jaxbTcObject: jaxbTf.getTestCase())
+      for (TestCase jaxbTc: jaxbTf.getTestCase())
       {
-        TestCaseType jaxbTc = (TestCaseType) jaxbTcObject;
         TaskFlowTestCase tc = new TaskFlowTestCase(tf);
         tf.addTestCase(tc);
         tc.setDescription(jaxbTc.getDescription());
@@ -173,10 +172,8 @@ public class TaskFlowTesterService implements Serializable
         // loop over param values
         if (jaxbTc.getParamValueObject() != null)
         {
-          for (Object jaxbVoObject: jaxbTc.getParamValueObject())
+          for (ParamValueObject jaxbVo: jaxbTc.getParamValueObject())
           {
-            ParamValueObjectType jaxbVo =
-              (ParamValueObjectType) jaxbVoObject;
             // check whether param name still exists in TF, if not ignore it.
             if (tf.getInputParameter(jaxbVo.getName())==null)
             {
@@ -207,14 +204,12 @@ public class TaskFlowTesterService implements Serializable
   }
 
   private void addNestedValueObjects(ValueObject vo,
-                                     ParamValueObjectType jaxbVo)
+                                     ParamValueObject jaxbVo)
   {
     if (jaxbVo.getParamValueObject() != null)
     {
-      for (Object jaxbDetailVoObject: jaxbVo.getParamValueObject())
+      for (ParamValueObject jaxbDetailVo: jaxbVo.getParamValueObject())
       {
-        ParamValueObjectType jaxbDetailVo =
-          (ParamValueObjectType) jaxbDetailVoObject;
         ValueObject detailVo =
           new ValueObject(jaxbDetailVo.getName(), jaxbDetailVo.getClassName(),
                           vo, vo.isMapType());
@@ -234,10 +229,10 @@ public class TaskFlowTesterService implements Serializable
     }
   }
 
-  private TaskFlowTesterType createJaxbModelFromXml(String xml)
+  private TaskFlowTester createJaxbModelFromXml(String xml)
     throws JAXBException
   {
-    String instancePath = TaskFlowTesterType.class.getPackage().getName();
+    String instancePath = TaskFlowTester.class.getPackage().getName();
     Unmarshaller u;
     JAXBContext jc = JAXBContext.newInstance(instancePath);
     sLog.fine("JAXBContext: " + jc.getClass());
@@ -247,25 +242,25 @@ public class TaskFlowTesterService implements Serializable
     //      Source source = new StreamSource(stream);
     //      Schema schema = factory.newSchema(source);
     //      u.setSchema(schema);
-    TaskFlowTesterType tftester =
-      (TaskFlowTesterType) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+    TaskFlowTester tftester =
+      (TaskFlowTester) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
     return tftester;
   }
 
-  private TaskFlowTesterType createJaxbModelFromBeanModel()
+  private TaskFlowTester createJaxbModelFromBeanModel()
   {
     ObjectFactory factory = new ObjectFactory();
-    TaskFlowTesterType root = factory.createTaskFlowTester();
+    TaskFlowTester root = factory.createTaskFlowTester();
     for (TaskFlow tf: getTestTaskFlows())
     {
-      TaskFlowType jaxbTf = factory.createTaskFlow();
+      org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlow jaxbTf = factory.createTaskFlow();
       jaxbTf.setDisplayName(tf.getDisplayName());
       jaxbTf.setTaskFlowId(tf.getTaskFlowIdString());
       root.getTaskFlow().add(jaxbTf);
       // loop over TF testcases
       for (TaskFlowTestCase tc: tf.getTestCases())
       {
-        TestCaseType jaxbTc = factory.createTestCase();
+        TestCase jaxbTc = factory.createTestCase();
         jaxbTc.setDescription(tc.getDescription());
         jaxbTc.setName(tc.getName());
         jaxbTc.setRunAscall(tc.isRunAscall());
@@ -277,7 +272,7 @@ public class TaskFlowTesterService implements Serializable
         {
           for (ValueObject vo: tc.getParamValueObjects())
           {
-            ParamValueObjectType jaxbVo = factory.createParamValueObject();
+            ParamValueObject jaxbVo = factory.createParamValueObject();
             jaxbVo.setName(vo.getName());
             jaxbVo.setClassName(vo.getClassName());
             jaxbVo.setValueAsString(vo.getValueAsString());
@@ -293,13 +288,13 @@ public class TaskFlowTesterService implements Serializable
   }
 
   private void addNestedParamValues(ObjectFactory factory, ValueObject vo,
-                                    ParamValueObjectType jaxbVo)
+                                    ParamValueObject jaxbVo)
   {
     if (vo.getValueProperties() != null)
     {
       for (ValueObject detailVo: vo.getValueProperties())
       {
-        ParamValueObjectType jaxbDetailVo =
+        ParamValueObject jaxbDetailVo =
           factory.createParamValueObject();
         jaxbDetailVo.setName(detailVo.getName());
         jaxbDetailVo.setClassName(detailVo.getClassName());
@@ -312,10 +307,10 @@ public class TaskFlowTesterService implements Serializable
     }
   }
 
-  private String writeToXML(TaskFlowTesterType taskFlows)
+  private String writeToXML(TaskFlowTester taskFlows)
   {
     String output = null;
-    String instancePath = TaskFlowTesterType.class.getPackage().getName();
+    String instancePath = TaskFlowTester.class.getPackage().getName();
     try
     {
       JAXBContext jc = JAXBContext.newInstance(instancePath);
@@ -372,7 +367,7 @@ public class TaskFlowTesterService implements Serializable
           importFromXml(xml);
         }
         catch (IOException e)
-        {          
+        {
           // we catch IO exception here as well, so we go to next resource
         }
       }
