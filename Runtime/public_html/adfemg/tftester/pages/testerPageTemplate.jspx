@@ -127,10 +127,19 @@
                                         binding="#{viewScope.TestCaseExporter.popup}">
                                 <af:dialog id="d3" type="ok" resize="on"
                                            title="Task Flow Testcases XML">
-                                  <af:inputText simple="false" label="Xml"
-                                                columns="120" rows="20"
-                                                id="it4" disabled="true"
-                                                value="#{viewScope.TestCaseExporter.xml}"/>
+                                  <af:panelFormLayout id="pt_pfl1">
+                                    <af:panelLabelAndMessage id="pt_plam1"
+                                                             label="TIP"
+                                                             labelStyle="font-weight:bold;">
+                                      <af:outputText value="Save as src/adf-emg-task-flow-tester.xml (or anywhere on classpath) to auto-load on startup of tester"
+                                                     id="pt_ot1"/>
+                                    </af:panelLabelAndMessage>
+                                    <af:spacer height="10" id="pt_s1"/>
+                                    <af:inputText simple="false" label="Xml"
+                                                  columns="120" rows="20"
+                                                  id="it4" disabled="true"
+                                                  value="#{viewScope.TestCaseExporter.xml}"/>
+                                  </af:panelFormLayout>
                                   <f:facet name="buttonBar">
                                     <af:commandButton text="Export to File"
                                                       shortDesc="Save the XML to a file. If you store the file under name 'adf-emg-task-flow-tester.xml' in the source root directory of your ADF project, the XML will be automatically loaded when starting the tester."
