@@ -91,10 +91,10 @@
                                                       align="afterEnd"
                                                       alignId="ctb1"/>
                               </af:commandToolbarButton>
-                              <af:popup childCreation="immediate" 
+                              <af:popup childCreation="immediate"
                                         autoCancel="disabled" id="p3"
                                         contentDelivery="immediate">
-                                <af:dialog id="d4" 
+                                <af:dialog id="d4"
                                            title="Add Test Task Flow"
                                            dialogListener="#{pageFlowScope.TaskFlowTreeController.addTaskFlowListener}">
                                   <af:panelFormLayout id="pfl6"
@@ -121,8 +121,8 @@
                                                        icon="/adfemg/images/exporttoxml.png"
                                                        immediate="true"
                                                        actionListener="#{viewScope.TestCaseExporter.exportToXml}"/>
-                              <af:popup childCreation="deferred" 
-                                        autoCancel="disabled" id="p2" 
+                              <af:popup childCreation="deferred"
+                                        autoCancel="disabled" id="p2"
                                         binding="#{viewScope.TestCaseExporter.popup}">
                                 <af:dialog id="d3" type="ok" resize="on"  contentHeight="270" contentWidth="680"
                                            title="Task Flow Testcases XML">
@@ -175,7 +175,7 @@
                           <f:facet name="menus"/>
                           <f:facet name="toolbar">
                             <af:toolbar id="pt_t1">
-                              <af:selectBooleanCheckbox value="#{pageFlowScope.TaskFlowTreeController.showFolders}" autoSubmit="true" 
+                              <af:selectBooleanCheckbox value="#{pageFlowScope.TaskFlowTreeController.showFolders}" autoSubmit="true"
                               label="Group By Directory?"  id="pt_sbc1"/>
                             </af:toolbar>
                           </f:facet>
@@ -192,7 +192,7 @@
                                 <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
                                     <af:panelGroupLayout id="pgl6">
                                       <af:image  source="/adfemg/images/taskflow.png"
-                                           inlineStyle="margin-right:3px; vertical-align:middle;"     id="i3"/>                                                              
+                                           inlineStyle="margin-right:3px; vertical-align:middle;"     id="i3"/>
                                       <af:outputText value="#{node.name}" shortDesc="#{node.taskFlowIdString}"
                                                      id="ot2"/>
                                     </af:panelGroupLayout>
@@ -203,7 +203,7 @@
                                                        id="selectFolder"
                                                        icon="/adfemg/images/folder.png"
                                                        iconPosition="leading"
-                                                       shortDesc="#{node.name}" 
+                                                       shortDesc="#{node.name}"
                                                        partialSubmit="true"
                                                        immediate="true">
                                   </af:commandImageLink>
@@ -311,15 +311,20 @@
                                     <af:panelLabelAndMessage label="#{row.name}"
                                                              showRequired="#{row.required}"
                                                              id="plam1">
-                                      <af:panelGroupLayout id="pgl3"
+                                      <af:panelGroupLayout id="pgl3" partialTriggers="pt_dgedit"
                                                            layout="horizontal">
-                                        <af:inputText required="#{row.required and !row.valueObject.complexType}"
+                                        <af:inputText showRequired="#{row.required and !row.valueObject.complexType}"
                                                       label="#{row.name}"
                                                       shortDesc="#{row.valueObject.hintText}"
                                                       value="#{InputParameterController.rawParamValue}"
                                                       columns="60"
                                                       simple="true"
-                                                      id="it1"/>
+                                                      id="it1" disabled="#{row.valueObject.multiLine}"
+                                                      autoSubmit="true"/>
+                                        <af:commandLink id="pt_cl1" shortDesc="Switch to multi line editor"
+                                                        rendered="#{not row.valueObject.complexType}" text="...">
+                                          <af:showPopupBehavior popupId="edit"/>
+                                        </af:commandLink>
                                         <af:iterator var="prop"
                                                      value="#{row.valueObjects}"
                                                      id="i2">
@@ -327,6 +332,14 @@
                                                                    id="dc1"/>
                                         </af:iterator>
                                       </af:panelGroupLayout>
+                                      <af:popup id="edit" childCreation="deferred" contentDelivery="lazyUncached">
+                                        <af:dialog id="pt_dgedit" title="Set Parameter #{row.name}">
+                                          <af:inputText label="#{row.name}"
+                                                        shortDesc="#{row.valueObject.hintText}"
+                                                        value="#{InputParameterController.rawParamValue}"
+                                                        columns="100" simple="true" id="pt_it1" rows="16"/>
+                                        </af:dialog>
+                                      </af:popup>
                                     </af:panelLabelAndMessage>
                                   </af:iterator>
                                   <f:facet name="footer"></f:facet>
