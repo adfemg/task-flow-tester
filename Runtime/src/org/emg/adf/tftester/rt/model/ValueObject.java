@@ -2,6 +2,8 @@
  Copyright: see readme.txt
 
  $revision_history$
+ 07-jan-2013   Wilfred van der Deijl
+ 1.3           support for multi-line values
  03-jan-2013   Wilfred van der Deijl
  1.2           logging of exceptions
  17-dec-2012   Steven Davelaar
@@ -584,6 +586,12 @@ public class ValueObject implements Serializable
   public boolean isElExpressionUsed()
   {
     return elExpressionUsed;
+  }
+
+  public boolean isMultiLine()
+  {
+    String asString = getValueAsString();
+    return asString != null && asString.contains("\n");
   }
 
   public ValueObject clone()

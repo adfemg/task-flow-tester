@@ -44,15 +44,28 @@ in the correct context
             <af:group id="dc_g2">
               <af:iterator var="prop" value="#{prop.valueProperties}" id="i2">
                 <af:panelLabelAndMessage label="#{prop.name}" id="plam1">
-                  <af:panelGroupLayout id="pgl3" layout="horizontal">
+                  <af:panelGroupLayout id="pgl3" layout="horizontal" partialTriggers="dc_dgedit">
                     <af:inputText label="#{prop.name}"
                                   shortDesc="#{prop.hintText}"
                                   value="#{InputParameterController.rawParamValue}"
-                                  columns="60" simple="true" id="it1"/>
+                                  columns="60" simple="true" id="it1" disabled="#{prop.multiLine}"
+                                  autoSubmit="true"/>
+                    <af:commandLink id="dc_cl1" shortDesc="Switch to multi line editor"
+                                    rendered="#{not prop.complexType}" text="...">
+                      <af:showPopupBehavior popupId="edit"/>
+                    </af:commandLink>
                     <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
                                              id="dc2"/>
                   </af:panelGroupLayout>
                 </af:panelLabelAndMessage>
+                <af:popup id="edit" childCreation="deferred" contentDelivery="lazyUncached">
+                  <af:dialog id="dc_dgedit" title="Set Parameter #{prop.name}">
+                    <af:inputText label="#{prop.name}"
+                                  shortDesc="#{prop.hintText}"
+                                  value="#{InputParameterController.rawParamValue}"
+                                  columns="100" simple="true" id="dc_it1" rows="16"/>
+                  </af:dialog>
+                </af:popup>
               </af:iterator>
             </af:group>
             <af:outputText rendered="#{prop.mapType}" value="You specified a map-type class, close this dialog and use edit icon to enter map entries"
@@ -71,7 +84,7 @@ in the correct context
                 popupFetchListener="#{InputParameterController.openMapParamPopup}">
         <af:dialog id="d3" title="Construct Map Parameter #{prop.name}" type="ok"
                    dialogListener="#{InputParameterController.createMapParamValue}"
-                   contentWidth="700">
+                   contentWidth="712">
           <f:facet name="buttonBar"/>
           <af:panelGroupLayout id="pfl3" layout="scroll">
             <af:iterator var="prop" varStatus="vs"
@@ -83,9 +96,9 @@ in the correct context
                 <af:spacer width="84" height="10" id="dc_s1"/>
                 <af:outputLabel value="Key" id="dc_ol2" showRequired="true"/>
                 <af:spacer width="144" height="10" id="dc_s2"/>
-                <af:outputLabel value="Value" id="dc_ol3" showRequired="true"/>
+                <af:outputLabel value="Value" id="dc_ol3" showRequired="false"/>
               </af:panelGroupLayout>
-              <af:panelGroupLayout id="dc_pgl3" layout="horizontal">
+              <af:panelGroupLayout id="dc_pgl3" layout="horizontal" partialTriggers="dc_dgmedit">
                 <af:inputText label="Class Name" autoSubmit="true"
                               required="true" simple="true"
                               valueChangeListener="#{InputParameterController.classNameChanged}"
@@ -96,7 +109,11 @@ in the correct context
                 <af:inputText label="Value" autoSubmit="true"
                               shortDesc="#{prop.hintText}" required="false"
                               value="#{InputParameterController.rawParamValue}" columns="60" id="it5"
-                              simple="true"/>
+                              simple="true" disabled="#{prop.multiLine}"/>
+                <af:commandLink id="dc_cl2" shortDesc="Switch to multi line editor"
+                                rendered="#{not prop.complexType}" text="...">
+                  <af:showPopupBehavior popupId="medit"/>
+                </af:commandLink>
                 <af:declarativeComponent viewId="/adfemg/tftester/pages/ComplexValueEditor.jspx"
                                          id="dc1"/>
                 <af:commandImageLink shortDesc="Remove map entry"
@@ -105,6 +122,14 @@ in the correct context
                                      icon="/adfemg/images/deleteRow.png"
                                      partialSubmit="true" id="cb6"/>
               </af:panelGroupLayout>
+              <af:popup id="medit" contentDelivery="lazyUncached" childCreation="deferred">
+                <af:dialog id="dc_dgmedit" title="Set Entry #{prop.name}">
+                  <af:inputText label="#{prop.name}"
+                                shortDesc="#{prop.hintText}"
+                                value="#{InputParameterController.rawParamValue}"
+                                columns="100" simple="true" id="dc_it2" rows="16"/>
+                </af:dialog>
+              </af:popup>
             </af:iterator>
             <af:panelGroupLayout id="pgl5" layout="horizontal" halign="right">
               <af:spacer width="1" height="20" id="s2"/>
