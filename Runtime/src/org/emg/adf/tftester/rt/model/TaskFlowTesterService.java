@@ -1,7 +1,9 @@
  /*******************************************************************************
   Copyright: see readme.txt
-  
+
   $revision_history$
+  09-jan-2013   Wilfred van der Deijl
+  1.3           read XML with XSL for backwards compatibility
   03-jan-2013   Wilfred van der Deijl
   1.2           upgrade JAXB v1 to v2.1
   17-dec-2012   Steven Davelaar
@@ -11,58 +13,64 @@
  ******************************************************************************/
  package org.emg.adf.tftester.rt.model;
 
- import java.io.ByteArrayInputStream;
- import java.io.File;
- import java.io.IOException;
- import java.io.InputStream;
- import java.io.Serializable;
- import java.io.StringWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.io.StringWriter;
 
- import java.net.MalformedURLException;
- import java.net.URISyntaxException;
- import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
- import java.util.ArrayList;
- import java.util.Collections;
- import java.util.Enumeration;
- import java.util.HashMap;
- import java.util.List;
- import java.util.Map;
- import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
- import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContext;
 
- import javax.xml.bind.JAXBContext;
- import javax.xml.bind.JAXBException;
- import javax.xml.bind.Marshaller;
- import javax.xml.bind.Unmarshaller;
- import javax.xml.parsers.DocumentBuilder;
- import javax.xml.parsers.DocumentBuilderFactory;
- import javax.xml.parsers.ParserConfigurationException;
- import javax.xml.parsers.SAXParser;
- import javax.xml.parsers.SAXParserFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
 
- import oracle.adf.share.logging.ADFLogger;
+import oracle.adf.share.logging.ADFLogger;
 
- import oracle.jbo.JboException;
+import oracle.jbo.JboException;
 
- import org.emg.adf.tftester.rt.model.xml.jaxb.ObjectFactory;
- import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObject;
- import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTester;
- import org.emg.adf.tftester.rt.model.xml.jaxb.TestCase;
+import org.emg.adf.tftester.rt.model.xml.jaxb.ObjectFactory;
+import org.emg.adf.tftester.rt.model.xml.jaxb.ParamValueObject;
+import org.emg.adf.tftester.rt.model.xml.jaxb.TaskFlowTester;
+import org.emg.adf.tftester.rt.model.xml.jaxb.TestCase;
 
- import org.w3c.dom.Document;
- import org.w3c.dom.Element;
- import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
- import org.xml.sax.Attributes;
- import org.xml.sax.SAXException;
- import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
- /**
-  * The service class that maintains the list of task flows and testcases, loads available task flows,
-  * and implements the XML import/export functions.
-  */
+
+/**
+ * The service class that maintains the list of task flows and testcases, loads available task flows,
+ * and implements the XML import/export functions.
+ */
  public class TaskFlowTesterService implements Serializable
  {
    @SuppressWarnings("compatibility:-3144222963419312295")
@@ -84,7 +92,7 @@
      {
        if (returnExisting)
        {
-         return testTaskFlowsMap.get(taskFlowId);        
+         return testTaskFlowsMap.get(taskFlowId);
        }
        else if (throwError)
        {
@@ -101,17 +109,17 @@
        tf = new TaskFlow();
        tf.setTaskFlowIdString(taskFlowId);
        tf.getTaskFlowDefinition();
-       tf.setDisplayName(displayName);    
+       tf.setDisplayName(displayName);
        // call getDisplayName as final test, will throw NPE when task flow path is OK but id after # is wrong
        tf.getDisplayName();
-       getTestTaskFlows().add(tf);       
+       getTestTaskFlows().add(tf);
        testTaskFlowsMap.put(taskFlowId, tf);
      }
      catch (Exception e)
      {
        if (throwError)
        {
-         throw new JboException("Invalid task flow id");        
+         throw new JboException("Invalid task flow id");
        }
      }
      return tf;
@@ -127,7 +135,7 @@
      return writeToXML(createJaxbModelFromBeanModel());
    }
 
-   public void importFromXml(String xml)
+   public void importFromXml(Source xml)
    {
      try
      {
@@ -136,6 +144,7 @@
      }
      catch (Exception exc)
      {
+       sLog.severe("error importing XML", exc);
        throw new JboException("Error importing testcases from XML: " +
                               exc.getMessage());
      }
@@ -151,8 +160,8 @@
          //      tf.setTaskFlowIdString(jaxbTf.getTaskFlowId());
          //      getTestTaskFlows().add(tf);
          // last argument is true so addTaskFlow will return existing task flow if present, so new testcases
-         // will be added under existing node    
-       TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);  
+         // will be added under existing node
+       TaskFlow tf = addTaskFlow(jaxbTf.getTaskFlowId(), jaxbTf.getDisplayName(), false, true);
        if (tf==null)
        {
          // this happens when XML contains tf that no longer exists in context of this app
@@ -229,23 +238,34 @@
      }
    }
 
-   private TaskFlowTester createJaxbModelFromXml(String xml)
-     throws JAXBException
-   {
-     String instancePath = TaskFlowTester.class.getPackage().getName();
-     Unmarshaller u;
-     JAXBContext jc = JAXBContext.newInstance(instancePath);
-     sLog.fine("JAXBContext: " + jc.getClass());
-     u = jc.createUnmarshaller();
-     //      SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-     //      InputStream stream = getClass().getClassLoader().getResourceAsStream("org/emg/adf/tftester/rt/model/xml/tftester.xsd");
-     //      Source source = new StreamSource(stream);
-     //      Schema schema = factory.newSchema(source);
-     //      u.setSchema(schema);
-     TaskFlowTester tftester =
-       (TaskFlowTester) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
-     return tftester;
-   }
+  private TaskFlowTester createJaxbModelFromXml(Source xml)
+    throws JAXBException, TransformerException
+  {
+    String instancePath = TaskFlowTester.class.getPackage().getName();
+    JAXBContext jc = JAXBContext.newInstance(instancePath);
+    sLog.fine("JAXBContext: " + jc.getClass());
+
+    // setup XSL transform for backwards compatibility
+    final InputStream xslStream =
+      Thread.currentThread().getContextClassLoader().getResourceAsStream("/org/emg/adf/tftester/rt/model/xml/attr-to-elem.xsl");
+    if (xslStream == null)
+    {
+      throw new IllegalStateException("failed to load XSL resource");
+    }
+    Source xslSrc = new StreamSource(xslStream);
+    TransformerFactory factory = TransformerFactory.newInstance();
+    Transformer transformer = factory.newTransformer(xslSrc);
+
+    // read xml while applying XSL
+    DOMResult domRes = new DOMResult();
+    transformer.transform(xml, domRes);
+    Document doc = (Document) domRes.getNode();
+
+    // unmarshal transformed xml doc to bean
+    Unmarshaller u = jc.createUnmarshaller();
+    TaskFlowTester tftester = (TaskFlowTester) u.unmarshal(doc);
+    return tftester;
+  }
 
    private TaskFlowTester createJaxbModelFromBeanModel()
    {
@@ -363,11 +383,10 @@
          {
            URL url = enump.nextElement();
            InputStream stream = url.openStream();
-           String xml = convertStreamToString(stream, "UTF-8");
-           importFromXml(xml);
+           importFromXml(new StreamSource(stream));
          }
          catch (IOException e)
-         {          
+         {
            // we catch IO exception here as well, so we go to next resource
          }
        }
@@ -376,29 +395,6 @@
      {
      }
      Collections.sort(getTestTaskFlows());
-   }
-
-   /**
-    * Nice trick from StackOverflow website to convert stream to string using standard library.
-    * The reason it works is because Scanner iterates over tokens in the stream, and in this case we
-    * separate tokens using "beginning of the input boundary" (\A) thus giving us only one token
-    * for the entire contents of the stream.
-    * @param is
-    * @param encoding
-    * @return
-    */
-   private String convertStreamToString(java.io.InputStream is,
-                                        String encoding)
-   {
-     try
-     {
-       return new java.util.Scanner(is,
-                                    encoding).useDelimiter("\\A").next();
-     }
-     catch (java.util.NoSuchElementException e)
-     {
-       return "";
-     }
    }
 
    public static void main(String[] args)

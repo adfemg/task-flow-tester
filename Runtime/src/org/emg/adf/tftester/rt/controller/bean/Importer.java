@@ -1,28 +1,30 @@
 /*******************************************************************************
  Copyright: see readme.txt
- 
+
  $revision_history$
+ 09-jan-2013   Wilfred van der Deijl
+ 1.1           import XML as more versatile javax.xml.transform.Source
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
 package org.emg.adf.tftester.rt.controller.bean;
 
 import java.io.Serializable;
+import java.io.StringReader;
 
-import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
+
+import javax.xml.transform.stream.StreamSource;
 
 import oracle.adf.model.BindingContext;
 import oracle.adf.model.binding.DCBindingContainer;
 import oracle.adf.view.rich.component.rich.RichPopup;
 
-import oracle.adf.view.rich.context.AdfFacesContext;
-
 import oracle.jbo.JboException;
 
 import org.emg.adf.tftester.rt.controller.TaskFlowTesterServiceFactory;
 import org.emg.adf.tftester.rt.model.TaskFlowTesterService;
-import org.emg.adf.tftester.rt.util.JsfUtils;
+
 
 /**
  * Controller class to support Import from XML function in user interface.
@@ -71,8 +73,8 @@ public class Importer implements Serializable
   {
     try
     {
-      taskFlowTesterService.importFromXml(xml);
-      getPopup().hide();      
+      taskFlowTesterService.importFromXml(new StreamSource(new StringReader(xml)));
+      getPopup().hide();
       TaskFlowTester.getInstance().refreshTreeArea();
       TaskFlowTester.getInstance().setCurrentTestTaskFlowIfNeeded();
     }
