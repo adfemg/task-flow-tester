@@ -2,6 +2,8 @@
  Copyright: see readme.txt
 
  $revision_history$
+ 09-jan-2013   Wilfred van der Deijl
+ 1.3           read XML with XSL for backwards compatibility
  03-jan-2013   Wilfred van der Deijl
  1.2           upgrade JAXB v1 to v2.1
  17-dec-2012   Steven Davelaar
@@ -11,7 +13,6 @@
 ******************************************************************************/
 package org.emg.adf.tftester.rt.model;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
 
 import oracle.adf.share.logging.ADFLogger;
 
@@ -128,7 +135,7 @@ public class TaskFlowTesterService implements Serializable
     return writeToXML(createJaxbModelFromBeanModel());
   }
 
-  public void importFromXml(String xml)
+  public void importFromXml(Source xml)
   {
     try
     {
@@ -137,6 +144,7 @@ public class TaskFlowTesterService implements Serializable
     }
     catch (Exception exc)
     {
+      sLog.severe("error importing XML", exc);
       throw new JboException("Error importing testcases from XML: " +
                              exc.getMessage());
     }
@@ -231,21 +239,32 @@ public class TaskFlowTesterService implements Serializable
     }
   }
 
-  private TaskFlowTester createJaxbModelFromXml(String xml)
-    throws JAXBException
+  private TaskFlowTester createJaxbModelFromXml(Source xml) throws JAXBException,
+                                                                   TransformerException
   {
     String instancePath = TaskFlowTester.class.getPackage().getName();
-    Unmarshaller u;
     JAXBContext jc = JAXBContext.newInstance(instancePath);
     sLog.fine("JAXBContext: " + jc.getClass());
-    u = jc.createUnmarshaller();
-    //      SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    //      InputStream stream = getClass().getClassLoader().getResourceAsStream("org/emg/adf/tftester/rt/model/xml/tftester.xsd");
-    //      Source source = new StreamSource(stream);
-    //      Schema schema = factory.newSchema(source);
-    //      u.setSchema(schema);
-    TaskFlowTester tftester =
-      (TaskFlowTester) u.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+
+    // setup XSL transform for backwards compatibility
+    final InputStream xslStream =
+      Thread.currentThread().getContextClassLoader().getResourceAsStream("/org/emg/adf/tftester/rt/model/xml/attr-to-elem.xsl");
+    if (xslStream == null)
+    {
+      throw new IllegalStateException("failed to load XSL resource");
+    }
+    Source xslSrc = new StreamSource(xslStream);
+    TransformerFactory factory = TransformerFactory.newInstance();
+    Transformer transformer = factory.newTransformer(xslSrc);
+
+    // read xml while applying XSL
+    DOMResult domRes = new DOMResult();
+    transformer.transform(xml, domRes);
+    Document doc = (Document) domRes.getNode();
+
+    // unmarshal transformed xml doc to bean
+    Unmarshaller u = jc.createUnmarshaller();
+    TaskFlowTester tftester = (TaskFlowTester) u.unmarshal(doc);
     return tftester;
   }
 
@@ -365,8 +384,7 @@ public class TaskFlowTesterService implements Serializable
         {
           URL url = enump.nextElement();
           InputStream stream = url.openStream();
-          String xml = convertStreamToString(stream, "UTF-8");
-          importFromXml(xml);
+          importFromXml(new StreamSource(stream));
         }
         catch (IOException e)
         {
@@ -378,29 +396,6 @@ public class TaskFlowTesterService implements Serializable
     {
     }
     Collections.sort(getTestTaskFlows());
-  }
-
-  /**
-   * Nice trick from StackOverflow website to convert stream to string using standard library.
-   * The reason it works is because Scanner iterates over tokens in the stream, and in this case we
-   * separate tokens using "beginning of the input boundary" (\A) thus giving us only one token
-   * for the entire contents of the stream.
-   * @param is
-   * @param encoding
-   * @return
-   */
-  private String convertStreamToString(java.io.InputStream is,
-                                       String encoding)
-  {
-    try
-    {
-      return new java.util.Scanner(is,
-                                   encoding).useDelimiter("\\A").next();
-    }
-    catch (java.util.NoSuchElementException e)
-    {
-      return "";
-    }
   }
 
   public static void main(String[] args)

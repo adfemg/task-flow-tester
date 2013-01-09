@@ -112,6 +112,7 @@
          <string v="TRINIDAD"/>
          <string v="XML"/>
          <string v="XML_SCHEMA"/>
+         <string v="XSL"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.ant.AntConfiguration">
