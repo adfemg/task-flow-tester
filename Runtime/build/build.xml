@@ -202,6 +202,7 @@
   <target name="all" description="Build the project" depends="deploy,compile,copy"/>
   <target name="clean" description="Clean the project">
     <delete includeemptydirs="true" quiet="true">
+      <fileset dir="${tft.runtime.jaxb.dir}"    includes="**/*"/>
       <fileset dir="${tft.runtime.output.dir}"  includes="**/*"/>
       <fileset dir="${tft.runtime.deploy.dir}"  includes="**/*"/>
       <fileset dir="${tft.runtime.javadoc.dir}" includes="**/*"/>
@@ -267,7 +268,7 @@
 
 
 
-  <target name="compile" description="Compile Java source files" depends="init">
+  <target name="compile" description="Compile Java source files" depends="init,jaxb">
     <javac destdir="${tft.runtime.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
            deprecation="${javac.deprecation}" encoding="Cp1252" source="1.6" target="1.6">
       <src path="../src"/>
