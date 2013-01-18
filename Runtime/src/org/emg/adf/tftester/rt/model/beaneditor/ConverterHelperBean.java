@@ -2,6 +2,8 @@
  Copyright: see readme.txt
  
  $revision_history$
+ 15-jan-2013   Steven Davelaar
+ 1.1           Added support for oracle.jbo.domain.Number
  06-jun-2012   Steven Davelaar
  1.0           initial creation
 ******************************************************************************/
@@ -17,20 +19,21 @@ import java.util.Date;
 
 import oracle.jbo.Key;
 
+import oracle.jbo.domain.Number;
 import oracle.jbo.domain.Timestamp;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
- /**
-  * This class converts String values to the correct type.
-  * It is used when populating a Map type input parameter.
-  * Spring BeanWrapper does not support a Map. Apache commons PropertyUtils does 
-  * support a map but does not have the built-in property editors Spring has, and
-  * they don't work with maps anyway as they are registered against a class, 
-  * not a specific property
-  */
+/**
+ * This class converts String values to the correct type.
+ * It is used when populating a Map type input parameter.
+ * Spring BeanWrapper does not support a Map. Apache commons PropertyUtils does 
+ * support a map but does not have the built-in property editors Spring has, and
+ * they don't work with maps anyway as they are registered against a class, 
+ * not a specific property
+ */
 public class ConverterHelperBean
 {
   private byte byteValue;
@@ -53,6 +56,7 @@ public class ConverterHelperBean
   
   private BigDecimal bigDecimalValue;
   private java.util.Date utilDateValue;
+  private oracle.jbo.domain.Number jboNumberValue;
   private oracle.jbo.domain.Date jboDateValue;
   private oracle.jbo.domain.Timestamp jboTimestampValue;
   private Key key;
@@ -70,6 +74,7 @@ public class ConverterHelperBean
     bw.registerCustomEditor(oracle.jbo.domain.Date.class, new JboDateEditor(sdf,true));    
     bw.registerCustomEditor(oracle.jbo.domain.Timestamp.class, new JboTimeStampEditor(sdf,true));    
     bw.registerCustomEditor(oracle.jbo.Key.class, new JboKeyEditor());    
+    bw.registerCustomEditor(oracle.jbo.domain.Number.class, new JboNumberEditor());    
   }
 
 //  public static
@@ -284,6 +289,16 @@ public class ConverterHelperBean
     return key;
   }
   
+  public void setJboNumberValue(Number jboNumberValue)
+  {
+    this.jboNumberValue = jboNumberValue;
+  }
+
+  public Number getJboNumberValue()
+  {
+    return jboNumberValue;
+  }
+
   public static Object convertValue(String type, String stringValue)
   {
     ConverterHelperBean instance = new ConverterHelperBean();
@@ -319,4 +334,6 @@ public class ConverterHelperBean
     System.err.println("CV 2: "+instance.charValue);
     System.err.println(convertValue("char", "A"));
   }
+
+
 }
