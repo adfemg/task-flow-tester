@@ -2,6 +2,8 @@
  Copyright: see readme.txt
 
  $revision_history$
+ 17-jan-2013   Steven Davelaar
+ 1.4           set className before valueAsString in clone method
  07-jan-2013   Wilfred van der Deijl
  1.3           support for multi-line values
  03-jan-2013   Wilfred van der Deijl
@@ -601,9 +603,11 @@ public class ValueObject implements Serializable
     // need to set ELExpressionUsed before calling setValueAsString otherwise
     // we get type converter mismatch
     clone.setElExpressionUsed(isElExpressionUsed());
+    // set class name before setting valueAsString so correct property editor is used to
+    // create value of correct type!
+    clone.setClassName(getClassName());
     clone.setValueAsString(getValueAsString());
     clone.setIndex(getIndex());
-    clone.setClassName(getClassName());
     if (getValueProperties()!=null)
     {
       for (ValueObject childVo : getValueProperties())
