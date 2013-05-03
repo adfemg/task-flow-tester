@@ -13,7 +13,8 @@
       <pathelement location="${oracle.home}/ide/extensions/oracle.ide.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.ide.library.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.jdeveloper.runner.jar"/>
-      <pathelement location="${oracle.commons}/modules/oracle.javatools_11.1.1/javatools-nodeps.jar"/>
+      <pathelement location="${oracle.home}/jdev/extensions/oracle.adf-faces-dt.jar"/>
+        <pathelement location="${oracle.commons}/modules/oracle.javatools_11.1.1/javatools-nodeps.jar"/>
       <pathelement location="${oracle.home}//ide/lib/javatools.jar"/>
 
 <!--

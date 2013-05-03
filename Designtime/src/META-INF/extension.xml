@@ -1,6 +1,6 @@
 <extension xmlns="http://jcp.org/jsr/198/extension-manifest"
            id="org.emg.adf.taskflowtester"
-           version="11.1.2.1.25"
+           version="11.1.2.1.29"
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
@@ -59,6 +59,8 @@
     <bundle>oracle.jdeveloper.runner.core</bundle>
     <bundle>oracle.ide.library</bundle>    
     <bundle>oracle.ide.library.navigator</bundle>    
+    <bundle>oracle.adf-faces-dt</bundle>    
+
 </required-bundles>
 
   <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
