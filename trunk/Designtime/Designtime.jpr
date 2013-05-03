@@ -197,16 +197,13 @@
    </hash>
    <hash n="oracle.jdeveloper.runner.RunConfigurations">
       <hash n="runConfigurationDefinitions">
-         <hash n="Task Flow Tester">
-            <value n="allowInput" v="true"/>
+         <hash n="Default">
             <value n="custom" v="false"/>
-            <value n="name" v="Task Flow Tester"/>
-            <url n="targetURL" protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/WEB-INF/adfemg/tftester/tester-tf.xml"/>
+            <value n="name" v="Default"/>
          </hash>
       </hash>
       <list n="runConfigurationList">
          <string v="Default"/>
-         <string v="Task Flow Tester"/>
       </list>
    </hash>
    <hash n="oracle.jdevimpl.config.JProjectLibraries">
@@ -221,6 +218,10 @@
          </hash>
          <hash>
             <value n="id" v="Oracle.adf.pageflow.dt.runner.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="ADF Common Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -246,7 +247,7 @@
             </hash>
             <hash>
                <list n="classPath">
-                  <url protocol="jar" path="file:/C:/jdev11122/jdeveloper/jdev/extensions/oracle.adf.pageflow.dt.runner.jar!/"/>
+                  <url protocol="jar" path="file:/C:/jdev11123/jdeveloper/jdev/extensions/oracle.adf.pageflow.dt.runner.jar!/"/>
                </list>
                <value n="deployedByDefault" v="true"/>
                <value n="description" v="Oracle.adf.pageflow.dt.runner.jar"/>
@@ -266,6 +267,10 @@
          </hash>
          <hash>
             <value n="id" v="Oracle.adf.pageflow.dt.runner.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="ADF Common Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

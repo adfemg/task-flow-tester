@@ -405,6 +405,7 @@
                                                  value="#{false}" id="si4"/>
                                 </af:selectOneRadio>
                                 <af:commandButton text="Run Test" id="cb1"
+                                                  partialSubmit="true"
                                                   rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
                                                   disabled="#{pageFlowScope.TaskFlowTester.testActive}"
                                                   actionListener="#{pageFlowScope.TaskFlowTester.doTest}"/>
@@ -453,7 +454,7 @@
                     </af:decorativeBox>
                   </f:facet>
                   <f:facet name="second">
-                    <af:decorativeBox id="db1" topHeight="5"
+                    <af:decorativeBox id="db1" topHeight="5" partialTriggers="cb1"
                                       theme="default">
                       <f:facet name="center">
                         <!--
