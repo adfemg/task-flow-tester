@@ -1,14 +1,15 @@
-/*******************************************************************************
-Copyright (c) 2006 Oracle Corporation
+ /*******************************************************************************
+  Copyright: see readme.txt
 
-Open Issues :
-
-$revision_history$
- 07-jun-2012  Steven Davelaar
-   1.0        initial creation
-
-******************************************************************************/
-package org.emg.adf.tftester.dt.addin;
+  $revision_history$
+  25-apr-2013   Steven Davelaar
+  1.1           - Set run active file to false on tester run config
+                - Set adfc run target to tftester view activity
+                - Update ru target URL to point to correct hjdev home if needed
+  07-jun-2012   Steven Davelaar
+  1.0           initial creation
+ ******************************************************************************/
+ package org.emg.adf.tftester.dt.addin;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +20,10 @@ import javax.swing.JOptionPane;
 
 import oracle.ide.Addin;
 import oracle.ide.Ide;
+import oracle.ide.log.LogManager;
 import oracle.ide.model.Project;
+
+import oracle.javatools.data.HashStructure;
 
 import oracle.jdeveloper.library.JLibraryManager;
 import oracle.jdeveloper.library.ProjectLibraryChangeEvent;
@@ -29,73 +33,132 @@ import oracle.jdeveloper.runner.RunConfigurations;
 
 
 /**
- * Add-in class that adds library listener. The listener checks whether the ADF EMG Task Flow Tester library is 
+ * Add-in class that adds library listener. The listener checks whether the ADF EMG Task Flow Tester library is
  * added to the project, and if so, it adds a project run configuration to launch the tester task flow
- * 
+ *
  * @author Steven Davelaar
  */
-public class TesterAddin
+ public class TesterAddin
  // extends Command
   implements Addin
-{
+ {
 
-//  private static final Integer cmdId = Ide.findCmdID("org.emg.adf.tfTester");
+ //  private static final Integer cmdId = Ide.findCmdID("org.emg.adf.tfTester");
 
-//  public RunTester()
-//  {
-//    super(cmdId, NO_CHANGE);
-//  }
+ //  public RunTester()
+ //  {
+ //    super(cmdId, NO_CHANGE);
+ //  }
 
-//  @Override
-// check source AdfcEmbeddedServerCallback
-//  public int doit()
-//  {
-//
-//    String[] libraries = new String[]
-//      { "ADF EMG Task Flow Tester" };
-//    JProjectUtil.addLibraries(Ide.getActiveProject(), libraries);
-//
-//    AdfcConfigNode cnode = (AdfcConfigNode) getContext().getNode();
-//    XmlContext xmlContext = cnode.getXmlContext(context);
-//    AbstractModel xmlModel = xmlContext.getActiveAbstractModel();
-//    TaskFlow tf = AdfcSingleViewUtils.getSingleTaskFlow(xmlModel);
-//    TaskFlowId tfi = tf.getTaskFlowId();
-//    //    System.err.println("doc name: "+tfi.getDocumentName());
-//    //    System.err.println("fully qual name: "+tfi.getFullyQualifiedName());
-//    //    System.err.println("local tfi: "+tfi.getLocalTaskFlowId());
-//    //    RunConfigurations.setActiveRunConfiguration(Ide.getActiveProject(), rc);
-//    return 0;
-//  }
+ //  @Override
+ // check source AdfcEmbeddedServerCallback
+ //  public int doit()
+ //  {
+ //
+ //    String[] libraries = new String[]
+ //      { "ADF EMG Task Flow Tester" };
+ //    JProjectUtil.addLibraries(Ide.getActiveProject(), libraries);
+ //
+ //    AdfcConfigNode cnode = (AdfcConfigNode) getContext().getNode();
+ //    XmlContext xmlContext = cnode.getXmlContext(context);
+ //    AbstractModel xmlModel = xmlContext.getActiveAbstractModel();
+ //    TaskFlow tf = AdfcSingleViewUtils.getSingleTaskFlow(xmlModel);
+ //    TaskFlowId tfi = tf.getTaskFlowId();
+ //    //    System.err.println("doc name: "+tfi.getDocumentName());
+ //    //    System.err.println("fully qual name: "+tfi.getFullyQualifiedName());
+ //    //    System.err.println("local tfi: "+tfi.getLocalTaskFlowId());
+ //    //    RunConfigurations.setActiveRunConfiguration(Ide.getActiveProject(), rc);
+ //    return 0;
+ //  }
 
   private static final String RUN_CONFIG_NAME = "Task Flow Tester";
 
+
+  /**
+   * When project is versioned and multiple developers use different install dirs for JDev, the run target URL
+   * might be invalid. Also when developers start using a new JDev version the run target should point to the 
+   * JDev extension dir.
+   * This method will update the run target URL if needed.
+   * @return
+   */
+  private String getRunConfigTargetUrlPath()
+  {
+    String homeDir = Ide.getProductHomeDirectory();
+    homeDir = homeDir.replace('\\', '/');
+    String filePrefix = homeDir.startsWith("/") ? "file:" : "file:/";
+    String jarloc =
+      filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/META-INF/adfc-config.xml";
+    return jarloc;
+  }
+  
+  private void updateRunConfigTargetUrlPathIfNeeded(Project project)
+  {
+    RunConfiguration rc = RunConfigurations.getRunConfigurationByName(project, RUN_CONFIG_NAME);
+    if (rc!=null)
+    {
+      if (rc.isRunActiveFile())
+      {
+        rc.setRunActiveFile(false);              
+      }
+      String oldPath = rc.getTargetURL().getPath();
+      String newPath = getRunConfigTargetUrlPath(); 
+      if (!newPath.equals(oldPath))
+      {
+        try
+        {
+          URL runUrl = new URL("jar", null, newPath);
+          rc.setTargetURL(runUrl);          
+//  Unfortunately, showing this dialog does not work: JDev hangs and the dialog only contains the tite and not the message.
+           String message =   "ADF EMG Task Flow Tester INFO: The default run target of the 'Task Flow Tester' run configuration has been updated \nto point to the correct location of the ADF EMG Task Flow Tester Runtime jar file."
+                                ;
+          // Showing a dialog makes JDev hang in 11.1.1.x, so we use logger line
+          LogManager.getIdeLogWindow().log(message);
+//           JOptionPane.showMessageDialog(Ide.getMainWindow(), message
+//                                         ,"ADF EMG Task Flow Tester"
+//                                         ,JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (MalformedURLException e)
+        {
+          e.printStackTrace();
+        }
+      }  
+    }
+//    else
+//    {
+//      System.err.println("****** NOOOOOOOO TF TESTER RUN CONFIG IN PRJ "+project.getShortLabel());
+//    }
+  }
+
   private void addTaskFlowTesterRunConfiguration()
   {
-//    System.err.println("CHECK RUN CONFIG EXISTS .....");
-    boolean exists = RunConfigurations.getRunConfigurationByName(Ide.getActiveProject(), RUN_CONFIG_NAME) !=null;
+ //    System.err.println("CHECK RUN CONFIG EXISTS .....");
+
+
+    RunConfiguration existing = RunConfigurations.getRunConfigurationByName(Ide.getActiveProject(), RUN_CONFIG_NAME);
+    boolean exists = existing !=null;
     if (exists)
     {
       return;
     }
-//    System.err.println("ADING RUN CONFIG.....");
+ //    System.err.println("ADING RUN CONFIG.....");
     RunConfiguration rc = new RunConfiguration();
     rc.setCustom(false);
     rc.setName(RUN_CONFIG_NAME);
-    String homeDir = Ide.getProductHomeDirectory();
-    homeDir = homeDir.replace('\\', '/');
-    String filePrefix = homeDir.startsWith("/") ? "file:" : "file:/";
-// Before JDev 11.1.1.6 we cann run the tester within unbounde dtask flow using tester page
-// We must run it inside its own task flow and mempory scope by running the tf-tester task flow
-//   float version = Ide.getVersion();
-//      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/WEB-INF/adfemg/tftester/tester-tf.xml";
-//      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/META-INF/adfc-config.xml";
-      String jarloc =
-        filePrefix + homeDir + "extensions/org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar!/META-INF/adfc-config.xml";
+ // Before JDev 11.1.1.6 we cann run the tester within unbounde dtask flow using tester page
+ // We must run it inside its own task flow and mempory scope by running the tf-tester task flow
+ //   float version = Ide.getVersion();
+ //      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/WEB-INF/adfemg/tftester/tester-tf.xml";
+ //      String runFile = version >= 11.116 ? "/adfemg/tftester/pages/tester.jspx" : "/META-INF/adfc-config.xml";
     try
     {
-      URL runUrl = new URL("jar", null, jarloc);
+      URL runUrl = new URL("jar", null, getRunConfigTargetUrlPath());
       rc.setTargetURL(runUrl);
       rc.setAllowInput(true);
+      rc.setRunActiveFile(false);
+      
+      HashStructure adfcRunSettings = rc.getProperties().getOrCreateHashStructure("oracle.adfdt.controller.adfc.source.runner.AdfcRunnerLaunchSettings");
+      adfcRunSettings.putString("viewActivityId", "tftester");
+
       RunConfigurations.addRunConfiguration(Ide.getActiveProject(), rc);    
       String message =   "A run configuration named 'Task Flow Tester' has been added to the project run configurations."+ "\n" +
       "Use this run configuration to launch the ADF EMG Task Flow Tester."
@@ -114,10 +177,10 @@ public class TesterAddin
   @Override
   public void initialize()
   {
-//    System.err.println("INIT4 TFTESTER ADDIN");
+ //    System.err.println("INIT4 TFTESTER ADDIN");
     // add run config for current ptoject and register listener so it will be added for other projects when
     // user adds the ADF tftester lib
-//    addTaskFlowTesterRunConfiguration();
+ //    addTaskFlowTesterRunConfiguration();
     registerLibraryChangeListener();
   }
 
@@ -129,6 +192,7 @@ public class TesterAddin
 
       public void projectOpened(Project project)
       {
+        updateRunConfigTargetUrlPathIfNeeded(project);
       }
 
       public void projectClosed(Project project)
@@ -152,9 +216,9 @@ public class TesterAddin
         }
       }
     };
-//    System.err.println("REGISTERING LIB CHANGE LISTENER.....");
+ //    System.err.println("REGISTERING LIB CHANGE LISTENER.....");
     JLibraryManager instance = JLibraryManager.getInstance();
     instance.addLibraryChangeListener(_listener);
   }
 
-}
+ }
