@@ -59,7 +59,7 @@
        <!-- put the version information in the manifest file as well -->
        <manifest>
          <attribute name="Export-Package" value="org.emg.adf.tftester.dt.addin"/>
-         <attribute name="Require-Bundle" value="oracle.ide.library,oracle.jdeveloper.runner,oracle.jdeveloper.runner.core,oracle.ide,oracle.ide.runner,oracle.idert,oracle.javatools,oracle.javatools-nodeps"/>
+         <attribute name="Require-Bundle" value="oracle.ide.library,oracle.jdeveloper.runner,oracle.jdeveloper.runner.core,oracle.ide,oracle.ide.runner,oracle.idert,oracle.javatools,oracle.javatools-nodeps,oracle.adf-faces-dt"/>
          <attribute name="Bundle-ClassPath" value="."/>
          <attribute name="Bundle-Version" value="11.1.2"/>
          <attribute name="Bundle-ManifestVersion" value="2"/>

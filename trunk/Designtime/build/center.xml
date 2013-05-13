@@ -1,7 +1,7 @@
 <updates version="1.0" xmlns="http://xmlns.oracle.com/jdeveloper/updatecenter">
    <update id="org.emg.adf.taskflowtester" xmlns="http://xmlns.oracle.com/jdeveloper/update">
       <name>ADF EMG Task Flow Tester</name>
-      <version>11.1.2.1.29</version>
+      <version>11.1.2.1.30</version>
       <author>ADF Enterprise Methodology Group (Steven Davelaar)</author>
       <author-url>http://java.net/projects/adf-task-flow-tester/pages/Home</author-url>
       <description>ADF EMG Task Flow Tester is a web-based testing tool for ADF bounded task flows. 
@@ -12,6 +12,6 @@ After installing this extension, you need to add the 'ADF EMG Task Flow Tester' 
       <requirements>
          <requires-extension id="oracle.j2ee" minVersion="11.1.2.0.0" maxVersion="12.9.9.99.99"/>
       </requirements>
-      <bundle-url>jhs11.1.2.1.29-install.zip</bundle-url>
+      <bundle-url>jhs11.1.2.1.30-install.zip</bundle-url>
    </update>
 </updates>
