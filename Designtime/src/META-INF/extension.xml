@@ -1,25 +1,11 @@
 <extension xmlns="http://jcp.org/jsr/198/extension-manifest"
            id="org.emg.adf.taskflowtester"
-           version="11.1.2.1.32"
+           version="12.1.2.0.0"
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
-   <dependencies>
 <!--
-    <import>oracle.adf.pageflow.dt</import>
-    <import>oracle.adf.pageflow.dt.runner</import>    
-    <import>oracle.adf.pageflow.dt.debug</import>    
-    <import>oracle.controller.dt</import>
-    <import>oracle.j2ee.xml.descriptors</import>
-    <import>oracle.j2ee.server</import>
-    <import>oracle.j2ee.webapp</import>
-    <import>oracle.j2ee.webapp.runner</import>
-    <import>oracle.adf.controller.dt</import>    
-    <import>oracle.adf.controller.config.dt</import>    
-    <import>oracle.adf.controller.deploy.dt</import>    
-    <import>oracle.j2ee.webapp.runner</import>        
-    <import>oracle.j2ee.jstl</import>        
--->
+   <dependencies>
     <import>oracle.ide</import>
     <import>oracle.ide.runner</import>
     <import>oracle.ide.xmlef</import>
@@ -30,25 +16,6 @@
 
 </dependencies>
    <required-bundles>
-<!--
-    <bundle>oracle.xmlef</bundle>
-    <bundle>oracle.xmlef-core</bundle>
-    <bundle>oracle.xmlef-swing</bundle>
-    <bundle>oracle.icons</bundle>
-    <bundle>oracle.uic</bundle>
-    <bundle>oracle.adf-controller-api</bundle>
-    <bundle>oracle.jewt-core</bundle>
-    <bundle>oracle.xml-descriptor</bundle>
-    <bundle>oracle.jgoodies-looks</bundle>
-    <bundle>oracle.adf.pageflow.dt</bundle>    
-    <bundle>oracle.adf.pageflow.dt.runner</bundle>    
-    <bundle>oracle.adf.controller.dt</bundle>    
-    <bundle>oracle.adf.controller.config.dt</bundle>    
-    <bundle>oracle.adf.controller.deploy.dt</bundle>    
-    <bundle>oracle.adf.pageflow.dt.debug</bundle>    
-    <bundle>oracle.j2ee.webapp.runner</bundle>        
-    <bundle>oracle.j2ee.jstl</bundle>        
--->
     <bundle>oracle.jdeveloper.java.core</bundle>
     <bundle>oracle.ide</bundle>
     <bundle>oracle.javaxide</bundle>
@@ -62,7 +29,7 @@
     <bundle>oracle.adf-faces-dt</bundle>    
 
 </required-bundles>
-
+-->
   <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
 
     <triggers>

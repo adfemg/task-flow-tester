@@ -104,12 +104,15 @@
          <string v="ADFc"/>
          <string v="ADFm"/>
          <string v="Ant"/>
+         <string v="Database"/>
+         <string v="EJB"/>
          <string v="HTML"/>
          <string v="JAVASCRIPT"/>
          <string v="JSF"/>
          <string v="JSP"/>
          <string v="Java"/>
          <string v="TRINIDAD"/>
+         <string v="TopLink"/>
          <string v="XML"/>
          <string v="XML_SCHEMA"/>
          <string v="XSL"/>
@@ -244,10 +247,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="JSF 2.0"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="JSTL 1.2"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -332,12 +331,34 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Java EE 1.5"/>
+            <value n="id" v="Java EE"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="TopLink"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSF 2.1"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Org.springframework_2.5.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
       <hash n="internalDefinitions">
-         <list n="libraryDefinitions"/>
+         <list n="libraryDefinitions">
+            <hash>
+               <list n="classPath">
+                  <url protocol="jar" path="file:/C:/jdev1212/oracle_common/modules/org.springframework_2.5.jar!/"/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Org.springframework_2.5.jar"/>
+               <value n="id" v="Org.springframework_2.5.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+         </list>
       </hash>
       <list n="libraryReferences">
          <hash>
@@ -345,10 +366,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="JSF 2.0"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="JSTL 1.2"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -433,7 +450,19 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Java EE 1.5"/>
+            <value n="id" v="Java EE"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="TopLink"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSF 2.1"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Org.springframework_2.5.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

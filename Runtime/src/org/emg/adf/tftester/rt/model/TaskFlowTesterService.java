@@ -337,6 +337,8 @@ import org.xml.sax.helpers.DefaultHandler;
        sLog.fine("JAXBContext: " + jc.getClass());
        Marshaller m = jc.createMarshaller();
        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+// javax.xml.bind.context.factory = org.eclipse.persistence.jaxb.JAXBContextFactory
+//       m.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
        sLog.fine("Marshaller: " + m.getClass());
        String encoding = "UTF-8";
        m.setProperty(Marshaller.JAXB_ENCODING, encoding);

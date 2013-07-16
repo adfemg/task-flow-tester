@@ -14,7 +14,7 @@
       <pathelement location="${oracle.home}/jdev/extensions/oracle.ide.library.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.jdeveloper.runner.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.adf-faces-dt.jar"/>
-        <pathelement location="${oracle.commons}/modules/oracle.javatools_11.1.1/javatools-nodeps.jar"/>
+        <pathelement location="${oracle.commons}/modules/oracle.javatools_12.1.2/javatools-nodeps.jar"/>
       <pathelement location="${oracle.home}//ide/lib/javatools.jar"/>
 
 <!--
@@ -61,7 +61,7 @@
          <attribute name="Export-Package" value="org.emg.adf.tftester.dt.addin"/>
          <attribute name="Require-Bundle" value="oracle.ide.library,oracle.jdeveloper.runner,oracle.jdeveloper.runner.core,oracle.ide,oracle.ide.runner,oracle.idert,oracle.javatools,oracle.javatools-nodeps,oracle.adf-faces-dt"/>
          <attribute name="Bundle-ClassPath" value="."/>
-         <attribute name="Bundle-Version" value="11.1.2"/>
+         <attribute name="Bundle-Version" value="12.1.2"/>
          <attribute name="Bundle-ManifestVersion" value="2"/>
          <attribute name="Bundle-SymbolicName" value="org.emg.adf.taskflowtester"/>
        </manifest>
@@ -91,7 +91,7 @@
                    replace="&lt;version&gt;${tft.version.number}&lt;/version&gt;"/>
     <replaceregexp file="${tft.design.build.dir}/center.xml"
                    match="&lt;bundle-url&gt;(\s*)(.*)&lt;/bundle-url&gt;"
-                   replace="&lt;bundle-url&gt;jhs${tft.version.number}-install.zip&lt;/bundle-url&gt;"/>
+                   replace="&lt;bundle-url&gt;adfemg-tftester-${tft.version.number}-install.zip&lt;/bundle-url&gt;"/>
     <copy file="${tft.design.build.dir}/bundle.xml" todir="${tft.stage.dir}/META-INF"/>
     <copy file="${tft.design.build.dir}/center.xml" todir="${tft.stage.dir}"/>
     <copy file="${tft.design.deploy.dir}/org.emg.adf.taskflowtester.jar" todir="${tft.stage.dir}"/>
