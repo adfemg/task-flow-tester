@@ -15,26 +15,31 @@
       <value n="oracle.adfdtinternal.view.common.migration.wizards.MigrationHelper" v="11.1.1.1.0.3"/>
       <value n="oracle.adfdtinternal.view.rich.binding.migration.JarResourceMigrator" v="11.1.1.1.0"/>
       <value n="oracle.adfdtinternal.view.rich.migration.ComponentIdNodeMigratorHelper" v="11.1.1.1.0.01"/>
+      <value n="oracle.adfdtinternal.view.rich.migration.FacesLibraryVersionMigrator" v="11.1.1.1.0.1"/>
       <value n="oracle.adfdtinternal.view.rich.migration.LibraryVersionMigrator" v="11.1.1.1.0.1"/>
-      <value n="oracle.ide.model.Project" v="11.1.2.0.0"/>
+      <value n="oracle.ide.model.Project" v="11.1.2.0.0;12.1.2.0.0"/>
       <value n="oracle.ide.model.ResourcePathsMigrator" v="11.1.1.1.0"/>
       <value n="oracle.ideimpl.model.TechnologyScopeUpdateMigrator" v="11.1.2.0.0.4"/>
       <value n="oracle.jbo.dt.jdevx.deployment.JbdProjectMigrator" v="11.1.2.0.0"/>
       <value n="oracle.jbo.dt.jdevx.ui.appnav.APProjectMigrator" v="11.1.1.0.1.5"/>
       <value n="oracle.jbo.dt.migrate.ResourceBundlePathMigrator" v="11.1.1.0.1.5"/>
       <value n="oracle.jbo.dt.migration.ServiceInterfaceMigrator" v="11.1.1.1.0"/>
+      <value n="oracle.jdeveloper.dbmodeler.Migration" v="12.1.1.0.0"/>
       <value n="oracle.jdeveloper.ejb.EjbMigrator" v="11.1.1.1.0"/>
       <value n="oracle.jdeveloper.library.ProjectLibraryMigrator" v="11.1.1.1.0"/>
       <value n="oracle.jdeveloper.model.OutputDirectoryMigrator" v="11.1.1.1.0"/>
       <value n="oracle.jdevimpl.deploy.DeploymentProfilesMigrator" v="11.1.1.1.0"/>
       <value n="oracle.jdevimpl.deploy.jps.JpsDataMigrator" v="11.1.1.1.0"/>
+      <value n="oracle.jdevimpl.deploy.migrators.DeploymentMigrator" v="12.1.2.0.1"/>
       <value n="oracle.jdevimpl.jsp.JspMigrator" v="11.1.1"/>
-      <value n="oracle.jdevimpl.offlinedb.migration.OfflineDBProjectMigrator" v="11.1.1.1.0"/>
+      <value n="oracle.jdevimpl.offlinedb.migration.OfflineDBProjectMigrator" v="11.1.1.1.0;12.1.1.0.0"/>
       <value n="oracle.jdevimpl.offlinedb.migration.OfflinePlSqlMigrator" v="11.1.1.1.0"/>
       <value n="oracle.jdevimpl.resourcebundle.XliffAddin$XliffMigratorHelper" v="11.1.1.1.0"/>
       <value n="oracle.jdevimpl.webapp.jsp.libraries.JspLibraryMigrator" v="11.1.1.1.4"/>
+      <value n="oracle.jdevimpl.webapp.jsp.taglibraries.trinidad.migration.TrinidadLibraryVersionMigrator" v="11.1.1.1.0.1"/>
       <value n="oracle.jdevimpl.webapp.WebAppContentSetNodeMigratorHelper" v="11.1.1"/>
-      <value n="oracle.jdevimpl.webapp.WebAppProjectNodeMigratorHelper" v="11.1.2.0.0"/>
+      <value n="oracle.jdevimpl.webapp.WebAppProjectNodeMigratorHelper" v="11.1.2.0.0;12.1.2.0.0"/>
+      <value n="oracle.jdevimpl.webservices.rest.migration.RestLibraryMigrator" v="12.1.1.0.0"/>
       <value n="oracle.jdevimpl.webservices.rest.migration.RestPathMigrator" v="11.1.2.0.0"/>
       <value n="oracle.jdevimpl.webservices.WebServicesMigratorHelper" v="11.1.1.1.0"/>
       <value n="oracle.jdevimpl.xml.wl.WeblogicMigratorHelper" v="11.1.1.1.0"/>
@@ -149,7 +154,8 @@
                      <hash n="filters">
                         <list n="rules">
                            <hash>
-                              <value n="DefaultFilters" v=""/>
+                              <value n="pattern" v="**"/>
+                              <value n="type" v="0"/>
                            </hash>
                         </list>
                      </hash>
@@ -163,9 +169,7 @@
                <hash n="rules"/>
             </hash>
             <url n="jarURL" path="deploy/org.emg.adf.taskflowtester.jar"/>
-            <hash n="libraryDependencies">
-               <value n="IncludeLibrariesFromOtherContainers" v="true"/>
-            </hash>
+            <hash n="libraryDependencies"/>
             <value n="profileClass" v="oracle.jdevimpl.extensiondt.deploy.ExtensionProfile"/>
             <value n="profileName" v="edtExtensionProfile"/>
             <hash n="requireBundles">

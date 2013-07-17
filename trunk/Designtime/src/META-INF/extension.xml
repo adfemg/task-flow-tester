@@ -4,32 +4,6 @@
            esdk-version="1.0">
   <name>ADF EMG Task Flow Tester</name>
   <owner>ADF Enterprise Methodology Group</owner>
-<!--
-   <dependencies>
-    <import>oracle.ide</import>
-    <import>oracle.ide.runner</import>
-    <import>oracle.ide.xmlef</import>
-    <import>oracle.jdeveloper.common</import>
-    <import>oracle.jdeveloper.runner</import>
-    <import>oracle.jdeveloper.runner.core</import>
-    <import>oracle.ide.library.navigator</import>    
-
-</dependencies>
-   <required-bundles>
-    <bundle>oracle.jdeveloper.java.core</bundle>
-    <bundle>oracle.ide</bundle>
-    <bundle>oracle.javaxide</bundle>
-    <bundle>oracle.idert</bundle>
-    <bundle>oracle.javatools</bundle>
-    <bundle>oracle.javatools-nodeps</bundle>
-    <bundle>oracle.jdeveloper.runner</bundle>
-    <bundle>oracle.jdeveloper.runner.core</bundle>
-    <bundle>oracle.ide.library</bundle>    
-    <bundle>oracle.ide.library.navigator</bundle>    
-    <bundle>oracle.adf-faces-dt</bundle>    
-
-</required-bundles>
--->
   <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
 
     <triggers>
