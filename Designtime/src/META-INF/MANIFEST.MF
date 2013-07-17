@@ -1,2 +1,9 @@
 Manifest-Version: 1.0
+Export-Package: org.emg.adf.tftester.dt.addin
+Require-Bundle: oracle.ide.library,oracle.jdeveloper.runner,oracle.jde
+ veloper.runner.core,oracle.ide,oracle.ide.runner,oracle.idert,oracle.
+ javatools,oracle.javatools-nodeps,oracle.adf-faces-dt
 Bundle-ClassPath: .
+Bundle-Version: 12.1.2
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.emg.adf.taskflowtester
