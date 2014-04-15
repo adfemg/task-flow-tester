@@ -230,8 +230,14 @@ public class ValueObject implements Serializable
     if (isComplexType() && getValueProperties().size()==0)
     {
       String className = getClassName(true);
+      if (getClassName() == null) {
+        setClassName(className);
+      }
       Class c = getClass(className);
-      setClassName(className);
+      if (c != null && c.isInterface()) {
+        // abort on interface and we'll retry when user sets classname
+        return;
+      }
       //    BeanWrapper bw = paramValue!=null ? new BeanWrapperImpl(paramValue) : new BeanWrapperImpl(c);
       BeanWrapper bw;
       try
@@ -260,6 +266,7 @@ public class ValueObject implements Serializable
   public void setClassName(String className)
   {
     this.className = className;
+    initComplexValueObject(); // re-init for situation where implementation class changes
     if (isMapEntry())
     {
       setType(className);
