@@ -16,7 +16,7 @@
     <input-parameter-definition id="__7">
       <name>someContext</name>
       <value>#{pageFlowScope.someContext}</value>
-      <class>org.emg.adf.sample.controller.bean.SampleContext</class>
+      <class>org.emg.adf.sample.controller.bean.SampleContextInterface</class>
     </input-parameter-definition>
     <return-value-definition id="__3">
       <name>returnValue1</name>
