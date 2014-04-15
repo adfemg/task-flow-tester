@@ -18,8 +18,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 
-public class SampleContext
-{
+public class SampleContext implements SampleContextInterface {
   private String aap;
   private String noot;
   private String mies;
@@ -33,7 +32,7 @@ public class SampleContext
   private oracle.jbo.domain.Date dateValue;
   private Key key;
   private HashMap mapProperty;
-  
+
   public SampleContext()
   {
     super();
@@ -93,7 +92,7 @@ public class SampleContext
   {
     return bignummer;
   }
-  
+
   public static void main(String[] args)
   {
     // see http://static.springsource.org/spring/docs/current/spring-framework-reference/html/validation.html
@@ -152,7 +151,7 @@ public class SampleContext
     {
       super(sdf, value);
     }
-    
+
     public Object getValue()
     {
       java.util.Date value = (Date) super.getValue();
@@ -161,7 +160,7 @@ public class SampleContext
         return null;
       }
       java.sql.Timestamp sqlDate = new java.sql.Timestamp (value.getTime());
-      return  new oracle.jbo.domain.Date(sqlDate);       
+      return  new oracle.jbo.domain.Date(sqlDate);
     }
   }
 
