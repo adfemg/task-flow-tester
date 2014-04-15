@@ -4,7 +4,7 @@
 
    <!-- Set the classpath to compile against-->
    <path id="classpath">
-      
+
       <pathelement location="${bea.home}/wlserver/server/ext/jdbc/oracle/11g/ojdbc6.jar"/>
       <pathelement location="${bea.home}/wlserver/server/lib/wlclient.jar"/>
       <pathelement location="${bea.home}/wlserver/server/lib/wlthint3client.jar"/>
@@ -19,7 +19,7 @@
     <pathelement location="${oracle.commons}/modules/org.springframework_2.5.jar"/>
     <pathelement location="${oracle.commons}/modules/org.apache.commons.beanutils_1.8.3.jar"/>
 
-    
+
 <!-- New path JDev 11.1.2 -->
       <fileset dir="${bea.home}/oracle_common/modules/oracle.jsf_2.1">
         <include name="**/*.jar"/>
@@ -117,7 +117,7 @@
    </target>
 
   <target name="deploy" depends="stage">
-    <copy todir="${tft.extensions.dir}">
+    <copy todir="${tft.extensions.dir}" verbose="true">
       <fileset dir="${tft.runtime.deploy.dir}">
          <include name="*.jar"/>
          <include name="*.zip"/>
