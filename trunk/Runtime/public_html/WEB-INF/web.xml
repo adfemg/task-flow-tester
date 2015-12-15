@@ -45,6 +45,18 @@
     <param-name>javax.faces.FACELETS_RESOURCE_RESOLVER</param-name>
     <param-value>oracle.adfinternal.view.faces.facelets.rich.AdfFaceletsResourceResolver</param-value>
   </context-param>
+  <context-param>
+    <param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>oracle.adf.view.rich.geometry.DEFAULT_DIMENSIONS</param-name>
+    <param-value>auto</param-value>
+  </context-param>
+  <context-param>
+    <param-name>oracle.adf.view.rich.SYNCROWS</param-name>
+    <param-value>enable</param-value>
+  </context-param>
   <filter>
     <filter-name>trinidad</filter-name>
     <filter-class>org.apache.myfaces.trinidad.webapp.TrinidadFilter</filter-class>
