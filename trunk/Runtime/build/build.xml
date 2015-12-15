@@ -21,7 +21,7 @@
 
 
 <!-- New path JDev 11.1.2 -->
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.jsf_2.1">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.jsf">
         <include name="**/*.jar"/>
       </fileset>
 <!--
@@ -30,22 +30,22 @@
       </fileset>
 -->
 
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.xdk_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.xdk">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.controller_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.controller">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.pageflow_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.pageflow">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.model_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.model">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.view_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.view">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.share.ca_12.1.2">
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.share.ca">
         <include name="**/*.jar"/>
       </fileset>
       <fileset dir="${jdev.home}/BC4J/jlib">
@@ -127,7 +127,7 @@
 
   <target name="compile" description="Compile Java source files" depends="init,jaxb">
     <javac destdir="${tft.runtime.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
-           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.6" target="1.6">
+           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.8" target="1.8">
       <src path="../src"/>
       <src path="../adfmsrc"/>
     </javac>
