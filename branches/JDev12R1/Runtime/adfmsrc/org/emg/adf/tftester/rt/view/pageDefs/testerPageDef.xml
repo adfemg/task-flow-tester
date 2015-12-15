@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.2.61.83" id="testerPageDef"
+                Package="org.emg.adf.tftester.rt.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables"/>
+    <page path="org.emg.adf.tftester.rt.view.pageDefs.testerPageTemplatePageDef"
+          id="pageTemplateBinding" Refresh="ifNeeded"/>
+  </executables>
+  <bindings/>
+</pageDefinition>

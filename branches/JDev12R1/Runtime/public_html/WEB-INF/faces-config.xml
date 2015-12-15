@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<faces-config version="2.1" xmlns="http://java.sun.com/xml/ns/javaee">
+  <application>
+    <default-render-kit-id>oracle.adf.rich</default-render-kit-id>
+    <navigation-handler>org.emg.adf.tftester.rt.controller.TesterNavigationHandler</navigation-handler>
+  </application>
+</faces-config>

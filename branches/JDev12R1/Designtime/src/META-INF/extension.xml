@@ -1,0 +1,47 @@
+<extension xmlns="http://jcp.org/jsr/198/extension-manifest"
+           id="org.emg.adf.taskflowtester"
+           version="12.1.2.0.0"
+           esdk-version="1.0">
+  <name>ADF EMG Task Flow Tester</name>
+  <owner>ADF Enterprise Methodology Group</owner>
+  <trigger-hooks xmlns="http://xmlns.oracle.com/ide/extension">
+
+    <triggers>
+
+<!--
+      <actions xmlns="http://xmlns.oracle.com/jdeveloper/1013/extension">
+        <action id="org.emg.adf.tfTester">
+          <properties>
+            <property name="Name">Add Test Run Configuration</property>
+            <property name="LongDescription">Add Test Run Configuration</property>
+          </properties>
+          <command-class>org.emg.adf.tftester.RunTester</command-class>
+        </action>
+    </actions>
+      <context-menu-hook rule="context-has-tf-node">      
+        <site idref="navigator"></site>
+          <menu>
+            <section xmlns="http://jcp.org/jsr/198/extension-manifest" id="MY_CUSTOM_MENU_SECTION_ONE" weight="8.0">
+             <item action-ref="org.emg.adf.tfTester"></item>
+            </section>
+         </menu>
+      </context-menu-hook>
+-->
+      <libraries xmlns="http://xmlns.oracle.com/jdeveloper/1013/jdev-libraries">
+        <library  name="ADF EMG Task Flow Tester" deployed="true" forceExtensionInitialization="true">
+            <classpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT.jar</classpath>
+            <srcpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT-src.zip</srcpath>
+            <docpath>org.emg.adf.taskflowtester/org.emg.adf.AdfTaskFlowTesterRT-javadoc.zip</docpath>
+        </library>    
+      </libraries>
+
+    </triggers>
+  </trigger-hooks>
+  <hooks>
+    <jdeveloper-hook xmlns="http://xmlns.oracle.com/jdeveloper/1013/extension">
+      <addins>
+        <addin>org.emg.adf.tftester.dt.addin.TesterAddin</addin>
+      </addins>
+    </jdeveloper-hook>
+  </hooks>
+</extension>

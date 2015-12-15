@@ -1,0 +1,54 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<SDM>
+   <OverallProperties
+      id="OverallProperties1"/>
+   <TaskFlowCall
+      id="TaskFlowCall2">
+      <property
+         name="activityId">testTaskFlowCall</property>
+      <property
+         name="runAsDialog">true</property>
+      <property
+         name="description">&lt;html>&lt;p>&lt;b>testTaskFlowCall&lt;/b>&lt;/p>&lt;p>Activity Type:  Task Flow Call&lt;/p></property>
+      <property
+         name="exceptionHandler">false</property>
+      <property
+         name="y">254.69531</property>
+      <property
+         name="x">439.67676</property>
+   </TaskFlowCall>
+   <View
+      id="View3">
+      <property
+         name="activityId">tftester</property>
+      <property
+         name="page">/adfemg/tftester/pages/tester.jsf</property>
+      <property
+         name="description">&lt;html>&lt;p>&lt;b>tftester&lt;/b>&lt;/p>&lt;p>Activity Type:  View&lt;/p></property>
+      <property
+         name="exceptionHandler">false</property>
+      <property
+         name="y">108.79883</property>
+      <property
+         name="x">293.5</property>
+   </View>
+   <WildcardControlFlowRule
+      id="WildcardControlFlowRule7">
+      <property
+         name="activityId">*</property>
+      <property
+         name="y">265.0</property>
+      <property
+         name="x">50.0</property>
+   </WildcardControlFlowRule>
+   <ControlFlowCase
+      islink="true"
+      id="ControlFlowCase8"
+      from="WildcardControlFlowRule7"
+      to="TaskFlowCall2">
+      <property
+         name="fromOutcome">adfemgTestTaskFlowInDialog</property>
+      <property
+         name="sdm:polyPoints">R50,86.0,265.0,398.67676,254.69531,L50</property>
+   </ControlFlowCase>
+</SDM>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns="http://adf.emg.org/tftester"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://adf.emg.org/tftester" elementFormDefault="qualified">
+
+  <xsd:element name="TaskFlowTester">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="TaskFlow" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="TaskFlow">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="TestCase" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="taskFlowId" use="required" type="xsd:string"/>
+      <xsd:attribute name="displayName" use="optional" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="TestCase">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ParamValueObject" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" use="required" type="xsd:string"/>
+      <xsd:attribute name="description" use="optional" type="xsd:string"/>
+      <xsd:attribute name="runInRegion"  default="true" type="xsd:boolean"/>
+      <xsd:attribute name="runAscall"  default="false" type="xsd:boolean"/>
+      <xsd:attribute name="stretchLayout"  default="true" type="xsd:boolean"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="ParamValueObject">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="valueAsString" type="xsd:string" minOccurs="0"/>
+        <xsd:element ref="ParamValueObject" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string"/>
+      <xsd:attribute name="className" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
+

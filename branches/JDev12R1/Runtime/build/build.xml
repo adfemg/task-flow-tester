@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<project xmlns="antlib:org.apache.tools.ant" name="ViewController" default="stage" basedir=".">
+  <property file="build.properties"/>
+
+   <!-- Set the classpath to compile against-->
+   <path id="classpath">
+
+      <pathelement location="${bea.home}/wlserver/server/ext/jdbc/oracle/11g/ojdbc6.jar"/>
+      <pathelement location="${bea.home}/wlserver/server/lib/wlclient.jar"/>
+      <pathelement location="${bea.home}/wlserver/server/lib/wlthint3client.jar"/>
+      <pathelement location="${bea.home}/wlserver/server/lib/weblogic.jar"/>
+
+      <pathelement location="${jdev.home}/ord/jlib/ordim.jar"/>
+      <pathelement location="${jdev.home}/ord/jlib/ordhttp.jar"/>
+
+      <pathelement location="${jdev.home}/adfv/jlib/oracle-page-templates-ext.jar"/>
+
+    <pathelement location="${oracle.commons}/modules/org.apache.commons.digester_1.8.jar"/>
+    <pathelement location="${oracle.commons}/modules/org.springframework_2.5.jar"/>
+    <pathelement location="${oracle.commons}/modules/org.apache.commons.beanutils_1.8.3.jar"/>
+
+
+<!-- New path JDev 11.1.2 -->
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.jsf_2.1">
+        <include name="**/*.jar"/>
+      </fileset>
+<!--
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.jsf_1.2.9">
+        <include name="**/*.jar"/>
+      </fileset>
+-->
+
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.xdk_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.controller_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.pageflow_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.model_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.view_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/oracle.adf.share.ca_12.1.2">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${jdev.home}/BC4J/jlib">
+        <include name="**/*.jar"/>
+      </fileset>
+
+ </path>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${tft.runtime.output.dir}"/>
+  </target>
+  <target name="all" description="Build the project" depends="deploy,compile,copy"/>
+
+  <target name="clean" description="Clean the project">
+    <delete includeemptydirs="true" quiet="true">
+      <fileset dir="${tft.runtime.jaxb.dir}"    includes="**/*"/>
+      <fileset dir="${tft.runtime.output.dir}"  includes="**/*"/>
+      <fileset dir="${tft.runtime.deploy.dir}"  includes="**/*"/>
+      <fileset dir="${tft.runtime.javadoc.dir}" includes="**/*"/>
+    </delete>
+  </target>
+
+  <target name="stage" description="Deploy JDeveloper profiles" depends="copy, compile,  sourcezipfile, javadoc">
+    <taskdef name="ojdeploy" classname="oracle.jdeveloper.deploy.ant.OJDeployAntTask" uri="oraclelib:OJDeployAntTask"
+             classpath="${oracle.jdeveloper.ant.library}"/>
+    <property name="ojdeploy.buildscript.abs"  location="${tft.runtime.deploy.dir}/ojdeploy-build.xml"/>
+    <property name="ojdeploy.statuslog.abs"    location="${tft.runtime.deploy.dir}/ojdeploy-statuslog.xml"/>
+    <property name="ojdeploy.workspace.abs"    location="${tft.workspace.path}"/>
+    <property name="ojdeploy.outputfile.abs"   location="${tft.runtime.deploy.jar}"/>
+    <ora:ojdeploy xmlns:ora="oraclelib:OJDeployAntTask" executable="${oracle.jdeveloper.ojdeploy.path}"
+                  ora:buildscript="${ojdeploy.buildscript.abs}"
+                  ora:statuslog="${ojdeploy.statuslog.abs}">
+      <ora:deploy>
+        <ora:parameter name="workspace" value="${ojdeploy.workspace.abs}"/>
+        <ora:parameter name="project" value="${tft.runtime.project.name}"/>
+        <ora:parameter name="profile" value="${tft.runtime.deploy.profile.name}"/>
+        <ora:parameter name="nocompile" value="false"/>
+        <ora:parameter name="outputfile" value="${ojdeploy.outputfile.abs}"/>
+      </ora:deploy>
+    </ora:ojdeploy>
+  </target>
+
+   <target name="sourcezipfile" depends="init">
+     <!-- create the output directory if it doesn't exist-->
+     <mkdir dir="${tft.runtime.deploy.dir}"/>
+     <!-- zip up all the sources and place them with the jarfile in the deployment directory -->
+     <zip destfile="${tft.runtime.deploy.src.zip}" basedir="../src">
+       <include name="**/*.properties"/>
+       <include name="**/*.java"/>
+       <include name="**/*.xml"/>
+       <include name="readme.txt"/>
+     </zip>
+   </target>
+
+   <target name="javadoc" depends="init">
+      <!-- Recreate javadoc directory to prevent html files of renamed
+           classes/packages to linger around -->
+      <delete dir="${tft.runtime.javadoc.dir}"/>
+      <mkdir dir="${tft.runtime.javadoc.dir}"/>
+      <!--Create Javadoc-->
+      <javadoc packagenames="org.emg.adf.tftester.*" sourcepath="../src"
+               classpathref="classpath"
+               destdir="${tft.runtime.javadoc.dir}" version="false" author="false"/>
+      <!-- zip the javadoc, and put it in the deployment directory -->
+     <!-- create the deploy directory if it doesn't exist-->
+     <mkdir dir="${tft.runtime.deploy.dir}"/>
+      <zip destfile="${tft.runtime.deploy.javadoc.zip}" basedir="${tft.runtime.javadoc.dir}"/>
+   </target>
+
+  <target name="deploy" depends="stage">
+    <copy todir="${tft.extensions.dir}" verbose="true">
+      <fileset dir="${tft.runtime.deploy.dir}">
+         <include name="*.jar"/>
+         <include name="*.zip"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile" description="Compile Java source files" depends="init,jaxb">
+    <javac destdir="${tft.runtime.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
+           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.6" target="1.6">
+      <src path="../src"/>
+      <src path="../adfmsrc"/>
+    </javac>
+  </target>
+  <target name="copy" description="Copy files to output directory" depends="init">
+    <patternset id="copy.patterns">
+      <include name="**/*.cpx"/>
+      <include name="**/*.dcx"/>
+      <include name="**/*.ejx"/>
+      <include name="**/*.gif"/>
+      <include name="**/*.ini"/>
+      <include name="**/*.jpeg"/>
+      <include name="**/*.jpg"/>
+      <include name="**/*.png"/>
+      <include name="**/*.properties"/>
+      <include name="**/*.sva"/>
+      <include name="**/*.tag"/>
+      <include name="**/*.tld"/>
+      <include name="**/*.wsdl"/>
+      <include name="**/*.xcfg"/>
+      <include name="**/*.xlf"/>
+      <include name="**/*.xml"/>
+      <include name="**/*.xsd"/>
+      <include name="**/*.xsl"/>
+      <include name="**/oracle.adf.controller.internal.AdfcNavigationHandler"/>
+    </patternset>
+    <copy todir="${tft.runtime.output.dir}">
+      <fileset dir="../src">
+        <patternset refid="copy.patterns"/>
+      </fileset>
+      <fileset dir="../adfmsrc">
+        <patternset refid="copy.patterns"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="jaxb">
+
+    <delete dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
+    <mkdir dir="../src/org/emg/adf/tftester/rt/model/xml/jaxb"/>
+
+    <!--
+      Generate source code.
+      The 'schema' attribute gives the path to the schema the sources
+      will be generated from.
+      The 'target' attribute specifies the base directory that the source
+      will be generated into. Sources will be created in subdirectories
+      corresponding to the package structure.
+      -->
+      <java classname="com.sun.tools.internal.xjc.XJCFacade">
+        <arg value="-no-header"/> <!-- suppress generation of a file header with timestamp -->
+        <arg value="-verbose"/>
+        <arg value="-p"/> <!-- specifies the target package -->
+        <arg value="org.emg.adf.tftester.rt.model.xml.jaxb"/>
+        <arg value="-d"/> <!-- generated files will go into this directory -->
+        <arg file="../src"/>
+        <arg file="../src/org/emg/adf/tftester/rt/model/xml/tftester.xsd"/> <!-- schema file/URL/dir/jar -->
+      </java>
+    <echo message="Created JAXB classes"/>
+  </target>
+
+</project>
