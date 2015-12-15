@@ -298,7 +298,12 @@ public class TaskFlowTester implements Serializable
       XMLElement el = createTaskFlowCallXmlNode();
       Activity actNew = ActivityXmlImpl.parse(act.getParsingContext(), el);
       // replace the activity with the newly created activity that has correct return values
-      activities.put(callActId, actNew);
+      try {
+        activities.put(callActId, actNew);
+      } catch (UnsupportedOperationException use) {
+        // ignore exceptions in 12.2 which closed this mutable Map
+        // for now, just forget about return params in 12.2 :-(
+      }
     }
   }
 
