@@ -14,7 +14,7 @@
       <pathelement location="${oracle.home}/jdev/extensions/oracle.ide.library.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.jdeveloper.runner.jar"/>
       <pathelement location="${oracle.home}/jdev/extensions/oracle.adf-faces-dt.jar"/>
-        <pathelement location="${oracle.commons}/modules/oracle.javatools_12.1.2/javatools-nodeps.jar"/>
+        <pathelement location="${oracle.commons}/modules/oracle.javatools/javatools-nodeps.jar"/>
       <pathelement location="${oracle.home}//ide/lib/javatools.jar"/>
 
 <!--
@@ -47,7 +47,7 @@
 
   <target name="compile" description="Compile Java source files" depends="init">
     <javac destdir="${tft.design.output.dir}" classpathref="classpath" debug="${javac.debug}" nowarn="${javac.nowarn}"
-           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.6" target="1.6">
+           deprecation="${javac.deprecation}" encoding="Cp1252" source="1.8" target="1.8">
       <src path="${tft.design.source.dir}"/>
     </javac>
   </target>
