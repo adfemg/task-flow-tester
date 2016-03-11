@@ -51,6 +51,9 @@
       <fileset dir="${jdev.home}/BC4J/jlib">
         <include name="**/*.jar"/>
       </fileset>
+      <fileset dir="${bea.home}/oracle_common/modules/clients">
+        <include name="com.oracle.webservices.fmw.client.jar"/>
+      </fileset>
 
  </path>
 

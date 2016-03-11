@@ -208,40 +208,37 @@
                                 </f:facet>
 -->
                                 <f:facet name="org.emg.adf.tftester.rt.model.TaskFlowFolder">
-                                  <af:commandImageLink text="#{node.name}"
-                                                       id="selectFolder"
-                                                       icon="/adfemg/images/folder.png"
-                                                       iconPosition="leading"
-                                                       shortDesc="#{node.name}"
-                                                       partialSubmit="true"
-                                                       immediate="true">
-                                  </af:commandImageLink>
+                                  <af:image source="/adfemg/images/folder.png"
+                                            inlineStyle="vertical-align:middle; margin-right:4px;" id="pt_i2"/>
+                                  <af:link text="#{node.name}"
+                                           id="selectFolder"
+                                           partialSubmit="true"
+                                           immediate="true">
+                                  </af:link>
                                 </f:facet>
                                 <f:facet name="org.emg.adf.tftester.rt.model.TaskFlow">
-                                  <af:commandImageLink text="#{node.name}"
-                                                       id="selectTF"
-                                                       icon="/adfemg/images/taskflow.png"
-                                                       iconPosition="leading"
-                                                       shortDesc="#{node.taskFlowIdString}"
-                                                       partialSubmit="true"
-                                                       immediate="true">
+                                  <af:image source="/adfemg/images/taskflow.png"
+                                            inlineStyle="vertical-align:middle; margin-right:4px;" id="pt_i1"/>
+                                  <af:link text="#{node.name}"
+                                           id="selectTF"
+                                           partialSubmit="true"
+                                           immediate="true">
                                     <af:setPropertyListener type="action"
                                                             to="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow}"
                                                             from="#{node}"/>
-                                  </af:commandImageLink>
+                                  </af:link>
                                 </f:facet>
                                 <f:facet name="org.emg.adf.tftester.rt.model.TaskFlowTestCase">
-                                  <af:commandImageLink text="#{node.name}"
-                                                       id="selectTC"
-                                                       icon="/adfemg/images/testcase.png"
-                                                       iconPosition="leading"
-                                                       shortDesc="#{node.description}"
-                                                       partialSubmit="true"
-                                                       immediate="true">
+                                  <af:image source="/adfemg/images/testcase.png"
+                                            inlineStyle="vertical-align:middle; margin-right:4px;" id="pt_i3"/>
+                                  <af:link text="#{node.name}"
+                                           id="selectTC"
+                                           partialSubmit="true"
+                                           immediate="true">
                                     <af:setPropertyListener type="action"
                                                             to="#{pageFlowScope.TaskFlowTester.currentTestCase}"
                                                             from="#{node}"/>
-                                  </af:commandImageLink>
+                                  </af:link>
                                 </f:facet>
                               </af:switcher>
                             </f:facet>

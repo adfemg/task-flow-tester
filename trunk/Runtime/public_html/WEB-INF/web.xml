@@ -57,6 +57,10 @@
     <param-name>oracle.adf.view.rich.SYNCROWS</param-name>
     <param-value>enable</param-value>
   </context-param>
+  <context-param>
+    <param-name>org.apache.myfaces.trinidad.DISABLE_CONTENT_COMPRESSION</param-name>
+    <param-value>true</param-value>
+  </context-param>
   <filter>
     <filter-name>trinidad</filter-name>
     <filter-class>org.apache.myfaces.trinidad.webapp.TrinidadFilter</filter-class>
