@@ -5,9 +5,9 @@
    <u:update id="org.emg.adf.taskflowtester">
       <u:name>ADF EMG Task Flow Tester</u:name>
       <u:version>12.2.1.0.3</u:version>
-      <u:author>ADF Enterprise Methodology Group (Steven Davelaar)</u:author>
-      <u:author-url>http://java.net/projects/adf-task-flow-tester/pages/Home</u:author-url>
-      <u:description>ADF EMG Task Flow Tester is a web-based testing tool for ADF bounded task flows. 
+      <u:author>ADF Enterprise Methodology Group</u:author>
+      <u:author-url>https://github.com/adfemg/task-flow-tester</u:author-url>
+      <u:description>ADF EMG Task Flow Tester is a web-based testing tool for ADF bounded task flows.
 It supports testing of task flows that use pages as well as task flows using page fragments. A sophisticated mechanism to specify task flow input parameters is provided.
 A set of task flow input parameters and run options can be saved as a task flow testcase. Task flows and their testcases can be exported to XML and imported from XML.
 After installing this extension, you need to add the 'ADF EMG Task Flow Tester' library to your project. This will add a run configuration to your project that launches the tester.

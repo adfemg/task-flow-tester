@@ -20,7 +20,7 @@
           <f:facet name="end">
             <af:panelGroupLayout id="pgl4" layout="horizontal" halign="end">
               <af:goLink text="Help"
-                         destination="http://java.net/projects/adf-task-flow-tester/pages/Home"
+                         destination="https://github.com/adfemg/task-flow-tester"
                          targetFrame="_blank" id="gl1"/>
               <af:statusIndicator id="si1"/>
               <f:facet name="separator">
