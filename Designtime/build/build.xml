@@ -90,8 +90,8 @@
                    match="&lt;version&gt;(\s*)(.*)&lt;/version&gt;"
                    replace="&lt;version&gt;${tft.version.number}&lt;/version&gt;"/>
     <replaceregexp file="${tft.design.build.dir}/center.xml"
-                   match="&lt;bundle-url&gt;(\s*)(.*)&lt;/bundle-url&gt;"
-                   replace="&lt;bundle-url&gt;adfemg-tftester-${tft.version.number}-install.zip&lt;/bundle-url&gt;"/>
+                   match="&lt;bundle-url&gt;(https://github.com/adfemg/task-flow-tester/releases/download/v)(.*)(/adfemg-tftester-)(.*)(-install.zip)&lt;/bundle-url&gt;"
+                   replace="&lt;bundle-url&gt;\1${tft.version.number}\3${tft.version.number}\5&lt;/bundle-url&gt;"/>
     <copy file="${tft.design.build.dir}/bundle.xml" todir="${tft.stage.dir}/META-INF"/>
     <copy file="${tft.design.build.dir}/center.xml" todir="${tft.stage.dir}"/>
     <copy file="${tft.design.deploy.dir}/org.emg.adf.taskflowtester.jar" todir="${tft.stage.dir}"/>
