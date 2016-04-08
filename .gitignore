@@ -1,0 +1,8 @@
+.data/
+.svn/
+**/classes/
+**/deploy/
+**/stage/
+Runtime/target/
+Runtime/javadoc/
+Runtime/src/org/emg/adf/tftester/rt/model/xml/jaxb/
