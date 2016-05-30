@@ -19,14 +19,36 @@
           <f:facet name="bottom"/>
           <f:facet name="end">
             <af:panelGroupLayout id="pgl4" layout="horizontal" halign="end">
-              <af:goLink text="Help"
-                         destination="https://github.com/adfemg/task-flow-tester"
-                         targetFrame="_blank" id="gl1"/>
-              <af:statusIndicator id="si1"/>
+            <af:panelLabelAndMessage label="#{securityContext.userName}" id="pt_plam2" rendered="#{securityContext.authenticated and securityContext.userName ne 'anonymous'}">
+              <af:link text="(logout)" id="pt_l2" action="#{LoginController.logout}" partialSubmit="true"/>
+            </af:panelLabelAndMessage>
+            <af:link text="Login" id="pt_l1" rendered="#{!securityContext.authenticated or securityContext.userName eq 'anonymous'}" partialSubmit="true">
+              <af:showPopupBehavior popupId="pLogin"/>
+            </af:link>
+            <af:popup childCreation="deferred" autoCancel="disabled" id="pLogin" binding="#{LoginController.popLogin}">
+              <af:dialog id="pt_d1" title="Login" type="none">
+                <af:subform id="pt_s2" defaultCommand="pt_b1">
+                  <af:panelFormLayout id="pt_pfl2">
+                    <af:inputText label="User" id="pt_it2" required="true" value="#{LoginController.username}"/>
+                    <af:inputText label="Password" id="pt_it3" secret="true" required="true"
+                                  value="#{LoginController.password}"/>
+                    <f:facet name="footer">
+                      <af:toolbar id="pt_t2">
+                        <af:button text="Login" id="pt_b1" action="#{LoginController.login}"/>
+                        <af:button text="Cancel" id="pt_b2" action="#{LoginController.cancelLogin}" immediate="true"/>
+                      </af:toolbar>
+                    </f:facet>
+                  </af:panelFormLayout>
+                </af:subform>
+              </af:dialog>
+            </af:popup>
+            <af:link text="Help" destination="https://github.com/adfemg/task-flow-tester" targetFrame="_blank"
+                     id="gl1"/>
+            <af:statusIndicator id="si1"/>
               <f:facet name="separator">
                 <af:spacer width="10" height="10" id="s1"/>
               </f:facet>
-            </af:panelGroupLayout>
+          </af:panelGroupLayout>
           </f:facet>
           <f:facet name="top"/>
           <af:spacer width="10" height="10" id="s4"/>

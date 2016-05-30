@@ -60,4 +60,9 @@
       <managed-bean-class id="__11">org.emg.adf.tftester.rt.controller.bean.TaskFlowLoader</managed-bean-class>
       <managed-bean-scope id="__14">view</managed-bean-scope>
     </managed-bean>
+  <managed-bean id="__1">
+    <managed-bean-name>LoginController</managed-bean-name>
+    <managed-bean-class>org.emg.adf.tftester.rt.controller.bean.LoginController</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
 </adfc-config>
