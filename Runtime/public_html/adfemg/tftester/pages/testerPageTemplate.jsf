@@ -414,7 +414,7 @@
                                                   windowHeight="600"
                                                   actionListener="#{pageFlowScope.TaskFlowTester.doTest}"
                                                   returnListener="#{pageFlowScope.TaskFlowTester.returnedFromTestDialog}"/>
-                                <af:commandButton text="Reset" id="cb3" partialTriggers="cb1"
+                                <af:commandButton text="Reset" id="cb3" partialTriggers="cb1" immediate="true" 
                                                   rendered="#{pageFlowScope.TaskFlowTester.currentTestTaskFlow.usesPageFragments}"
                                                   disabled="#{!pageFlowScope.TaskFlowTester.testActive}"
                                                   actionListener="#{pageFlowScope.TaskFlowTester.reset}"/>
